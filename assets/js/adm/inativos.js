@@ -46,35 +46,31 @@ async function processarAcaoLeads(endpoint, mensagem) {
   const checkboxes = document.querySelectorAll(".lead-checkbox:checked");
   const ids = Array.from(checkboxes).map((cb) => cb.value);
 
-  console.log("IDs selecionados para exclusão:", ids); // Adicione isso
-
   if (ids.length === 0) {
     showToast("Selecione ao menos um lead", "error");
     return;
   }
 
-  if (!confirm(mensagem.replace("{n}", ids.length))) return;
-
   try {
     const response = await fetch(`${API_CONFIG.BASE_URL}${endpoint}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" }, // Garante o cabeçalho
+      headers: { "Content-Type": "application/json" },
       ...API_CONFIG.FETCH_OPTIONS,
       body: JSON.stringify({ ids }),
     });
 
     const result = await response.json();
-    console.log("Resposta do Servidor:", result); // Adicione isso
 
     if (result.status === "success") {
+      // O Toast decente que configuramos assume o papel de dar o feedback
       showToast(result.message, "success");
       setTimeout(() => location.reload(), 1000);
     } else {
       showToast(result.message, "error");
     }
   } catch (error) {
-    console.error("Erro completo:", error);
-    showToast("Erro na requisição", "error");
+    console.error("Erro na requisição:", error);
+    showToast("Erro na comunicação com o servidor", "error");
   }
 }
 // --- 2. FLUXO PRINCIPAL ---
