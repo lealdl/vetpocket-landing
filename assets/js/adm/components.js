@@ -100,13 +100,16 @@ async function executarLogout() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const isAdm = window.location.pathname.includes("/adm/");
-  const prefix = isAdm ? "../../" : "";
+  // Verificamos se a página atual está dentro de /pages/adm/
+  const isAdm = window.location.pathname.includes("/pages/adm/");
 
-  loadComponent(
-    "header-placeholder",
-    `${prefix}assets/components/${isAdm ? "header-adm.html" : "header.html"}`,
-  );
+  // Usar caminhos absolutos (iniciando com /) evita o erro de "Base path"
+  const headerPath = isAdm
+    ? "/assets/components/header-adm.html"
+    : "/assets/components/header.html";
 
-  loadComponent("footer-placeholder", `${prefix}assets/components/footer.html`);
+  const footerPath = "/assets/components/footer.html";
+
+  loadComponent("header-placeholder", headerPath);
+  loadComponent("footer-placeholder", footerPath);
 });
