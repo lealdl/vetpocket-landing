@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetPocket | Atendimento Veterinário Inteligente</title>
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/slide.css">
+    <link rel="stylesheet" href="assets/css/toast.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="stylesheet" href="assets/css/qr-code.css">
+
+    <meta name="description"
+        content="VetPocket - Gestão profissional e autoconfigurável para veterinários homecare e clínicas. Modernize seus atendimentos domiciliares.">
+    <meta name="keywords" content="veterinário, homecare, gestão pet, software veterinário, VetPocket">
+    <meta name="author" content="Luciano">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vetapp-pocket.vercel.app/">
+    <meta property="og:title" content="VetPocket | Atendimento Veterinário Inteligente">
+    <meta property="og:description"
+        content="Saia das planilhas e tenha uma plataforma profissional para gerir seus atendimentos pet.">
+    <meta property="og:image" content="https://vetapp-pocket.vercel.app/assets/img/og-vet-pocket.png">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vetapp-pocket.vercel.app/">
+    <meta property="twitter:title" content="VetPocket | Atendimento Veterinário Inteligente">
+    <meta property="twitter:description"
+        content="Modernize sua gestão e impressione seus clientes com o sistema VetPocket.">
+    <meta property="twitter:image" content="https://vetapp-pocket.vercel.app/assets/img/og-vet-pocket.png">
+</head>
+
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <header class="hero" style="position: relative;">
+        <div class="qr-code-wrapper">
+            <div id="qrcode"></div>
+            <span>Acesse no Celular</span>
+        </div>
+
+        <div class="container">
+            <h1>Um sistema exclusivo para o seu <br><span>atendimento homecare.</span></h1>
+            <p>Saia das planilhas e tenha uma plataforma profissional, autoconfigurável e personalizada para a sua
+                marca. Modernize sua gestão e impressione seus clientes.</p>
+            <div class="hero-btns">
+                <a href="javascript:void(0)" class="btn-primary btn-lg abrir-modal">Tenho interesse no sistema</a>
+                <a href="javascript:void(0)" class="btn-outline btn-lg abrir-demo">Conheça o App</a>
+            </div>
+
+            <div id="vagas-counter" class="vagas-alert" style="display: none; margin-top: 20px;">
+                <i class="fas fa-fire" style="color: #ff4d4d;"></i>
+                Restam apenas <span id="vagas-numero" style="font-weight: bold; color: #ff4d4d;">--</span> vagas com
+                bônus de lançamento!
+            </div>
+        </div>
+    </header>
+
+    <a href="javascript:void(0)" class="btn-flutuante abrir-modal">
+        <i class="fas fa-rocket"></i> Tenho Interesse
+    </a>
+
+    <section id="funcionalidades" class="features container">
+        <div class="section-title">
+            <h2 style="text-align: center;">Seu consultório, suas regras.</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-award"></i>
+                <h3>Identidade Exclusiva</h3>
+                <p>Sua clínica com um sistema único. Entregamos o VetPocket personalizado com sua logo, cores e equipe,
+                    garantindo uma ferramenta profissional que reforça sua autoridade em cada atendimento.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-database"></i>
+                <h3>Dados Sob Seu Controle</h3>
+                <p>Diferente de grandes plataformas, aqui o banco de dados é exclusivo. Mais privacidade para seus
+                    prontuários e segurança para seus clientes.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-rocket"></i>
+                <h3>Pronto para Crescer</h3>
+                <p>Cadastre quantos veterinários e auxiliares precisar. O sistema cresce junto com sua demanda de
+                    atendimentos domiciliares.</p>
+            </div>
+
+            <div class="feature-card ai-highlight">
+                <div class="ai-badge">EM BREVE</div>
+                <i class="fas fa-brain"></i>
+                <h3>Gestão Inteligente com IA</h3>
+                <p>Receba sugestões de diagnósticos, protocolos de atendimento e insights de gestão gerados por
+                    inteligência artificial treinada para veterinários.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="passo-a-passo" class="steps container">
+        <div class="section-title" style="text-align: center;">
+            <h2>Sua clínica online em 3 passos</h2>
+            <p>Desenvolvido para você focar nos pets, não na configuração.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <h3>Identidade Visual</h3>
+                <p>Suba sua logo e personalize as informações básicas. O sistema assume a cara do seu negócio.</p>
+            </div>
+
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <h3>Cadastre sua Equipe</h3>
+                <p>Adicione auxiliares ou parceiros, defina fotos e níveis de acesso em poucos cliques.</p>
+            </div>
+
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <h3>Atendimento Livre</h3>
+                <p>Tudo pronto! Comece a registrar consultas e automatizar avisos onde quer que você esteja.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="precos" class="pricing-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Invista no seu patrimônio digital</h2>
+                <p>Fuja das mensalidades caras por usuário. Seja dono da sua tecnologia.</p>
+            </div>
+
+            <div id="pricing-wrapper" class="pricing-grid">
+                <div class="pricing-card featured">
+                    <div id="badge-vagas" class="badge" style="opacity: 0; transition: opacity 0.4s ease-in-out;">
+                        🔥 RESTAM <span id="num-vagas">10</span> VAGAS COM 30% OFF
+                    </div>
+                    <h3>Licença Profissional</h3>
+
+                    <div class="price">
+                        <span id="preco-antigo"
+                            style="display: none; text-decoration: line-through; color: #888; font-size: 1.1rem;">De R$
+                            1.347</span>
+                        <div class="main-price">
+                            <span class="currency">R$</span>
+                            <span id="preco-vaga" class="amount">1.347</span>
+                            <span id="tag-desconto" class="discount-tag" style="background: #e0e0e0; color: #666;">PREÇO
+                                REGULAR</span>
+                        </div>
+                        <p id="texto-parcela" class="installments">ou 12x de <b id="valor-parcela">R$ 134,70</b></p>
+                        <small style="color: #6a1b9a;">*10% de desconto para pagamento via PIX</small>
+                    </div>
+
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> <b>Acesso Vitalício</b> ao Sistema VetPocket</li>
+                        <li><i class="fas fa-check"></i> Instalação e Configuração inclusas</li>
+                        <li><i class="fas fa-check"></i> Banco de Dados Exclusivo</li>
+                        <li class="feature-pending">
+                            <i class="fas fa-clock"></i>
+                            <span>Automações de Lembretes Inteligentes</span>
+                            <span class="badge-soon">EM BREVE</span>
+                        </li>
+                        <li><i class="fas fa-shield-alt"></i> Manutenção e Backup Gerenciados<span>*</span></li>
+                    </ul>
+
+                    <a href="javascript:void(0)" class="btn-primary btn-lg abrir-modal">Garantir Minha Licença</a>
+
+                    <p class="hosting-note">
+                        *Licença vitalícia. Hospedagem gerenciada cobrada à parte, conforme valor vigente na data da
+                        aquisição.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="faq container">
+        <div class="section-title">
+            <h2>Dúvidas Frequentes</h2>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <button class="faq-question">A hospedagem e o backup já estão inclusos? <span
+                        class="icon">+</span></button>
+                <div class="faq-answer">
+                    <p>
+                        O valor da licença garante o seu direito de uso vitalício do software.
+                        A <b>hospedagem</b> (manutenção do sistema online) é obrigatória e cobrada mensalmente conforme
+                        o valor vigente.
+                        Já o <b>Backup Diário em Nuvem</b> é um serviço opcional: ele oferece uma camada extra de
+                        segurança,
+                        armazenando cópias dos seus dados em servidores externos para recuperação imediata em caso de
+                        falhas.
+                    </p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Por que o banco de dados é exclusivo? <span class="icon">+</span></button>
+                <div class="faq-answer">
+                    <p>Diferente de sistemas comuns (SaaS), onde seus dados ficam misturados aos de outros milhares de
+                        usuários, no VetPocket criamos uma instância isolada para você. Isso significa mais velocidade,
+                        segurança e total privacidade dos prontuários dos seus pacientes.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Preciso instalar algo ou entender de tecnologia? <span
+                        class="icon">+</span></button>
+                <div class="faq-answer">
+                    <p>
+                        Não. O VetPocket é entregue como uma solução 100% pronta para uso.
+                        Nós cuidamos de toda a infraestrutura em nossa nuvem gerenciada, configuramos seu banco de dados
+                        exclusivo e entregamos apenas os seus dados de acesso. Você foca nos pets, nós cuidamos da
+                        tecnologia.
+                    </p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Preciso baixar um aplicativo na Play Store ou App Store? <span
+                        class="icon">+</span></button>
+                <div class="faq-answer">
+                    <p>
+                        Não. O VetPocket é um <b>Web App</b> moderno que funciona diretamente pelo navegador (Chrome,
+                        Safari, etc.).
+                        Isso significa que ele não ocupa espaço no seu celular e pode ser acessado de qualquer
+                        dispositivo —
+                        computador, tablet ou smartphone — bastando ter conexão com a internet.
+                    </p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">E se a VetPocket parar de operar ou eu quiser sair? <span
+                        class="icon">+</span></button>
+                <div class="faq-answer">
+                    <p>
+                        Diferente de grandes corporações onde você é apenas um número, no VetPocket você tem a garantia
+                        de
+                        que <b>seus dados são seus</b>. Nossa arquitetura permite que, caso você decida sair ou o
+                        serviço
+                        mude, você leve consigo toda a sua estrutura de dados e até a instância do sistema.
+                        Você nunca ficará na mão ou preso a nós por contratos abusivos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="waitlistModal" class="modal">
+        <div class="modal-content" style="min-height: 480px; display: flex; flex-direction: column;">
+            <span class="close-modal">&times;</span>
+
+            <div id="chat-container">
+                <div class="msg-bubble bot-msg">
+                    Olá! Sou o assistente virtual da VetPocket. 🐾 Com quem eu falo?
+                </div>
+            </div>
+
+            <div id="chat-input-area" class="chat-input-group" style="display: none;">
+                <input type="text" id="chat-user-input" placeholder="Digite sua resposta...">
+                <button id="chat-send-btn" class="btn-chat-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <div id="chat-options-area" class="chat-options-group" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div id="modal-demo" class="modal-gallery">
+        <div class="modal-content-gallery">
+            <span class="close-demo">&times;</span>
+            <h2>Conheça o VetPocket por dentro</h2>
+
+            <div class="demo-slider">
+                <div class="slide">
+                    <img src="assets/img/og-vet-pocket.png" alt="Agenda de Vacinas e Retornos">
+                    <p><b>Agenda Inteligente:</b> Visualize seus próximos atendimentos e configure lembretes
+                        automáticos.</p>
+                </div>
+                <div class="slide active">
+                    <img src="assets/img/tela-visita.png" alt="Prontuário de Atendimento">
+                    <p><b>Atendimento Ágil:</b> Triagem e dados do pet organizados em uma só tela.</p>
+                </div>
+                <div class="slide">
+                    <img src="assets/img/tela-admin.png" alt="Painel Administrativo">
+                    <p><b>Controle Total:</b> Gerencie sua clínica e histórico de onde estiver.</p>
+                </div>
+                <div class="slide">
+                    <img src="assets/img/tela-login.png" alt="Interface Web">
+                    <p><b>Sem Instalação:</b> Acesso imediato via navegador, 100% na nuvem.</p>
+                </div>
+                <div class="slide">
+                    <img src="assets/img/tela-editar-paciente.png" alt="Edição de Paciente VetPocket">
+                    <p><b>Gestão Detalhada:</b> Edite informações vitais e sintomas dos pacientes em segundos.</p>
+                </div>
+                <div class="slide">
+                    <img src="assets/img/tela-prontuario.png" alt="Prontuário Médico VetPocket">
+                    <p><b>Prontuário Profissional:</b> Exporte atendimentos completos para PDF ou impressão com layout
+                        impecável.</p>
+                </div>
+                <!-- <div class="slide">
+                    <img src="assets/img/tela-financeiro.png" alt="Gestão Financeira VetPocket">
+                    <p><b>Controle Financeiro:</b> Acompanhe seus ganhos e despesas de atendimentos em tempo real.</p>
+                </div> -->
+
+
+                <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+                <button class="next" onclick="changeSlide(1)">&#10095;</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/faq.js"></script>
+    <script src="assets/js/bot.js"></script>
+    <script src="assets/js/qr-code.js"></script>
+    <script src="assets/js/slide.js"></script>
+
+    <script src="assets/js/adm/components.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const badge = document.getElementById('badge-vagas');
+            const precoVaga = document.getElementById('preco-vaga');
+            const precoAntigo = document.getElementById('preco-antigo');
+            const tagDesconto = document.getElementById('tag-desconto');
+            const valorParcela = document.getElementById('valor-parcela');
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
+                const data = await response.json();
+                const numVagas = parseInt(data.vagas_restantes);
+
+                if (numVagas > 0) {
+                    const termoVerbo = numVagas === 1 ? "RESTA" : "RESTAM";
+                    const sufixoS = numVagas === 1 ? "" : "S";
+
+                    if (badge) {
+                        badge.innerHTML = `🔥 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
+                        badge.style.setProperty('opacity', '1', 'important');
+                    }
+
+                    // Interface com Desconto (Lançamento)
+                    if (precoVaga) precoVaga.innerText = "942,90";
+                    if (precoAntigo) precoAntigo.style.display = "block";
+                    if (tagDesconto) {
+                        tagDesconto.innerText = "30% OFF - LANÇAMENTO";
+                        tagDesconto.style.cssText += "background: #d4edda !important; color: #155724 !important;";
+                    }
+                    if (valorParcela) valorParcela.innerText = "R$ 94,29";
+
+                } else {
+                    // Interface Padrão (Vagas Esgotadas)
+                    if (badge) {
+                        badge.innerHTML = "Oferta de Lançamento";
+                        badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important; display: inline-block !important; padding: 8px 20px;";
+                    }
+
+                    if (precoVaga) precoVaga.innerText = "1.347,00";
+                    if (precoAntigo) precoAntigo.style.display = "none";
+                    if (tagDesconto) {
+                        tagDesconto.innerText = "10% OFF À VISTA";
+                        tagDesconto.style.cssText += "background: #e0e7ff !important; color: #4338ca !important;";
+                    }
+                    if (valorParcela) valorParcela.innerText = "R$ 134,70";
+                }
+            } catch (e) {
+                console.warn("Erro ao buscar vagas, mantendo interface padrão.");
+                if (badge) badge.style.opacity = "1";
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+#toast-container {
+  position: fixed !important;
+  top: 130px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  /* Garante que o container não seja maior que a tela do celular */
+  width: 100%;
+  padding: 0 20px;
+}
+
+#toast {
+  visibility: hidden;
+  opacity: 0;
+  background-color: #333;
+  color: #fff;
+  padding: 16px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateY(-20px);
+  min-width: 300px;
+  text-align: center;
+  min-width: 280px; /* Reduzi levemente para caber em iPhones menores */
+  max-width: 90%; /* Impede que ele encoste nas bordas laterais */
+  width: auto;
+  word-wrap: break-word;
+}
+
+#toast.show {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+#toast.success {
+  background-color: #10b981 !important;
+}
+#toast.error {
+  background-color: #ef4444 !important;
+}
+#toast.info {
+  background-color: #6d28d9 !important;
+}

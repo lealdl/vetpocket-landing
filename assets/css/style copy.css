@@ -1,0 +1,493 @@
+/* ==========================================================================
+   1. VARIÁVEIS E RESET
+   ========================================================================== */
+:root {
+  --primary: #6d28d9;
+  --primary-hover: #5b21b6;
+  --bg-body: #f1f2f6;
+  --text-main: #111827;
+  --text-muted: #4b5563;
+  --white: #ffffff;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(109, 40, 217, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Essencial para os botões não vazarem */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  padding-top: 0;
+  transition: padding-top 0.3s ease;
+}
+
+/* ==========================================================================
+   2. HEADER E NAVBAR
+   ========================================================================== */
+#header-placeholder {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99999;
+  background: var(--white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.main-header,
+nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  border-bottom: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: var(--text-muted);
+  margin-left: 30px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-links li a:hover {
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   3. COMPONENTES REUTILIZÁVEIS E BOTÕES
+   ========================================================================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.section-title h2 {
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.section-title p {
+  color: var(--text-muted);
+}
+
+.btn-primary,
+.btn-outline,
+.btn-nav-demo {
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white) !important;
+  padding: 8px 20px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary) !important;
+  padding: 10px 22px;
+}
+
+.btn-nav-demo {
+  color: var(--primary) !important;
+  border: 2px solid var(--primary);
+  padding: 6px 14px;
+  background: transparent;
+  font-weight: 700;
+}
+
+.btn-nav-demo:hover {
+  background: var(--primary);
+  color: white !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+}
+
+.btn-flutuante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary);
+  color: white !important;
+  padding: 10px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: bold;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-flutuante:hover {
+  transform: translateY(-5px);
+}
+
+/* ==========================================================================
+   4. LAYOUT HERO E CONTEÚDO
+   ========================================================================== */
+.hero {
+  padding: 100px 0 40px;
+  text-align: center;
+  background: linear-gradient(to bottom, #f5f3ff, var(--bg-body));
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 20px;
+  line-height: 1.1;
+}
+
+.hero h1 span {
+  color: var(--primary);
+}
+
+.hero p {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+.hero-btns {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap; /* Ajuste para não quebrar no mobile */
+}
+
+.features,
+.steps,
+.pricing-section,
+.faq {
+  padding: 60px 0;
+}
+.features {
+  padding-top: 20px;
+}
+
+.features-grid,
+.steps-grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.feature-card,
+.step-item {
+  background: var(--white);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid #e2e8e0;
+  box-shadow: var(--shadow-sm);
+  transition: 0.3s;
+}
+
+/* ==========================================================================
+   5. PREÇOS (PRICING)
+   ========================================================================== */
+#pricing-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.pricing-card {
+  background: var(--white);
+  padding: 30px 25px !important; /* Ajuste solicitado de espaço interno */
+  border-radius: 24px;
+  border: 2px solid var(--primary);
+  text-align: center;
+  max-width: 450px;
+  position: relative;
+}
+
+.pricing-card .badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: white;
+  padding: 5px 20px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.price .amount {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.pricing-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.pricing-features li {
+  margin-bottom: 8px !important; /* Ajuste de aproximação solicitado */
+  line-height: 1.2 !important;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.pricing-features li b {
+  margin-right: 4px;
+}
+
+.hosting-note {
+  font-size: 0.75rem;
+  line-height: 1.3 !important;
+  margin-top: 12px !important;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ==========================================================================
+   6. FAQ E MODAIS
+   ========================================================================== */
+.faq-grid {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq-item {
+  background: var(--white);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+.faq-question {
+  width: 100%;
+  padding: 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  cursor: pointer;
+}
+.faq-answer {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s ease;
+  color: var(--text-muted);
+}
+.faq-item.active .faq-answer {
+  padding-bottom: 20px;
+  max-height: 200px;
+}
+
+.modal,
+.modal-gallery {
+  display: none;
+  position: fixed;
+  z-index: 999999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: white;
+  margin: 10% auto;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 500px;
+  position: relative;
+  text-align: center;
+}
+.close-modal {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+#mobileMenuBtn {
+  display: none; /* Deixe como none, o @media cuidará de exibir */
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px; /* Altura total do conjunto de linhas */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1000001;
+  padding: 0; /* Remove paddings que podem achatar as linhas */
+}
+/* Overlay de fundo com efeito Blur */
+/* Overlay de fundo com efeito Blur */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3); /* Escurecimento leve */
+  backdrop-filter: blur(8px); /* O SEGREDO DO BLUR */
+  -webkit-backdrop-filter: blur(8px); /* Suporte para Safari/iOS */
+  z-index: 99999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+}
+
+/* Quando o menu está aberto */
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Estado ativo (quando o menu abre) */
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+@media (max-width: 930px) {
+  #mobileMenuBtn {
+    display: flex; /* Exibe no mobile */
+  }
+}
+#mobileMenuBtn span {
+  display: block; /* Garante que o span se comporte como bloco */
+  width: 100%;
+  height: 3px; /* Espessura da linha */
+  background-color: var(--primary); /* Ou #6d28d9 diretamente */
+  border-radius: 3px;
+  transition: 0.3s;
+}
+/* ==========================================================================
+   7. RESPONSIVIDADE E MOBILE (CORREÇÃO TOTAL)
+   ========================================================================== */
+@media (max-width: 930px) {
+  #mobileMenuBtn {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background: var(--white);
+    flex-direction: column;
+    padding: 80px 20px 40px;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000000;
+    box-sizing: border-box;
+  }
+
+  .nav-links.active {
+    left: 0 !important;
+  }
+
+  .nav-links li {
+    width: 100%;
+    list-style: none;
+  }
+
+  /* Aplica borda apenas em links que NÃO são botões */
+  .nav-links li a:not(.btn-nav-demo):not(.btn-primary) {
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f2f6;
+    text-align: left;
+    text-decoration: none;
+    color: var(--text-main);
+    box-sizing: border-box;
+  }
+
+  /* AJUSTE DOS BOTÕES (Conheça o App / Área Admin) */
+  .nav-links .btn-nav-demo,
+  .nav-links .btn-primary {
+    display: block !important;
+    width: 100% !important;
+    margin: 15px 0 !important;
+    padding: 12px 10px !important;
+    box-sizing: border-box !important;
+    border-bottom: none !important; /* REMOVE A LINHA CINZA DEFINITIVAMENTE */
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  /* Garante o visual do botão vazado no mobile */
+  .nav-links .btn-nav-demo {
+    border: 2px solid var(--primary) !important;
+    color: var(--primary) !important;
+    background: transparent !important;
+  }
+}

@@ -1,0 +1,112 @@
+/* ==========================================================================
+   FOOTER MINIMIZADO
+   ========================================================================== */
+
+#footer-placeholder {
+  width: 100%;
+  display: block;
+}
+
+.footer {
+  background-color: #1f2937 !important;
+  color: #9ca3af !important;
+  padding: 30px 0; /* Reduzido de 60px para 30px */
+  margin-top: 40px; /* Reduzido de 80px para 40px para subir o footer */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.footer-minimal {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-brand .logo {
+  color: #ffffff !important;
+  font-size: 1.2rem; /* Reduzido levemente */
+  font-weight: 800;
+  margin-bottom: 2px; /* Espaçamento mínimo */
+}
+
+.footer-brand p {
+  font-size: 0.9rem; /* Reduzido de 1rem */
+  color: #d1d5db;
+}
+
+.footer-right {
+  text-align: right;
+}
+
+.footer-contact-info {
+  font-size: 0.85rem; /* Reduzido de 0.95rem */
+  color: #e5e7eb;
+  margin-bottom: 4px;
+}
+
+.separator {
+  margin: 0 8px;
+  color: #4b5563;
+}
+
+.copyright {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Ajustes para Celular (Compactação Máxima) */
+@media (max-width: 768px) {
+  .footer {
+    padding: 20px 0; /* Padding vertical mínimo no mobile */
+    margin-top: 20px;
+  }
+
+  .footer-minimal {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px; /* Controla o espaço entre os blocos de texto */
+  }
+
+  .footer-brand .logo {
+    margin-bottom: 0;
+  }
+
+  .footer-right {
+    text-align: center;
+    margin-top: 0; /* Remove margem extra */
+  }
+
+  .footer-contact-info span {
+    display: inline-block; /* Mantém na mesma linha se couber */
+    margin: 0 5px;
+  }
+
+  .separator {
+    display: none;
+  }
+}
+.footer-whatsapp {
+  color: inherit; /* Mantém a cor do texto do footer */
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre o ícone e o número */
+  transition: 0.3s;
+}
+
+.footer-whatsapp i {
+  color: #25d366; /* Cor oficial do WhatsApp para destaque */
+  font-size: 1.2rem;
+}
+
+.footer-whatsapp:hover {
+  color: var(--primary-light); /* Feedback visual no hover */
+  opacity: 0.8;
+}
