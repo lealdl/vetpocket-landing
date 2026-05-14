@@ -1,9 +1,79 @@
-const state = {
-  leads: [],
-  selectedIds: [],
-};
+/**
+ * New-VetPocket - Gerenciamento de Leads Arquivados/Inativos
+ * Local: assets/js/adm/inativos.js
+ */
+
+// --- 1. FUNÇÕES DE UTILIDADE (Escopo Global) ---
+
+/**
+ * Calcula e exibe as estatísticas nos cards superiores
+ */
+function atualizarCardsInativos(leads) {
+  console.log("📊 New-VetPocket: Atualizando cards estatísticos...");
+  const total = leads.length;
+
+  // Filtros baseados no perfil (Case-insensitive)
+  const homecare = leads.filter((l) =>
+    l.perfil?.toLowerCase().includes("home"),
+  ).length;
+  const clinica = leads.filter(
+    (l) =>
+      l.perfil?.toLowerCase().includes("clinica") ||
+      l.perfil?.toLowerCase().includes("fixa"),
+  ).length;
+  const misto = leads.filter((l) =>
+    l.perfil?.toLowerCase().includes("misto"),
+  ).length;
+
+  // Atualização do DOM
+  const elementos = {
+    "stat-total": total,
+    "stat-homecare": homecare,
+    "stat-clinica": clinica,
+    "stat-misto": misto,
+  };
+
+  Object.entries(elementos).forEach(([id, valor]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor;
+  });
+}
+
+/**
+ * Processa ações em massa (Restaurar ou Excluir)
+ */
+async function processarAcaoLeads(endpoint, mensagem) {
+  const checkboxes = document.querySelectorAll(".lead-checkbox:checked");
+  const ids = Array.from(checkboxes).map((cb) => cb.value);
+
+  if (ids.length === 0) return;
+  if (!confirm(mensagem.replace("{n}", ids.length))) return;
+
+  try {
+    const response = await fetch(`${API_CONFIG.BASE_URL}${endpoint}`, {
+      method: "POST",
+      ...API_CONFIG.FETCH_OPTIONS, // Garante credentials: 'include' para Vercel/Fedora
+      body: JSON.stringify({ ids }),
+    });
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      showToast(result.message, "success");
+      setTimeout(() => location.reload(), 1000);
+    } else {
+      showToast(result.message || "Erro na operação", "error");
+    }
+  } catch (error) {
+    console.error("❌ Erro na requisição:", error);
+    showToast("Erro de comunicação com o servidor", "error");
+  }
+}
+
+// --- 2. FLUXO PRINCIPAL ---
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // Verificação de autenticação
   if (localStorage.getItem("isLoggedIn") !== "true") {
     window.location.replace("login.html");
     return;
@@ -21,15 +91,20 @@ async function carregarInativos() {
       ...API_CONFIG.FETCH_OPTIONS,
     });
 
-    if (response.status === 401) return executarLogout();
-    if (!response.ok) throw new Error("Falha na comunicação com o servidor.");
+    if (response.status === 401) {
+      localStorage.removeItem("isLoggedIn");
+      window.location.replace("login.html");
+      return;
+    }
 
-    state.leads = await response.json();
+    if (!response.ok) throw new Error("Erro ao buscar inativos");
 
-    atualizarCardsInativos(state.leads);
-    renderizarTabela(state.leads);
+    const leads = await response.json();
+
+    atualizarCardsInativos(leads);
+    renderizarTabela(leads);
   } catch (error) {
-    console.error("❌ Erro:", error);
+    console.error("❌ Erro no carregamento:", error);
     showToast("Erro ao carregar lista de inativos", "error");
   }
 }
@@ -43,7 +118,6 @@ function renderizarTabela(leads) {
     return;
   }
 
-  // Performance: Usando DocumentFragment para evitar múltiplos repaints
   const fragment = document.createDocumentFragment();
 
   leads.forEach((lead) => {
@@ -52,7 +126,12 @@ function renderizarTabela(leads) {
       : "---";
 
     const row = document.createElement("tr");
-    row.className = lead.status_especial === "Usuário Beta" ? "row-beta" : "";
+    row.style.cursor = "pointer";
+
+    // Destaque para usuários Beta
+    if (lead.status_especial === "Usuário Beta") {
+      row.classList.add("row-beta");
+    }
 
     row.innerHTML = `
             <td data-label="Selecionar">
@@ -60,12 +139,12 @@ function renderizarTabela(leads) {
             </td>
             <td data-label="Nome"><strong>${lead.nome}</strong></td>
             <td data-label="E-mail">${lead.email}</td>
-            <td data-label="Telefone">${lead.telefone || "---"}</td>
+            <td data-label="WhatsApp">${lead.telefone || "---"}</td>
             <td class="desktop-only">${lead.perfil || "---"}</td>
             <td class="desktop-only">${dataBr}</td>
         `;
 
-    row.onclick = () => abrirModalInativo(lead, dataBr);
+    row.onclick = () => console.log("Visualizando lead:", lead.id);
     fragment.appendChild(row);
   });
 
@@ -81,11 +160,11 @@ function setupCheckboxLogic() {
   const btnExcluir = document.getElementById("btnExcluirDefinitivo");
 
   const toggleActions = () => {
-    const checked = document.querySelectorAll(".lead-checkbox:checked");
-    const anyChecked = checked.length > 0;
+    const anyChecked = Array.from(checkboxes).some((cb) => cb.checked);
+    const display = anyChecked ? "flex" : "none";
 
-    if (btnRestaurar) btnRestaurar.style.display = anyChecked ? "flex" : "none";
-    if (btnExcluir) btnExcluir.style.display = anyChecked ? "flex" : "none";
+    if (btnRestaurar) btnRestaurar.style.display = display;
+    if (btnExcluir) btnExcluir.style.display = display;
   };
 
   if (selectAll) {
@@ -100,46 +179,20 @@ function setupCheckboxLogic() {
 }
 
 function setupEventListeners() {
-  // Evento Restaurar
-  document
-    .getElementById("btnRestaurar")
-    ?.addEventListener("click", async () => {
-      await processarAcaoLeads(
-        "restaurar-leads.php",
-        "Restaurar selecionados para lista ativa?",
-      );
-    });
+  const btnRestaurar = document.getElementById("btnRestaurar");
+  const btnExcluir = document.getElementById("btnExcluirDefinitivo");
 
-  // Evento Excluir Definitivo (Sua nova Lixeira)
-  document
-    .getElementById("btnExcluirDefinitivo")
-    ?.addEventListener("click", async () => {
-      await processarAcaoLeads(
-        "excluir-leads.php",
-        "⚠️ CUIDADO: Excluir permanentemente do banco de dados?",
-      );
-    });
-}
+  btnRestaurar?.addEventListener("click", () => {
+    processarAcaoLeads(
+      "restaurar-leads.php",
+      "Deseja restaurar {n} leads para a lista ativa?",
+    );
+  });
 
-async function processarAcaoLeads(endpoint, mensagem) {
-  const ids = Array.from(
-    document.querySelectorAll(".lead-checkbox:checked"),
-  ).map((cb) => cb.value);
-  if (!confirm(mensagem)) return;
-
-  try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}${endpoint}`, {
-      method: "POST",
-      ...API_CONFIG.FETCH_OPTIONS,
-      body: JSON.stringify({ ids }),
-    });
-
-    const result = await response.json();
-    if (result.status === "success") {
-      showToast(result.message, "success");
-      setTimeout(() => location.reload(), 1000);
-    }
-  } catch (e) {
-    showToast("Erro ao processar solicitação", "error");
-  }
+  btnExcluir?.addEventListener("click", () => {
+    processarAcaoLeads(
+      "excluir-leads.php",
+      "⚠️ AVISO CRÍTICO: Deseja excluir permanentemente {n} leads do banco de dados? Esta ação não pode ser desfeita.",
+    );
+  });
 }
