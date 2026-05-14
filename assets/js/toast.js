@@ -1,13 +1,4 @@
-console.log("✅ Arquivo toast.js carregado com sucesso!");
-
-let toastTimer = null;
-
-function showToast(message, type = "success") {
-  console.log(
-    `%c 🔔 TOAST: ${message}`,
-    "color: yellow; background: black; font-weight: bold;",
-  );
-
+function showToast(message, type = "success", duration = 3000) {
   let container = document.getElementById("toast-container");
   if (!container) {
     container = document.createElement("div");
@@ -15,26 +6,25 @@ function showToast(message, type = "success") {
     document.body.appendChild(container);
   }
 
-  let toast = document.getElementById("toast");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.id = "toast";
-    container.appendChild(toast);
-  }
-
-  clearTimeout(toastTimer);
+  const toast = document.createElement("div");
   toast.className = `toast ${type}`;
-  toast.textContent = message;
 
-  setTimeout(() => {
-    toast.classList.add("show");
+  const icon = type === "success" ? "check-circle" : "exclamation-circle";
+  toast.innerHTML = `
+      <span><i class="fas fa-${icon}"></i> ${message}</span>
+  `;
 
-    // Debug de posição
-    const rect = toast.getBoundingClientRect();
-    console.log("📏 Posição do Toast:", rect.top, "px do topo");
+  container.appendChild(toast);
 
-    toastTimer = setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3500);
-  }, 50);
+  // Remove automaticamente
+  const removeToast = () => {
+    toast.classList.add("fade-out");
+    setTimeout(() => toast.remove(), 500);
+  };
+
+  const timer = setTimeout(removeToast, duration);
+  toast.onclick = () => {
+    clearTimeout(timer);
+    removeToast();
+  };
 }
