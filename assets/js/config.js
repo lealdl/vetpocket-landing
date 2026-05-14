@@ -3,13 +3,12 @@ const isLocal =
   window.location.hostname === "127.0.0.1";
 
 const API_CONFIG = {
-  BASE_URL: isLocal
-    ? "http://127.0.0.1/backend-landing/"
-    : "https://llrh.com.br/backend-landing/", // Certifique-se de manter a barra final
-
+  BASE_URL:
+    window.location.hostname === "localhost"
+      ? "http://127.0.0.1/backend-landing/"
+      : "https://llrh.com.br/backend-landing/",
   FETCH_OPTIONS: {
-    // credentials: "include" pode causar erros em requisições cross-origin (CORS)
-    // se o servidor não estiver configurado para domínios específicos.
+    credentials: "include", // ESSENCIAL: Envia PHPSESSID via CORS
     headers: {
       "Content-Type": "application/json",
     },
