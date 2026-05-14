@@ -46,30 +46,37 @@ async function processarAcaoLeads(endpoint, mensagem) {
   const checkboxes = document.querySelectorAll(".lead-checkbox:checked");
   const ids = Array.from(checkboxes).map((cb) => cb.value);
 
-  if (ids.length === 0) return;
+  console.log("IDs selecionados para exclusão:", ids); // Adicione isso
+
+  if (ids.length === 0) {
+    showToast("Selecione ao menos um lead", "error");
+    return;
+  }
+
   if (!confirm(mensagem.replace("{n}", ids.length))) return;
 
   try {
     const response = await fetch(`${API_CONFIG.BASE_URL}${endpoint}`, {
       method: "POST",
-      ...API_CONFIG.FETCH_OPTIONS, // Garante credentials: 'include' para Vercel/Fedora
+      headers: { "Content-Type": "application/json" }, // Garante o cabeçalho
+      ...API_CONFIG.FETCH_OPTIONS,
       body: JSON.stringify({ ids }),
     });
 
     const result = await response.json();
+    console.log("Resposta do Servidor:", result); // Adicione isso
 
     if (result.status === "success") {
       showToast(result.message, "success");
       setTimeout(() => location.reload(), 1000);
     } else {
-      showToast(result.message || "Erro na operação", "error");
+      showToast(result.message, "error");
     }
   } catch (error) {
-    console.error("❌ Erro na requisição:", error);
-    showToast("Erro de comunicação com o servidor", "error");
+    console.error("Erro completo:", error);
+    showToast("Erro na requisição", "error");
   }
 }
-
 // --- 2. FLUXO PRINCIPAL ---
 
 document.addEventListener("DOMContentLoaded", async () => {
