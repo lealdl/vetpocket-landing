@@ -131,8 +131,8 @@
     <section id="precos" class="pricing-section">
         <div class="container">
             <div class="section-title">
-                <h2>Invista no seu patrimônio digital</h2>
-                <p>Fuja das mensalidades caras por usuário. Seja dono da sua tecnologia.</p>
+                <h2>🔥 OFERTA ESPECIAL DE LANÇAMENTO</h2>
+                <p>Garanta sua vaga com condições exclusivas por tempo limitado</p>
             </div>
 
             <div id="pricing-wrapper" class="pricing-grid">
@@ -140,20 +140,34 @@
                     <div id="badge-vagas" class="badge" style="opacity: 0; transition: opacity 0.4s ease-in-out;">
                         🔥 RESTAM <span id="num-vagas">10</span> VAGAS COM 30% OFF
                     </div>
-                    <h3>Licença Profissional</h3>
+                    <h3>Licença Profissional Vitalícia</h3>
 
                     <div class="price">
-                        <span id="preco-antigo"
-                            style="display: none; text-decoration: line-through; color: #888; font-size: 1.1rem;">De R$
-                            1.347</span>
-                        <div class="main-price">
-                            <span class="currency">R$</span>
-                            <span id="preco-vaga" class="amount">1.347</span>
-                            <span id="tag-desconto" class="discount-tag" style="background: #e0e0e0; color: #666;">PREÇO
-                                REGULAR</span>
+                        <div class="economy-badge" style="background: #10b981; color: white; padding: 8px 16px; border-radius: 30px; font-size: 0.85rem; display: inline-block; margin-bottom: 15px;">
+                            💰 Economia de R$ 673,50
                         </div>
-                        <p id="texto-parcela" class="installments">ou 12x de <b id="valor-parcela">R$ 134,70</b></p>
-                        <small style="color: #6a1b9a;">*10% de desconto para pagamento via PIX</small>
+                        
+                        <div style="text-align: left; margin-top: 15px;">
+                            <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                                <div style="font-size: 0.9rem; color: #065f46; font-weight: 600; margin-bottom: 8px;">💳 À vista no PIX:</div>
+                                <div style="font-size: 2rem; font-weight: 800; color: #065f46;">
+                                    R$ 942,90
+                                </div>
+                                <div style="font-size: 0.8rem; color: #047857;">Economia de R$ 673,50 no total</div>
+                            </div>
+
+                            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px;">
+                                <div style="font-size: 0.9rem; color: #92400e; font-weight: 600; margin-bottom: 8px;">📱 Parcelado no cartão:</div>
+                                <div style="font-size: 1.5rem; font-weight: 800; color: #92400e;">
+                                    12x de R$ 134,70
+                                </div>
+                                <div style="font-size: 0.8rem; color: #b45309;">Total: R$ 1.616,40</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                            <small style="color: #6a1b9a;">*Valores sujeitos a alteração após término da promoção</small>
+                        </div>
                     </div>
 
                     <ul class="pricing-features">
@@ -302,11 +316,6 @@
                     <p><b>Prontuário Profissional:</b> Exporte atendimentos completos para PDF ou impressão com layout
                         impecável.</p>
                 </div>
-                <!-- <div class="slide">
-                    <img src="assets/img/tela-financeiro.png" alt="Gestão Financeira VetPocket">
-                    <p><b>Controle Financeiro:</b> Acompanhe seus ganhos e despesas de atendimentos em tempo real.</p>
-                </div> -->
-
 
                 <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
                 <button class="next" onclick="changeSlide(1)">&#10095;</button>
@@ -326,11 +335,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
             const badge = document.getElementById('badge-vagas');
-            const precoVaga = document.getElementById('preco-vaga');
-            const precoAntigo = document.getElementById('preco-antigo');
-            const tagDesconto = document.getElementById('tag-desconto');
-            const valorParcela = document.getElementById('valor-parcela');
-
+            
             try {
                 const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
                 const data = await response.json();
@@ -341,33 +346,14 @@
                     const sufixoS = numVagas === 1 ? "" : "S";
 
                     if (badge) {
-                        badge.innerHTML = `🔥 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
+                        badge.innerHTML = `🎯 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
                         badge.style.setProperty('opacity', '1', 'important');
                     }
-
-                    // Interface com Desconto (Lançamento)
-                    if (precoVaga) precoVaga.innerText = "942,90";
-                    if (precoAntigo) precoAntigo.style.display = "block";
-                    if (tagDesconto) {
-                        tagDesconto.innerText = "30% OFF - LANÇAMENTO";
-                        tagDesconto.style.cssText += "background: #d4edda !important; color: #155724 !important;";
-                    }
-                    if (valorParcela) valorParcela.innerText = "R$ 94,29";
-
                 } else {
-                    // Interface Padrão (Vagas Esgotadas)
                     if (badge) {
-                        badge.innerHTML = "Oferta de Lançamento";
+                        badge.innerHTML = "Oferta de Lançamento - Últimas Unidades";
                         badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important; display: inline-block !important; padding: 8px 20px;";
                     }
-
-                    if (precoVaga) precoVaga.innerText = "1.347,00";
-                    if (precoAntigo) precoAntigo.style.display = "none";
-                    if (tagDesconto) {
-                        tagDesconto.innerText = "10% OFF À VISTA";
-                        tagDesconto.style.cssText += "background: #e0e7ff !important; color: #4338ca !important;";
-                    }
-                    if (valorParcela) valorParcela.innerText = "R$ 134,70";
                 }
             } catch (e) {
                 console.warn("Erro ao buscar vagas, mantendo interface padrão.");
