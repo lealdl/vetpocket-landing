@@ -1,0 +1,46 @@
+/* Container principal do QR Code */
+.qr-code-wrapper {
+  position: absolute;
+  left: 40px; /* Distância fixa da borda esquerda */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+/* Efeito sutil ao passar o mouse */
+.qr-code-wrapper:hover {
+  transform: translateY(-55%) scale(1.02);
+}
+
+/* Estilização do texto abaixo do QR */
+.qr-code-wrapper span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4f46e5;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+}
+
+/* Garante que o QR Code respeite o arredondamento */
+#qrcode img {
+  border-radius: 10px;
+  display: block;
+}
+
+/* Responsividade: Esconde em telas onde ele atropelaria o texto do Hero */
+@media (max-width: 1200px) {
+  .qr-code-wrapper {
+    display: none;
+  }
+}

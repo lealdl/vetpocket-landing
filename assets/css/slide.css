@@ -1,0 +1,227 @@
+/* --- ESTILOS DO CARROSSEL DE DEMO --- */
+
+#modal-demo {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.85); /* Fundo escuro para destacar o App */
+  backdrop-filter: blur(8px); /* Efeito moderno de vidro embaçado */
+  overflow-y: auto;
+  cursor: zoom-out; /* Indica visualmente que o clique fecha a visualização */
+}
+
+.demo-slider {
+  cursor: default; /* Dentro do carrossel o cursor volta ao normal */
+  max-width: 85%; /* Garante sobra lateral para o clique de fechamento */
+  margin: 5vh auto; /* Centraliza verticalmente com base na altura da tela */
+}
+.slide {
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.4s ease-in-out;
+  width: 100%;
+}
+
+.slide.active {
+  display: block;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  max-height: 70vh; /* Evita que a imagem suma da tela no desktop */
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.slide p {
+  margin-top: 15px;
+  font-size: 1.1rem;
+  color: #444;
+  font-weight: 500;
+}
+
+/* --- CONTROLES (SETAS) --- */
+.prev,
+.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--primary);
+  color: white;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.prev {
+  left: -60px;
+}
+.next {
+  right: -60px;
+}
+
+.prev:hover,
+.next:hover {
+  background: var(--primary-hover);
+  transform: translateY(-50%) scale(1.1);
+}
+/* Container Principal do Modal */
+.modal-gallery {
+  display: none;
+  position: fixed;
+  z-index: 100000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* Fundo bem escuro para focar no App */
+  backdrop-filter: blur(5px);
+  overflow-y: auto;
+  cursor: pointer; /* Indica que o fundo fecha o modal */
+}
+
+/* Conteúdo Interno */
+.modal-content-gallery {
+  position: relative;
+  margin: 5vh auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 1100px;
+  cursor: default; /* Dentro do conteúdo, o cursor volta ao normal */
+}
+
+/* O Botão de Fechar (X) */
+.close-demo {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  color: #3ea801;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 100001;
+  transition: 0.3s;
+}
+
+.close-demo:hover {
+  color: #d92828; /* Cor roxa da sua identidade visual */
+  transform: scale(1.1);
+}
+
+/* Ajuste para o Título no Modal */
+.modal-content-gallery h2 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+/* ==========================================================================
+  BREAKPOINTS DE RESPONSIVIDADE (MAXIMIZADO)
+  ========================================================================== */
+
+/* 1. Telas Grandes (Desktop Wide) */
+@media (min-width: 1200px) {
+  .demo-slider {
+    max-width: 1200px; /* Aumentado para preencher melhor o desktop */
+  }
+  .slide img {
+    max-height: 80vh; /* Máximo aproveitamento vertical */
+  }
+}
+
+/* 2. Tablets e Laptops (até 1024px) */
+@media (max-width: 1024px) {
+  .demo-slider {
+    max-width: 95%;
+  }
+  .prev {
+    left: 10px;
+  }
+  .next {
+    right: 10px;
+  }
+}
+
+/* 3. Celulares Grandes/Médios (até 768px) - FOCO EM TAMANHO MÁXIMO */
+/* ==========================================================================
+   AJUSTE DE ZOOM PARA MOBILE (DENTRO DE slide.css)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .demo-slider {
+    margin: 5px auto;
+    width: 100%;
+    overflow: hidden; /* Cria a moldura para o zoom */
+  }
+
+  .slide img {
+    /* O "Pulo do Gato": faz a imagem ser maior que a tela para dar zoom */
+    width: 250% !important;
+    max-height: 75vh !important;
+
+    /* Foca no centro do print do sistema */
+    object-fit: cover !important;
+    object-position: center center !important;
+
+    border-radius: 4px;
+    border: none;
+    transition: transform 0.3s ease;
+  }
+
+  /* Reposiciona as setas para ficarem SOBRE a imagem, já que ela ocupa tudo */
+  .prev,
+  .next {
+    width: 40px;
+    height: 40px;
+    background: rgba(99, 102, 241, 0.8) !important; /* Roxo VetHome */
+    z-index: 100;
+  }
+
+  .prev {
+    left: 10px !important;
+  }
+  .next {
+    right: 10px !important;
+  }
+
+  .slide p {
+    font-size: 1rem !important;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff !important;
+    padding: 10px;
+    margin: 10px 15px;
+    border-radius: 6px;
+  }
+}
+/* 4. Celulares Pequenos (até 480px) */
+@media (max-width: 480px) {
+  .slide img {
+    max-height: 65vh; /* Ajuste fino para não bater no botão flutuante */
+  }
+
+  .slide p {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .prev,
+  .next {
+    width: 40px;
+    height: 40px;
+  }
+}

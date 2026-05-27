@@ -1,0 +1,12 @@
+/* Estilo da Logo no Header - Seguindo o padrão do Footer */
+.logo,
+.nav-container .logo,
+.header-logo {
+  color: #6d28d9 !important; /* Roxo padrão do sistema */
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espaço para o ícone de patinha se houver */
+}

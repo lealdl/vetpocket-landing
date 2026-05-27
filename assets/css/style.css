@@ -1,0 +1,1095 @@
+/* ==========================================================================
+   1. VARIÁVEIS E RESET
+   ========================================================================== */
+:root {
+  --primary: #6d28d9;
+  --primary-hover: #5b21b6;
+  --badge-pricing: #ffa500;
+  --bg-body: #f1f2f6;
+  --text-main: #111827;
+  --text-muted: #4b5563;
+  --white: #ffffff;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(109, 40, 217, 0.1);
+  --text-info: #5b686d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: padding-top 0.3s ease;
+}
+.pricing-features li span {
+  font-size: 0.9rem;
+  vertical-align: super;
+  margin-left: 3px;
+  font-weight: bold;
+  display: inline-block;
+
+  cursor: help;
+}
+#waitlistForm .txt-opcional {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  color: var(--badge-pricing) !important;
+  font-size: 11px;
+  margin: 3px 0 15px 0 !important;
+  font-weight: 500;
+}
+/* Tipografia Base */
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.8rem;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   2. ESTRUTURA E NAVBAR
+   ========================================================================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+#header-placeholder {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99999;
+  background: var(--white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.navbar {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.nav-container,
+.main-header,
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: var(--text-muted);
+  margin-left: 30px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-links li a:hover {
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   3. BOTÕES REUTILIZÁVEIS
+   ========================================================================== */
+.btn-primary,
+.btn-outline,
+.btn-nav-demo {
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white) !important;
+  padding: 8px 20px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary) !important;
+  padding: 10px 22px;
+}
+
+.btn-nav-demo {
+  color: var(--primary) !important;
+  border: 2px solid var(--primary);
+  padding: 6px 14px;
+  background: transparent;
+  font-weight: 700;
+}
+
+.btn-nav-demo:hover {
+  background: var(--primary);
+  color: white !important;
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+}
+
+.btn-flutuante {
+  position: fixed;
+  bottom: 20px;
+  right: 300px;
+  background-color: var(--primary);
+  color: white !important;
+  padding: 10px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: bold;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.3s;
+}
+
+.btn-flutuante:hover {
+  transform: translateY(-5px);
+}
+
+/* ==========================================================================
+   4. SEÇÕES (HERO, FEATURES, STEPS)
+   ========================================================================== */
+.hero {
+  padding: 10px 0 20px !important;
+  text-align: center;
+  background: linear-gradient(to bottom, #f5f3ff, var(--bg-body));
+}
+
+.hero h1 span {
+  color: var(--primary);
+}
+
+.hero p {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+.hero-btns {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-btns .btn-primary,
+.hero-btns .btn-outline {
+  width: 280px;
+  height: 55px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  padding: 0;
+}
+
+/* Grid e Cards Genéricos */
+.features {
+  padding: 20px 0 40px;
+}
+.steps {
+  padding: 30px 0 20px;
+}
+.pricing-section,
+.faq {
+  padding: 60px 0;
+}
+
+.features-grid,
+.steps-grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.feature-card,
+.step-item {
+  background: var(--white);
+  padding: 35px;
+  border-radius: 16px;
+  border: 1px solid #e2e8e0;
+  box-shadow: var(--shadow-sm);
+  transition: 0.3s;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.section-title h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+/* Estilo específico dos Steps */
+.step-item {
+  position: relative;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(109, 40, 217, 0.3);
+}
+
+/* ==========================================================================
+   5. PREÇOS, FAQ E MODAIS
+   ========================================================================== */
+#pricing-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.pricing-card {
+  background: var(--white);
+  padding: 30px 25px !important;
+  border-radius: 24px;
+  border: 2px solid var(--primary);
+  text-align: center;
+  max-width: 450px;
+  position: relative;
+}
+
+.pricing-card .badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--badge-pricing);
+  color: white;
+  padding: 5px 20px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.price .amount {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.pricing-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.pricing-features li {
+  margin-bottom: 8px !important;
+  line-height: 1.2 !important;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+/* Estilo para recursos que serão lançados (Em Breve) */
+.badge-soon {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  /* Sombras suaves em vez de animação */
+  box-shadow: 0 2px 4px rgba(245, 124, 0, 0.2);
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+/* O item da lista fica apenas com opacidade reduzida, indicando que ainda não está ativo */
+.feature-pending {
+  opacity: 0.7;
+  filter: grayscale(0.5); /* Deixa levemente acinzentado */
+  display: flex;
+  align-items: center;
+}
+/* Ajuste opcional para o ícone no li */
+.pricing-features li.feature-pending i {
+  color: #94a3b8;
+  width: 18px;
+  text-align: center;
+}
+
+.hosting-note {
+  font-size: 0.75rem;
+  margin-top: 12px !important;
+  color: var(--text-muted);
+}
+
+/* FAQ */
+.faq-grid {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq-item {
+  background: var(--white);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.faq-question {
+  width: 100%;
+  padding: 20px;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.faq-answer {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+  padding-bottom: 20px;
+  max-height: 200px;
+}
+
+/* Modais */
+.modal,
+.modal-gallery {
+  display: none;
+  position: fixed;
+  z-index: 999999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+/* --- ESTILIZAÇÃO DO MODAL DE FORMULÁRIO --- */
+
+.modal-content {
+  background: var(--white);
+  margin: 5% auto; /* Aproxima do topo em telas menores */
+  padding: 40px 30px;
+  border-radius: 24px;
+  max-width: 480px;
+  width: 90%; /* Responsividade para mobile */
+  position: relative;
+  max-height: 90vh; /* Não deixa o modal ser maior que 90% da altura da tela */
+  overflow-y: auto;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(109, 40, 217, 0.1);
+}
+
+/* Botão de Fechar (X) */
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-modal:hover {
+  color: var(--primary);
+}
+
+/* Títulos e Textos do Modal */
+.modal-content h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 15px;
+}
+
+.modal-content p {
+  color: var(--text-muted);
+  margin-bottom: 25px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Estilização dos Inputs */
+#waitlistForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espaço entre os campos */
+}
+
+#waitlistForm input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb; /* Borda visível e limpa */
+  background: #f9fafb;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+#waitlistForm input:focus {
+  border-color: var(--primary); /* Destaque ao clicar */
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.1);
+}
+
+/* Botão do Formulário */
+#waitlistForm .btn-primary {
+  padding: 16px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
+}
+
+/* Mensagem de Sucesso */
+.success-msg {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ecfdf5;
+  color: #059669;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+/* Destaque para o Card de IA */
+.feature-card.ai-highlight {
+  border: 2px solid #6d28d9; /* Cor indigo para diferenciar */
+  background: linear-gradient(145deg, #ffffff, #f5f3ff);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.feature-card.ai-highlight:hover {
+  transform: translateY(-10px);
+}
+
+.ai-badge {
+  position: absolute;
+  top: 10px;
+  right: -30px;
+  background: linear-gradient(45deg, #ff8c00, #ffa500);
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(255, 152, 0, 0.3);
+  font-size: 10px;
+  font-weight: bold;
+  padding: 5px 35px;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   6. MENU MOBILE E OVERLAY
+   ========================================================================== */
+#mobileMenuBtn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1000001;
+}
+
+#mobileMenuBtn span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary);
+  border-radius: 3px;
+  transition: 0.3s;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.4s;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+#chat-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.bot-msg {
+  background: #f0f2f5;
+  color: #1c1e21;
+  padding: 10px 15px;
+  border-radius: 18px 18px 18px 4px;
+  align-self: flex-start;
+  max-width: 85%;
+  font-size: 0.95rem;
+}
+.user-msg {
+  background: #6d28d9;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 18px 18px 4px 18px;
+  align-self: flex-end;
+  max-width: 85%;
+  font-size: 0.95rem;
+}
+.chat-input-group {
+  display: none;
+  padding: 15px 0;
+  border-top: 1px solid #eee;
+  gap: 10px;
+}
+.chat-input-group input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+.btn-chat-send {
+  background: #6d28d9;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.chat-options-group {
+  display: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 15px 0;
+}
+.btn-chat-opt {
+  background: white;
+  border: 1px solid #6d28d9;
+  color: #6d28d9;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-chat-opt:hover {
+  background: #6d28d9;
+  color: white;
+}
+/* Layout do Chat */
+#chat-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+/* Estilo das Bolhas */
+.msg-bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  max-width: 85%;
+  line-height: 1.4;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.bot-msg {
+  background: #f1f5f9; /* Tom neutro Light Mode */
+  color: #334155;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.user-msg {
+  background: #6d28d9; /* Seu roxo padrão */
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+/* Elementos de Interação */
+.chat-input-group {
+  border-top: 1px solid #eee;
+  padding: 15px 0;
+  gap: 10px;
+}
+
+.btn-chat-send {
+  background: #6d28d9;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.chat-options-group {
+  padding: 15px 0;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn-chat-opt {
+  background: white;
+  border: 1px solid #6d28d9;
+  color: #6d28d9;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-chat-opt:hover {
+  background: #6d28d9;
+  color: white;
+}
+/* ==========================================================================
+   7. RESPONSIVIDADE (MEDIA QUERIES)
+   ========================================================================== */
+/* @media (max-width: 930px) {
+  #mobileMenuBtn {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background: var(--white);
+    flex-direction: column;
+    padding: 80px 20px 40px;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000000;
+  }
+
+  .nav-links.active {
+    left: 0 !important;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links li a:not(.btn-nav-demo):not(.btn-primary) {
+    display: block;
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f2f6;
+    color: var(--text-main);
+  }
+
+  .nav-links .btn-nav-demo,
+  .nav-links .btn-primary {
+    display: block !important;
+    width: 100% !important;
+    margin: 15px 0 !important;
+    padding: 12px 10px !important;
+    border-bottom: none !important;
+  }
+
+  .nav-links .btn-nav-demo {
+    border: 2px solid var(--primary) !important;
+    color: var(--primary) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 40px !important;
+  }
+
+  .hero-btns {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-btns .btn-primary,
+  .hero-btns .btn-outline {
+    width: 100%;
+    max-width: 320px;
+  }
+  .btn-flutuante {
+    right: 30px; 
+    bottom: 10px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+} */
+/* Menu Mobile e Ajustes Intermediários */
+/* ==========================================================================
+   AJUSTE CORRETIVO: MENU MOBILE (Bordas e Espaçamento)
+   ========================================================================== */
+@media (max-width: 930px) {
+  #mobileMenuBtn {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background: var(--white);
+    flex-direction: column;
+    padding: 80px 20px 40px; /* Padding lateral de 20px garante respiro para os botões */
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000000;
+  }
+
+  .nav-links.active {
+    left: 0 !important;
+  }
+
+  .nav-links li {
+    width: 100%;
+    list-style: none;
+    margin: 0; /* Remove margens que podem deslocar o botão */
+  }
+
+  /* Links normais com borda apenas embaixo */
+  .nav-links li a:not(.btn-nav-demo):not(.btn-primary) {
+    display: block;
+    padding: 15px 10px;
+    border-bottom: 1px solid #f1f2f6;
+    color: var(--text-main);
+    margin-left: 0; /* Reseta o margin-left 30px do desktop */
+  }
+
+  /* O AJUSTE DO BOTÃO (IMAGEM 3) */
+  .nav-links .btn-nav-demo {
+    display: block !important;
+    width: 100% !important;
+    margin: 20px 0 10px 0 !important; /* Espaçamento vertical */
+    padding: 14px 10px !important;
+    border: 2px solid var(--primary) !important; /* Borda completa */
+    border-radius: 12px !important; /* Borda arredondada profissional */
+    color: var(--primary) !important;
+    background: transparent !important;
+    text-align: center;
+    box-sizing: border-box; /* Garante que a borda não 'vaze' para fora */
+  }
+
+  /* Botão Área Admin no Mobile */
+  .nav-links .btn-primary {
+    display: block !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+    padding: 14px 10px !important;
+    border-radius: 12px !important;
+    background: var(--primary) !important;
+    color: white !important;
+    text-align: center;
+  }
+}
+.vagas-alert {
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid #ff4d4d;
+  padding: 10px 20px;
+  border-radius: 50px;
+  display: inline-block;
+  font-size: 0.9rem;
+  color: #333;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* Estilo para o preço original riscado */
+.old-price {
+  display: block;
+  color: #94a3b8; /* Cinza suave */
+  text-decoration: line-through; /* O riscado propriamente dito */
+  font-size: 1.1rem;
+  margin-bottom: -5px;
+  font-weight: 400;
+}
+
+/* Ajuste na cor do preço principal para destacar os 30% OFF */
+.main-price .amount {
+  color: #1e293b;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+/* Badge de desconto ao lado do preço */
+.discount-tag {
+  background: #dcfce7; /* Verde clarinho */
+  color: #166534; /* Verde escuro para contraste */
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+/* Animação sutil para a badge de vagas no topo do card */
+#badge-vagas {
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+/* Animação de digitação do Bot */
+.typing-dots {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+}
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  background-color: #939598;
+  border-radius: 50%;
+  animation: typing 1s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+/* Animação de Digitando */
+.typing-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  background: #f0f2f5;
+  border-radius: 18px;
+  width: fit-content;
+  margin-bottom: 10px;
+}
+
+.typing-indicator span {
+  width: 4px;
+  height: 4px;
+  background: #90949c;
+  border-radius: 50%;
+  animation: typing 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* Ajustes Específicos para Celulares (Onde o conteúdo diminui) */
+@media (max-width: 768px) {
+  /* Diminuindo drasticamente o topo e os vãos entre seções */
+  .hero {
+    padding: 30px 0 40px !important; /* Reduzido de 60px para 40px no bottom */
+  }
+
+  section {
+    padding: 30px 0 !important; /* Reduzido de 40px para 30px */
+  }
+
+  /* Reduz o espaço abaixo dos títulos de seção para aproximar do conteúdo/cards */
+  .section-title {
+    margin-bottom: 25px !important;
+  }
+
+  /* Redução dos Títulos Principais */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  .section-title h2 {
+    font-size: 1.3rem !important; /* Leve redução extra para harmonia */
+    margin-bottom: 8px !important;
+  }
+  .section-title p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  /* Ajuste dos Cards de Funcionalidades */
+  .features-grid {
+    gap: 12px; /* Espaço entre cards menor */
+  }
+  .feature-card {
+    padding: 15px !important; /* Mais compacto */
+    margin-bottom: 0px !important;
+  }
+  .feature-card h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 8px !important;
+  }
+  .feature-card i {
+    font-size: 1.3rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Ajuste dos Passos (Steps) */
+  .steps-grid {
+    gap: 15px;
+  }
+  .step-item {
+    padding: 10px !important;
+    margin-bottom: 5px !important;
+  }
+  .step-number {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  /* Ajuste dos Preços (Removendo o vácuo exagerado) */
+  .pricing-section {
+    padding-top: 20px !important;
+  }
+  .pricing-card {
+    padding: 20px 15px !important;
+    margin-top: 10px !important;
+    transform: scale(
+      1
+    ); /* Removi o scale para evitar distorção visual em telas finas */
+  }
+  .main-price .amount {
+    font-size: 2.2rem !important;
+  }
+
+  /* Botões e Flutuante */
+  .hero-btns {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px !important;
+  }
+
+  .btn-flutuante {
+    right: 15px;
+    bottom: 15px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  /* FAQ */
+  .faq-question {
+    font-size: 0.9rem !important;
+    padding: 10px !important;
+  }
+}

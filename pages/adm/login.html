@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login Adm | VetPocket</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/toast.css">
+    <link rel="stylesheet" href="../../assets/css/login.css">
+</head>
+
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo-adm">VetPocket 🐾</div>
+            <h2>Acesso Restrito</h2>
+            <p>Entre com suas credenciais para gerenciar os leads.</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="user">Usuário</label>
+                    <input type="text" id="user" name="user" autocomplete="username" placeholder="Seu usuário" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <div class="password-wrapper" id="wrapperSenha">
+                        <input type="password" id="password" name="password" autocomplete="current-password"
+                            placeholder="Sua senha" required>
+                        <i data-lucide="eye" class="toggle-icon"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary-login">Entrar no Painel</button>
+            </form>
+
+            <a href="../../index.html" class="back-link">← Voltar para o site</a>
+        </div>
+    </div>
+
+    <div id="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="../../assets/js/toast.js"></script>
+    <script src="../../assets/js/config.js"></script>
+    <script src="../../assets/js/adm/auth.js"></script>
+</body>
+
+</html>
