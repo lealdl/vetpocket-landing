@@ -998,6 +998,56 @@ nav {
     opacity: 1;
   }
 }
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+}
+
+.pricing-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 16px;
+    padding: 0;
+}
+
+.pricing-feature-item:last-child {
+    margin-bottom: 0;
+}
+
+.pricing-feature-item i {
+    width: 20px;
+    color: #10b981;
+    font-size: 14px;
+}
+
+.pricing-feature-item .badge-soon {
+    background: #f59e0b;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.pricing-feature-item .asterisk {
+    color: #ef4444;
+    margin-left: 4px;
+}
+.pricing-card .btn-primary {
+    display: block;
+    text-align: center;
+    margin-top: 28px;
+}
+
+.hosting-note {
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
 /* Ajustes Específicos para Celulares (Onde o conteúdo diminui) */
 @media (max-width: 768px) {
   /* Diminuindo drasticamente o topo e os vãos entre seções */
