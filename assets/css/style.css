@@ -1264,3 +1264,35 @@ nav {
         line-height: 1.4 !important;
     }
 }
+/* ==========================================================================
+   FAQ - CORREÇÃO URGENTE (Forçar esconder respostas)
+   ========================================================================== */
+
+/* FORÇA todas as respostas a ficarem escondidas inicialmente */
+.faq-answer {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 16px !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: max-height 0.3s ease-out, opacity 0.2s ease, padding 0.2s ease !important;
+}
+
+/* FORÇA a resposta a aparecer APENAS quando o item estiver ativo */
+.faq-item.active .faq-answer {
+    max-height: 300px !important;
+    padding: 0 16px 16px 16px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Garante que o ícone muda cor quando ativo */
+.faq-item.active .faq-question .icon {
+    background: #7c4dff !important;
+    color: white !important;
+}
+
+/* Garante que o cursor é pointer */
+.faq-question {
+    cursor: pointer !important;
+}
