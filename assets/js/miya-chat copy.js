@@ -141,12 +141,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 opcoesResposta = adicionarVoltarAoInicio(['🎁 Quero uma demonstração', '📞 Falar com vendas']);
             }
             else if (msg.includes('contato') || msg.includes('telefone') || msg.includes('whatsapp')) {
-                resposta = '📱 Canais de atendimento:\n\n📱 WhatsApp: (41) 98903-1310\n\nPosso abrir o WhatsApp para você?';
+                resposta = '📱 Canais de atendimento:\n\n📞 Telefone: (44) 4444-4444\n📱 WhatsApp: (44) 99999-9999\n✉️ Email: vendas@vetpocket.com\n\nPosso abrir o WhatsApp para você?';
                 opcoesResposta = adicionarVoltarAoInicio(['💬 Abrir WhatsApp']);
             }
             else if (msg.includes('demo') || msg.includes('demonstração')) {
                 resposta = '🎉 Ótimo! Vamos agendar sua demonstração gratuita.\n\nPosso te ajudar a marcar?';
-                opcoesResposta = adicionarVoltarAoInicio(['📞 Abrir WhatsApp']);
+                opcoesResposta = adicionarVoltarAoInicio(['📞 Abrir WhatsApp', '✉️ Enviar email']);
             }
             else if (msg.includes('personalização') || msg.includes('logo') || msg.includes('cores')) {
                 resposta = '🎨 O sistema é 100% personalizável com sua marca!\n\n✅ Logo da sua clínica\n✅ Cores personalizadas\n✅ Nome da sua empresa\n✅ Mascote exclusivo\n✅ URL personalizada\n\nSua identidade visual em destaque!';
@@ -211,36 +211,39 @@ document.addEventListener('DOMContentLoaded', function () {
                     break;
 
                 case '🎁 Saber sobre a oferta de lançamento':
-                    resposta = '🎉🔥 OFERTA ESPECIAL DE LANÇAMENTO! 🔥🎉<br><br>⚡ Licença Vitalícia: <b>R$ 942,90 à vista</b> (Economia de R$ 673,50)<br>📱 Ou <b>12x de R$ 134,70</b> no cartão<br><br>✅ Acesso Vitalício ao Sistema<br>✅ Instalação e Configuração inclusas<br>✅ Banco de Dados Exclusivo<br>✅ Manutenção e Backup Gerenciados<br><br>⚠️ <b>Vagas limitadas!</b> Após o fim da promoção, o valor voltará a ser R$ 1.616,40.<br><br>🎁 Gostaria de garantir sua vaga com esse desconto especial?';
-                    opcoesResposta = adicionarVoltarAoInicio(['🎁 Gostaria de garantir minha licença', '💰 Saber mais sobre preços', '📞 Falar com vendas']);
+                    resposta = '🎉🔥 OFERTA ESPECIAL DE LANÇAMENTO! 🔥🎉<br><br>⚡ Licença Vitalícia: <b>R$ 942,90 à vista</b> (Economia de R$ 673,50)<br>📱 Ou <b>12x de R$ 134,70</b> no cartão<br><br>✅ Acesso Vitalício ao Sistema<br>✅ Instalação e Configuração inclusas<br>✅ Banco de Dados Exclusivo<br>✅ Manutenção e Backup Gerenciados<br><br>⚠️ <b>Vagas limitadas!</b> Após o fim da promoção, o valor voltará a ser R$ 1.616,40.<br><br>🎁 Quer garantir sua vaga com esse desconto especial?';
+                    opcoesResposta = adicionarVoltarAoInicio(['🎁 Quero garantir minha licença', '💰 Saber mais sobre preços', '📞 Falar com vendas']);
                     break;
 
-                case '🎁 Gostaria de garantir minha licença':
-                    resposta = '🎉 Excelente! Para garantir sua licença com 30% OFF, clique no botão <b>"Tenho Interesse"</b> que está flutuando no final da tela.<br><br>Preencha seus dados e nossa equipe entrará em contato em breve!<br><br>💳 Pagamento via PIX à vista: <b>R$ 942,90</b><br>📱 Cartão de crédito: <b>12x de R$ 134,70</b><br><br>📞 Ou se preferir, fale conosco pelo WhatsApp.';
+                case '🎁 Quero garantir minha licença':
+                    resposta = '🎉 Excelente! Para garantir sua licença com 30% OFF, você pode:<br><br>💳 Pagamento via PIX à vista: <b>R$ 942,90</b><br>📱 Cartão de crédito: <b>12x de R$ 134,70</b><br><br>📞 Quer que eu abra o WhatsApp para você finalizar a compra?';
                     opcoesResposta = adicionarVoltarAoInicio(['💬 Abrir WhatsApp', '🔙 Voltar ao início']);
                     break;
 
                 case '🎁 Quero uma demonstração':
-                    const mensagemDemo = encodeURIComponent('🐾 Olá! Gostaria de agendar uma demonstração gratuita do sistema VetPocket. Podemos marcar um horário? 💙');
-                    window.open(`https://wa.me/5541989031310?text=${mensagemDemo}`, '_blank');
-                    resposta = '🎉 Ótimo! Abri o WhatsApp para você agendar sua demonstração gratuita. Nossa equipe te atenderá em breve! 🐾';
-                    opcoesResposta = adicionarVoltarAoInicio(['🔙 Voltar ao início']);
+                    resposta = '🎉 Excelente! Vamos agendar uma demonstração gratuita para você.<br><br>Posso anotar seu melhor email e telefone?<br><br>Ou você já pode agendar diretamente pelo WhatsApp!';
+                    opcoesResposta = adicionarVoltarAoInicio(['📞 Abrir WhatsApp', '✉️ Enviar email']);
                     break;
 
                 case '📞 Falar com vendas':
-                    resposta = '📱 Nossa equipe de vendas: WhatsApp (41) 98903-1310<br><br>Quer abrir o WhatsApp agora?';
+                    resposta = '📱 Nossa equipe de vendas: WhatsApp (44) 99999-9999<br><br>Quer abrir o WhatsApp agora?';
                     opcoesResposta = adicionarVoltarAoInicio(['💬 Abrir WhatsApp']);
                     break;
 
                 case '📞 Contato':
-                    resposta = '📱 Canais de atendimento:\n\n📱 WhatsApp: (41) 98903-1310';
+                    resposta = '📱 Canais de atendimento:<br><br>📞 Telefone: (44) 4444-4444<br>📱 WhatsApp: (44) 99999-9999<br>✉️ Email: vendas@vetpocket.com';
                     opcoesResposta = adicionarVoltarAoInicio(['💬 Abrir WhatsApp']);
                     break;
 
                 case '💬 Abrir WhatsApp':
-                    const mensagemBoasVindas = encodeURIComponent('🐾 Olá! Sou a Miya-ko, mascote da VetPocket! Notei seu interesse em nossa solução para clínicas veterinárias. Posso ajudar com mais informações sobre o sistema? 💙');
-                    window.open(`https://wa.me/5541989031310?text=${mensagemBoasVindas}`, '_blank');
-                    resposta = '📱 WhatsApp aberto! Enviamos uma mensagem de boas-vindas para você. Aguardamos seu contato! 🐾';
+                    window.open('https://wa.me/5544999999999', '_blank');
+                    resposta = '📱 WhatsApp aberto! Nossa equipe te atenderá em breve. 🐾';
+                    opcoesResposta = adicionarVoltarAoInicio([]);
+                    break;
+
+                case '✉️ Enviar email':
+                    window.location.href = 'mailto:vendas@vetpocket.com';
+                    resposta = '✉️ Email aberto! Aguardamos seu contato.';
                     opcoesResposta = adicionarVoltarAoInicio([]);
                     break;
 

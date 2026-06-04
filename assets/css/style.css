@@ -169,11 +169,12 @@ nav {
 
 .btn-flutuante {
   position: fixed;
-  bottom: 20px;
-  right: 300px;
+  bottom: 70px;
+  left: 45%;
+  transform: translateX(-50%);
   background-color: var(--primary);
   color: white !important;
-  padding: 10px 20px;
+  padding: 12px 28px;
   border-radius: 50px;
   text-decoration: none;
   font-size: 0.9rem;
@@ -184,10 +185,12 @@ nav {
   align-items: center;
   gap: 8px;
   transition: 0.3s;
+  white-space: nowrap;
 }
 
 .btn-flutuante:hover {
-  transform: translateY(-5px);
+  transform: translateX(-50%) translateY(-3px);
+  background-color: var(--primary-hover);
 }
 
 /* ==========================================================================
