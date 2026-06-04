@@ -1,8 +1,8 @@
 // assets/js/miya-chat.js
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('🚀 Inicializando chat Miya-ko...');
-    
+
     const miyaBtn = document.getElementById('miya-chat-btn');
     const miyaModal = document.getElementById('miya-chat-modal');
     const miyaCloseBtn = document.getElementById('miya-close-btn');
@@ -18,6 +18,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     console.log('✅ Elementos encontrados');
+
+    // 🔥 FUNÇÃO PARA LIMPAR O CHAT
+    function limparChat() {
+        console.log('🧹 Limpando chat...');
+        miyaMessages.innerHTML = '';
+        aguardandoNome = true;
+        nomeUsuario = '';
+        // Adiciona a mensagem inicial
+        addMessage('🐾 Olá! Sou a Miya-ko! 😊\n\nComo posso chamar você?', false);
+    }
 
     function adicionarVoltarAoInicio(opcoes) {
         if (!opcoes) return ['🔙 Voltar ao início', '🚪 Sair'];
@@ -42,9 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('📂 Abrindo chat...');
         miyaModal.classList.add('show');
         miyaInput.focus();
-        if (miyaMessages.children.length === 0) {
-            addMessage('🐾 Olá! Sou a Miya-ko! 😊\n\nComo posso chamar você?', false);
-        }
     }
 
     function closeChat() {
@@ -55,18 +62,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function addMessage(text, isUser = false, opcoes = null) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `miya-message ${isUser ? 'user' : 'bot'}`;
-        
+
         if (!isUser) {
             const avatar = document.createElement('div');
             avatar.className = 'miya-avatar';
-            avatar.innerHTML = '<img src="assets/img/logo_miyako-rouded.webp" alt="Miya">';
+            avatar.innerHTML = '<img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya">';
             messageDiv.appendChild(avatar);
         }
-        
+
         const bubble = document.createElement('div');
         bubble.className = 'miya-bubble';
         bubble.innerHTML = text.replace(/\n/g, '<br>');
-        
+
         if (opcoes && opcoes.length > 0) {
             const optionsDiv = document.createElement('div');
             optionsDiv.className = 'miya-options';
@@ -75,14 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.className = 'miya-option';
                 btn.textContent = opcao;
                 btn.setAttribute('data-opcao', opcao);
-                btn.onclick = (function(opt) {
-                    return function() { handleOptionClick(opt); };
+                btn.onclick = (function (opt) {
+                    return function () { handleOptionClick(opt); };
                 })(opcao);
                 optionsDiv.appendChild(btn);
             });
             bubble.appendChild(optionsDiv);
         }
-        
+
         messageDiv.appendChild(bubble);
         miyaMessages.appendChild(messageDiv);
         miyaMessages.scrollTop = miyaMessages.scrollHeight;
@@ -93,16 +100,20 @@ document.addEventListener('DOMContentLoaded', function() {
         addMessage(`🐾 Foi um prazer conversar com você, ${nome}! 💙\n\nAgradecemos muito pelo seu interesse!\n\nEstamos aqui sempre que precisar. 🐾`, false, ['🔙 Voltar ao início']);
         setTimeout(() => {
             miyaModal.classList.remove('show');
-        }, 5000);
+            // 🔥 LIMPA O CHAT APÓS FECHAR
+            setTimeout(() => {
+                limparChat();
+            }, 500);
+        }, 2000);
     }
 
     function sendMessage() {
         const text = miyaInput.value.trim();
         if (!text) return;
-        
+
         addMessage(text, true);
         miyaInput.value = '';
-        
+
         setTimeout(() => {
             if (aguardandoNome) {
                 aguardandoNome = false;
@@ -115,13 +126,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 ]));
                 return;
             }
-            
+
             let resposta = '';
             let opcoesResposta = [];
             const msg = text.toLowerCase();
-            
+
             if (msg.includes('funciona') || msg.includes('sistema')) {
-                resposta = '🐾 O VetPocket é um sistema de gestão completo para clínicas veterinárias!\n\n✅ Prontuário digital\n✅ Agenda de atendimentos\n✅ Controle de vacinas\n✅ Relatórios gerenciais\n✅ Personalização com sua logo\n\nQuer saber mais sobre alguma funcionalidade?';
+                resposta = '🐾 O VetPocket é um sistema de gestão completo para clínicas veterinárias!<br><br>✅ Prontuário digital<br>✅ Agenda de atendimentos <span style="color: #ef4444; font-size: 0.7rem;">* Em breve</span><br>✅ Controle de vacinas<br>✅ Relatórios gerenciais<br>✅ Personalização com sua logo<br><br>Quer saber mais sobre alguma funcionalidade?';
                 opcoesResposta = adicionarVoltarAoInicio(['📋 Prontuário', '📅 Agenda', '💉 Vacinas', '🎨 Personalização']);
             }
             else if (msg.includes('preço') || msg.includes('valor')) {
@@ -148,93 +159,93 @@ document.addEventListener('DOMContentLoaded', function() {
                 resposta = '🐾 Sobre o que você gostaria de saber?';
                 opcoesResposta = adicionarVoltarAoInicio(['⚙️ Como funciona o sistema?', '💰 Preços', '🎨 Personalização', '📞 Contato']);
             }
-            
+
             addMessage(resposta, false, opcoesResposta);
         }, 500);
     }
 
     function handleOptionClick(opcao) {
         console.log('🔘 Opção clicada:', opcao);
-        
+
         if (opcao === '🚪 Sair') {
             fecharComAgradecimento();
             return;
         }
-        
+
         addMessage(opcao, true);
-        
+
         setTimeout(() => {
             let resposta = '';
             let opcoesResposta = [];
-            
-            switch(opcao) {
+
+            switch (opcao) {
                 case '⚙️ Como funciona o sistema?':
-                    resposta = '🐾 O VetPocket é um sistema de gestão completo para clínicas veterinárias!\n\n✅ Prontuário digital\n✅ Agenda de atendimentos\n✅ Controle de vacinas\n✅ Relatórios gerenciais\n✅ Personalização com sua logo\n\nQuer saber mais sobre alguma funcionalidade?';
+                    resposta = '🐾 O VetPocket é um sistema de gestão completo para clínicas veterinárias!<br><br>✅ Prontuário digital<br>✅ Agenda de atendimentos <span style="color: #ef4444; font-size: 0.7rem;">* Em breve</span><br>✅ Controle de vacinas<br>✅ Relatórios gerenciais<br>✅ Personalização com sua logo<br><br>Quer saber mais sobre alguma funcionalidade?';
                     opcoesResposta = adicionarVoltarAoInicio(['📋 Prontuário', '📅 Agenda', '💉 Vacinas', '🎨 Personalização']);
                     break;
-                    
+
                 case '📋 Prontuário':
-                    resposta = '📋 O prontuário digital permite:\n\n• Histórico completo do paciente\n• Registro de consultas\n• Receitas e exames anexados\n• Exportar para PDF\n• Acesso de qualquer lugar';
+                    resposta = '📋 O prontuário digital permite:<br><br>• Histórico completo do paciente<br>• Registro de consultas<br>• Receitas e exames anexados<br>• Exportar para PDF<br>• Acesso de qualquer lugar';
                     opcoesResposta = adicionarVoltarAoInicio(['⚙️ Como funciona o sistema?', '💰 Preços', '📞 Contato']);
                     break;
-                    
+
                 case '📅 Agenda':
-                    resposta = '📅 Nossa agenda inteligente oferece:\n\n• Visualização diária/semanal/mensal\n• Controle de horários\n• Lembretes automáticos\n• Gestão de profissionais';
+                    resposta = '📅 Nossa agenda inteligente oferece:<br><br>• Visualização diária/semanal/mensal<br>• Controle de horários<br>• Lembretes automáticos <span style="color: #ef4444; font-size: 0.7rem;">* Em breve</span><br>• Gestão de profissionais<br><br>Estamos trabalhando para trazer essa funcionalidade em breve!';
                     opcoesResposta = adicionarVoltarAoInicio(['⚙️ Como funciona o sistema?', '💰 Preços', '📞 Contato']);
                     break;
-                    
+
                 case '💉 Vacinas':
-                    resposta = '💉 Controle de vacinas completo:\n\n• Cadastro de vacinas\n• Alertas de vencimento\n• Histórico do paciente\n• Calendário vacinal\n• Notificações automáticas';
+                    resposta = '💉 Controle de vacinas completo:<br><br>• Cadastro de vacinas<br>• Alertas de vencimento<br>• Histórico do paciente<br>• Calendário vacinal<br>• Notificações automáticas';
                     opcoesResposta = adicionarVoltarAoInicio(['⚙️ Como funciona o sistema?', '💰 Preços', '📞 Contato']);
                     break;
-                    
+
                 case '🎨 Personalização':
-                    resposta = '🎨 O sistema é 100% personalizável!\n\n✅ Logo da sua clínica\n✅ Cores personalizadas\n✅ Nome da sua empresa\n✅ Mascote exclusivo\n✅ URL personalizada';
+                    resposta = '🎨 O sistema é 100% personalizável!<br><br>✅ Logo da sua clínica<br>✅ Cores personalizadas<br>✅ Nome da sua empresa<br>✅ Mascote exclusivo<br>✅ URL personalizada';
                     opcoesResposta = adicionarVoltarAoInicio(['⚙️ Como funciona o sistema?', '💰 Preços', '📞 Contato']);
                     break;
-                    
+
                 case '💰 Preços':
-                    resposta = '💳 Plano Vitalício: R$ 942,90 à vista ou 12x R$ 134,70\n\nInclui instalação, configuração e suporte.\n\n🆓 Demonstração gratuita disponível!';
+                    resposta = '💳 Plano Vitalício: R$ 942,90 à vista ou 12x R$ 134,70<br><br>Inclui instalação, configuração e suporte.<br><br>🆓 Demonstração gratuita disponível!';
                     opcoesResposta = adicionarVoltarAoInicio(['🎁 Quero uma demonstração', '📞 Falar com vendas']);
                     break;
-                    
+
                 case '🎁 Quero uma demonstração':
-                    resposta = '🎉 Excelente! Vamos agendar uma demonstração gratuita para você.\n\nPosso anotar seu melhor email e telefone?\n\nOu você já pode agendar diretamente pelo WhatsApp!';
+                    resposta = '🎉 Excelente! Vamos agendar uma demonstração gratuita para você.<br><br>Posso anotar seu melhor email e telefone?<br><br>Ou você já pode agendar diretamente pelo WhatsApp!';
                     opcoesResposta = adicionarVoltarAoInicio(['📞 Abrir WhatsApp', '✉️ Enviar email']);
                     break;
-                    
+
                 case '📞 Falar com vendas':
-                    resposta = '📱 Nossa equipe de vendas: WhatsApp (44) 99999-9999\n\nQuer abrir o WhatsApp agora?';
+                    resposta = '📱 Nossa equipe de vendas: WhatsApp (44) 99999-9999<br><br>Quer abrir o WhatsApp agora?';
                     opcoesResposta = adicionarVoltarAoInicio(['💬 Abrir WhatsApp']);
                     break;
-                    
+
                 case '📞 Contato':
-                    resposta = '📱 Canais de atendimento:\n\n📞 Telefone: (44) 4444-4444\n📱 WhatsApp: (44) 99999-9999\n✉️ Email: vendas@vetpocket.com';
+                    resposta = '📱 Canais de atendimento:<br><br>📞 Telefone: (44) 4444-4444<br>📱 WhatsApp: (44) 99999-9999<br>✉️ Email: vendas@vetpocket.com';
                     opcoesResposta = adicionarVoltarAoInicio(['💬 Abrir WhatsApp']);
                     break;
-                    
+
                 case '💬 Abrir WhatsApp':
                     window.open('https://wa.me/5544999999999', '_blank');
                     resposta = '📱 WhatsApp aberto! Nossa equipe te atenderá em breve. 🐾';
                     opcoesResposta = adicionarVoltarAoInicio([]);
                     break;
-                    
+
                 case '✉️ Enviar email':
                     window.location.href = 'mailto:vendas@vetpocket.com';
                     resposta = '✉️ Email aberto! Aguardamos seu contato.';
                     opcoesResposta = adicionarVoltarAoInicio([]);
                     break;
-                    
+
                 case '🔙 Voltar ao início':
                     resposta = '🐾 Sobre o que você gostaria de saber?';
                     opcoesResposta = adicionarVoltarAoInicio(['⚙️ Como funciona o sistema?', '💰 Preços', '🎨 Personalização', '📞 Contato']);
                     break;
-                    
+
                 default:
-                    resposta = '🐾 Em breve nossa equipe entrará em contato!\n\nPosso ajudar com mais alguma coisa?';
+                    resposta = '🐾 Em breve nossa equipe entrará em contato!<br><br>Posso ajudar com mais alguma coisa?';
                     opcoesResposta = adicionarVoltarAoInicio(['⚙️ Como funciona o sistema?', '💰 Preços', '📞 Contato']);
             }
-            
+
             addMessage(resposta, false, opcoesResposta);
         }, 500);
     }
@@ -242,13 +253,16 @@ document.addEventListener('DOMContentLoaded', function() {
     miyaBtn.addEventListener('click', openChat);
     miyaCloseBtn.addEventListener('click', closeChat);
     miyaSendBtn.addEventListener('click', sendMessage);
-    miyaInput.addEventListener('keypress', function(e) {
+    miyaInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') sendMessage();
     });
 
-    window.addEventListener('click', function(e) {
+    window.addEventListener('click', function (e) {
         if (e.target === miyaModal) closeChat();
     });
+
+    // 🔥 INICIALIZA O CHAT LIMPO
+    limparChat();
 
     console.log('✅ Chat Miya-ko carregado com sucesso!');
 });
