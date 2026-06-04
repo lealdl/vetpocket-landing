@@ -1,0 +1,358 @@
+/* ============================================
+   BOTÃO FLUTUANTE MIYA-KO
+   ============================================ */
+.miya-floating-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+}
+
+.miya-floating-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c4dff, #b47cff);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(124, 77, 255, 0.4);
+    transition: all 0.3s ease;
+    animation: miya-bounce 2s ease infinite;
+}
+
+.miya-floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(124, 77, 255, 0.6);
+}
+
+.miya-floating-btn img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.miya-pulse {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    background: rgba(124, 77, 255, 0.3);
+    animation: pulse-ring 1.5s ease infinite;
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+}
+
+@keyframes miya-bounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.miya-floating-text {
+    position: absolute;
+    right: 75px;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.miya-floating-btn:hover .miya-floating-text {
+    opacity: 1;
+    transform: translateX(-4px);
+}
+
+/* ============================================
+   MODAL DO CHAT - Z-INDEX MAIOR
+   ============================================ */
+/* No miya-chat.css, aumente o z-index */
+.miya-modal {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    width: 380px;
+    max-width: calc(100vw - 48px);
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    z-index: 9999999 !important; /* 🔥 MUITO ALTO */
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+.miya-floating-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999999;
+}
+
+.miya-modal.show {
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.miya-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #7c4dff, #b47cff);
+    color: white;
+}
+
+.miya-header-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: white;
+    padding: 2px;
+}
+
+.miya-header-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.miya-header-info {
+    flex: 1;
+}
+
+.miya-header-info h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.miya-online-status {
+    font-size: 0.7rem;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.miya-online-status::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse-online 1.5s ease infinite;
+}
+
+@keyframes pulse-online {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.miya-close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.miya-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.miya-modal-body {
+    padding: 16px;
+    height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #f8fafc;
+}
+
+.miya-message {
+    display: flex;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.miya-message.user {
+    justify-content: flex-end;
+}
+
+.miya-message.user .miya-bubble {
+    background: linear-gradient(135deg, #7c4dff, #b47cff);
+    color: white;
+    border-radius: 18px 18px 4px 18px;
+}
+
+.miya-message.bot .miya-bubble {
+    background: white;
+    color: #1e293b;
+    border-radius: 18px 18px 18px 4px;
+    border: 1px solid #e2e8f0;
+}
+
+.miya-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.miya-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.miya-bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.miya-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.miya-option {
+    background: #f1f5f9;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #475569;
+}
+
+.miya-option:hover {
+    background: #7c4dff;
+    color: white;
+    transform: translateX(2px);
+}
+
+.miya-modal-footer {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+}
+
+.miya-modal-footer input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    font-size: 0.8rem;
+    outline: none;
+}
+
+.miya-modal-footer input:focus {
+    border-color: #7c4dff;
+}
+
+.miya-modal-footer button {
+    background: #7c4dff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.miya-modal-footer button:hover {
+    background: #6a44d9;
+    transform: scale(1.05);
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .miya-modal {
+        width: calc(100vw - 32px);
+        right: 16px;
+        bottom: 80px;
+    }
+    
+    .miya-floating-btn {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .miya-floating-btn img {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .miya-floating-text {
+        display: none;
+    }
+}
