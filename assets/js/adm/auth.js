@@ -1,23 +1,6 @@
 // assets/js/adm/auth.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Verificar se já está logado - EVITAR LOOP INFINITO
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  const currentPage = window.location.pathname;
-  
-  // Se já está logado e está na página de login, redirecionar para o admin
-  if (isLoggedIn === "true" && (currentPage.includes("login.html") || currentPage.includes("login"))) {
-    // Caminho absoluto a partir da raiz
-    window.location.href = "/pages/adm/index.html";
-    return;
-  }
-  
-  // Se não está logado e NÃO está na página de login, redirecionar para login
-  if (isLoggedIn !== "true" && !currentPage.includes("login.html") && !currentPage.includes("login")) {
-    window.location.href = "/login.html";
-    return;
-  }
-
   const loginForm = document.getElementById("loginForm");
 
   if (loginForm) {
@@ -30,13 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const submitBtn = loginForm.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
       
-      // Mostrar loading
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
       submitBtn.disabled = true;
 
       try {
-        console.log("🔍 Tentando login com usuário:", usuario);
-        
         const response = await fetch(`${API_CONFIG.BASE_URL}login.php`, {
           method: "POST",
           credentials: "include",
@@ -50,24 +30,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (result.status === "success") {
-          // Salvar dados no localStorage
           localStorage.setItem("isLoggedIn", "true");
           
-          if (result.token) {
-            localStorage.setItem("auth_token", result.token);
-          }
-          if (result.user_id) {
-            localStorage.setItem("user_id", result.user_id);
-          }
-          if (result.user_name) {
-            localStorage.setItem("user_name", result.user_name);
-          }
+          if (result.token) localStorage.setItem("auth_token", result.token);
+          if (result.user_id) localStorage.setItem("user_id", result.user_id);
+          if (result.user_name) localStorage.setItem("user_name", result.user_name);
           
           showToast("Login realizado com sucesso!", "success");
           
-          // Redirecionar para o dashboard/admin - caminho absoluto
           setTimeout(() => {
-            window.location.href = "/pages/adm/index.html";
+            window.location.href = "pages/adm/index.html";
           }, 1000);
         } else {
           showToast(result.message || "Credenciais inválidas.", "error");
@@ -83,12 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
   
-  // Inicializar ícones do Lucide se disponível
-  if (typeof lucide !== 'undefined') {
-    lucide.createIcons();
-  }
+  if (typeof lucide !== 'undefined') lucide.createIcons();
   
-  // Alternar visibilidade da senha
   const toggleIcon = document.querySelector('.toggle-icon');
   if (toggleIcon) {
     toggleIcon.addEventListener('click', function() {
@@ -100,9 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         passwordInput.type = 'password';
         this.setAttribute('data-lucide', 'eye');
       }
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     });
   }
   
