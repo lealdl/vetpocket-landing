@@ -18,9 +18,26 @@
             <li><a href="index.html"><i class="fas fa-users"></i> Leads Ativos</a></li>
             <li><a href="inativos.html"><i class="fas fa-archive"></i> Leads Inativos</a></li>
             <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
-            <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            <!-- 🔥 CORRIGIDO: href="javascript:void(0)" para não rolar a página -->
+            <li><a href="javascript:void(0)" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
         </ul>
     </nav>
 </aside>
 
 <div class="adm-overlay"></div>
+
+<script>
+    // 🔥 LOGOUT - Chamar a função global
+    const btnLogout = document.getElementById("btnLogout");
+    if (btnLogout) {
+        btnLogout.addEventListener("click", function(e) {
+            e.preventDefault();
+            // Chamar a função fazerLogout que está no auth.js
+            if (typeof window.fazerLogout === 'function') {
+                window.fazerLogout();
+            } else {
+                console.error("Função fazerLogout não encontrada");
+            }
+        });
+    }
+</script>
