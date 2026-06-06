@@ -145,6 +145,28 @@
         }
         initAdmin();
     </script>
+    <!-- Adicione antes do fechamento do body em inativos.html -->
+<script>
+    // 🔥 FUNÇÃO DE LOGOUT GLOBAL
+    window.fazerLogoutHeader = function() {
+        console.log("Logout chamado!");
+        if (confirm("Tem certeza que deseja sair?")) {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("auth_token");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            
+            if (typeof showToast === 'function') {
+                showToast("Logout realizado com sucesso!", "success");
+            }
+            
+            setTimeout(function() {
+                window.location.href = "/login.html";
+            }, 500);
+        }
+    };
+    console.log("✅ Função fazerLogoutHeader registrada na página");
+</script>
 </body>
 
 </html>
