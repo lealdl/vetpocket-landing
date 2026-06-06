@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.onsubmit = async (e) => {
       e.preventDefault();
 
-      const email = document.getElementById("usuario").value; // Mudei para email conforme seu backend
+      const email = document.getElementById("usuario").value;
       const password = document.getElementById("senha").value;
       const btnTexto = document.getElementById("btn-texto");
       const loader = document.getElementById("loader");
@@ -14,29 +14,31 @@ document.addEventListener("DOMContentLoaded", () => {
       loader.style.display = "block";
 
       try {
-        // Ajustado para bater com sua rota Express (porta 3001)
-        const response = await fetch("https://llrh.com.br/api/login", {
+        // 🔥 CORRIGIDO: apontando para o PHP
+        const response = await fetch("https://llrh.com.br/backend-landing/login.php", {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }), // Backend espera 'email' e 'password'
+          body: JSON.stringify({ email, password }),
         });
 
         const result = await response.json();
 
         if (result.auth === true) {
-          // 🛡️ A PARTE QUE FALTAVA: Salvar o token e dados do usuário
           localStorage.setItem("@VetHome:token", result.token);
           localStorage.setItem(
             "@VetHome:user",
             JSON.stringify({
-              name: result.name,
-              nivel: result.nivel,
-              foto: result.foto,
+              id: result.user?.id,
+              name: result.user?.nome || result.user?.name,
+              email: result.user?.email,
+              nivel_acesso: result.user?.nivel_acesso,
+              cargo: result.user?.cargo,
+              sexo: result.user?.sexo,
+              foto: result.user?.foto,
             }),
           );
 
-          // Redireciona
           window.location.href = "dashboard.html";
         } else {
           alert(result.message || "Credenciais inválidas.");
@@ -45,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Erro no login:", error);
-        alert("Erro ao conectar com o servidor Node.js.");
+        alert("Erro ao conectar com o servidor.");
         loader.style.display = "none";
         btnTexto.style.display = "block";
       }
