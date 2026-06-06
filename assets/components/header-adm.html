@@ -18,7 +18,8 @@
             <li><a href="index.html"><i class="fas fa-users"></i> Leads Ativos</a></li>
             <li><a href="inativos.html"><i class="fas fa-archive"></i> Leads Inativos</a></li>
             <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
-            <li><a href="javascript:void(0)" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            <!-- 🔥 USANDO onclick DIRETO NO HTML -->
+            <li><a href="javascript:void(0)" onclick="fazerLogoutHeader()"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
         </ul>
     </nav>
 </aside>
@@ -26,33 +27,24 @@
 <div class="adm-overlay"></div>
 
 <script>
-    // 🔥 FUNÇÃO DE LOGOUT DIRETAMENTE NO HEADER
-    function fazerLogoutHeader() {
+    // 🔥 FUNÇÃO DE LOGOUT GLOBAL
+    window.fazerLogoutHeader = function() {
         if (confirm("Tem certeza que deseja sair?")) {
-            // Limpar localStorage
             localStorage.removeItem("isLoggedIn");
             localStorage.removeItem("auth_token");
             localStorage.removeItem("user_id");
             localStorage.removeItem("user_name");
             
-            // Mostrar mensagem se possível
             if (typeof showToast === 'function') {
                 showToast("Logout realizado com sucesso!", "success");
             }
             
-            // Redirecionar
-            setTimeout(() => {
+            setTimeout(function() {
                 window.location.href = "/login.html";
             }, 500);
         }
-    }
+    };
     
-    // Configurar o botão de logout
-    const btnLogout = document.getElementById("btnLogout");
-    if (btnLogout) {
-        btnLogout.addEventListener("click", function(e) {
-            e.preventDefault();
-            fazerLogoutHeader();
-        });
-    }
+    // Para garantir que a função está disponível
+    console.log("✅ Função fazerLogoutHeader registrada");
 </script>
