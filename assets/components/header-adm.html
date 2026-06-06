@@ -18,7 +18,6 @@
             <li><a href="index.html"><i class="fas fa-users"></i> Leads Ativos</a></li>
             <li><a href="inativos.html"><i class="fas fa-archive"></i> Leads Inativos</a></li>
             <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
-            <!-- 🔥 CORRIGIDO: href="javascript:void(0)" para não rolar a página -->
             <li><a href="javascript:void(0)" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
         </ul>
     </nav>
@@ -27,17 +26,33 @@
 <div class="adm-overlay"></div>
 
 <script>
-    // 🔥 LOGOUT - Chamar a função global
+    // 🔥 FUNÇÃO DE LOGOUT DIRETAMENTE NO HEADER
+    function fazerLogoutHeader() {
+        if (confirm("Tem certeza que deseja sair?")) {
+            // Limpar localStorage
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("auth_token");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            
+            // Mostrar mensagem se possível
+            if (typeof showToast === 'function') {
+                showToast("Logout realizado com sucesso!", "success");
+            }
+            
+            // Redirecionar
+            setTimeout(() => {
+                window.location.href = "/login.html";
+            }, 500);
+        }
+    }
+    
+    // Configurar o botão de logout
     const btnLogout = document.getElementById("btnLogout");
     if (btnLogout) {
         btnLogout.addEventListener("click", function(e) {
             e.preventDefault();
-            // Chamar a função fazerLogout que está no auth.js
-            if (typeof window.fazerLogout === 'function') {
-                window.fazerLogout();
-            } else {
-                console.error("Função fazerLogout não encontrada");
-            }
+            fazerLogoutHeader();
         });
     }
 </script>
