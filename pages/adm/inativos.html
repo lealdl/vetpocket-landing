@@ -1,76 +1,20 @@
 <!DOCTYPE html>
+<script>
+    // 🔥 CORRIGIDO: Caminho absoluto
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.replace("/login.html");
+    }
+</script>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leads Arquivados / Inativos | VetPocket</title>
+    <title>Leads Arquivados | VetPocket</title>
     <link rel="stylesheet" href="../../assets/css/toast.css">
     <link rel="stylesheet" href="../../assets/css/leads.css">
     <link rel="stylesheet" href="../../assets/adm/adm-dashboard.css?v=1.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* Estilos adicionais específicos para inativos */
-        .modal-inativo .modal-header {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        }
-        
-        .btn-restaurar-modal {
-            background-color: #10b981 !important;
-        }
-        
-        .btn-restaurar-modal:hover {
-            background-color: #059669 !important;
-        }
-        
-        .lead-checkbox {
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-        }
-        
-        .table-responsive tr:hover {
-            background-color: #fef3c7;
-            transition: background-color 0.2s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .adm-modal {
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .stat-card h2 {
-            transition: transform 0.2s ease;
-        }
-        
-        /* Responsividade para mobile */
-        @media (max-width: 768px) {
-            .desktop-only {
-                display: none;
-            }
-            
-            .table-responsive td {
-                display: block;
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-            }
-            
-            .table-responsive td:before {
-                content: attr(data-label);
-                position: absolute;
-                left: 10px;
-                width: 45%;
-                text-align: left;
-                font-weight: 600;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -87,6 +31,7 @@
             </div>
         </div>
 
+        <!-- Cards de estatísticas -->
         <div class="dashboard-stats">
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-users"></i></div>
@@ -95,7 +40,6 @@
                     <h2 id="stat-total">0</h2>
                 </div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-icon" style="background: #e6fffa; color: #38b2ac;"><i class="fas fa-home"></i></div>
                 <div class="stat-info">
@@ -103,16 +47,13 @@
                     <h2 id="stat-homecare">0</h2>
                 </div>
             </div>
-
             <div class="stat-card">
-                <div class="stat-icon" style="background: #ebf8ff; color: #3182ce;"><i class="fas fa-hospital"></i>
-                </div>
+                <div class="stat-icon" style="background: #ebf8ff; color: #3182ce;"><i class="fas fa-hospital"></i></div>
                 <div class="stat-info">
                     <span class="stat-label">Clínica Fixa</span>
                     <h2 id="stat-clinica">0</h2>
                 </div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-icon" style="background: #fff5f5; color: #e53e3e;"><i class="fas fa-rocket"></i></div>
                 <div class="stat-info">
@@ -136,18 +77,13 @@
                         </tr>
                     </thead>
                     <tbody id="leads-table-body">
-                        <tr>
-                            <td colspan="6" style="text-align:center; padding:40px; color:#64748b;">
-                                <i class="fas fa-spinner fa-spin"></i> Carregando...
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
 
-    <!-- Modal de Edição/Visualização -->
+    <!-- Modal de Visualização -->
     <div class="adm-modal" id="modalEdicao">
         <div class="modal-content">
             <div class="modal-header">
@@ -157,45 +93,28 @@
             <div class="modal-body">
                 <form id="formEdicaoLead">
                     <input type="hidden" id="modalId">
-
                     <label>Nome:</label>
                     <input type="text" id="inputNome" class="adm-input">
-
                     <label>E-mail:</label>
                     <input type="email" id="inputEmail" class="adm-input">
-
-                    <label>WhatsApp (com DDD):</label>
-                    <input type="text" id="inputTelefone" class="adm-input" placeholder="Ex: 5511999999999">
-
-                    <label>Perfil de Atendimento:</label>
-                    <input type="text" id="inputPerfil" class="adm-input" readonly
-                        style="background: #f4f4f4; cursor: not-allowed;">
-
+                    <label>WhatsApp:</label>
+                    <input type="text" id="inputTelefone" class="adm-input">
+                    <label>Perfil:</label>
+                    <input type="text" id="inputPerfil" class="adm-input" readonly style="background:#f4f4f4">
                     <label>Status Especial:</label>
-                    <select id="inputStatusEspecial" class="adm-input"
-                        style="background: #fff; border: 1px solid #ddd;">
+                    <select id="inputStatusEspecial" class="adm-input">
                         <option value="Nenhum">Nenhum</option>
-                        <option value="Vaga Garantida">⭐ Vaga Garantida (Top 10)</option>
+                        <option value="Vaga Garantida">⭐ Vaga Garantida</option>
                         <option value="Lista de Espera">⏳ Lista de Espera</option>
-                        <option value="Usuário Beta">🚀 Usuário Beta (Cobaia)</option>
+                        <option value="Usuário Beta">🚀 Usuário Beta</option>
                     </select>
-
                     <label>Motivo do Arquivamento:</label>
-                    <textarea id="inputMotivoArquivamento" class="adm-input" rows="2" readonly
-                        style="background: #f4f4f4; cursor: not-allowed;"></textarea>
-
-                    <label>Notas Internas / Feedback:</label>
-                    <textarea id="inputNotas" class="adm-input" rows="3"
-                        placeholder="Anotações sobre o testador..."></textarea>
+                    <textarea id="inputMotivoArquivamento" class="adm-input" rows="2" readonly style="background:#f4f4f4"></textarea>
+                    <label>Notas Internas:</label>
+                    <textarea id="inputNotas" class="adm-input" rows="3"></textarea>
                     <p><strong>Cadastrado em:</strong> <span id="modalData"></span></p>
-                    <p><strong>Arquivado em:</strong> <span id="modalDataArquivamento"></span></p>
-
                     <div class="actions">
-                        <button type="submit" class="btn-save" style="display: none;">Salvar Alterações</button>
-                        <button type="button" id="btnRestaurarModal" class="btn-save btn-restaurar-modal"
-                            style="background-color: #10b981;">
-                            <i class="fas fa-undo"></i> Restaurar Lead
-                        </button>
+                        <button type="submit" class="btn-save" style="display:none">Salvar</button>
                         <a id="btnWhatsapp" href="#" target="_blank" class="btn-whatsapp">
                             <i class="fab fa-whatsapp"></i> Falar no WhatsApp
                         </a>
@@ -207,38 +126,23 @@
 
     <script src="../../assets/js/config.js"></script>
     <script src="../../assets/js/toast.js"></script>
+    <script src="../../assets/js/adm/components.js"></script>
     <script src="../../assets/js/adm/inativos.js"></script>
 
     <script>
-        // Verificação de login
-        if (localStorage.getItem("isLoggedIn") !== "true") {
-            window.location.replace("login.html");
-        }
-
-        // Inicialização do header
         async function initAdmin() {
             const placeholder = document.getElementById("header-placeholder");
             const url = "../../assets/components/header-adm.html";
-
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(`Erro ${response.status}: Arquivo não encontrado`);
-
+                if (!response.ok) throw new Error(`Erro ${response.status}`);
                 const html = await response.text();
                 placeholder.innerHTML = html;
-
-                if (typeof setupHeaderInteractions === "function") {
-                    setupHeaderInteractions();
-                }
+                if (typeof setupHeaderInteractions === "function") setupHeaderInteractions();
             } catch (error) {
-                console.error("❌ Falha no carregamento:", error);
-                placeholder.innerHTML = `<div style="background:#fee2e2; color:#991b1b; padding:20px; border:1px solid #f87171; margin:20px; border-radius:8px;">
-                    <strong>Erro ao carregar o Header:</strong><br>
-                    Caminho tentado: <code>${url}</code>
-                </div>`;
+                console.error("❌ Erro:", error);
             }
         }
-
         initAdmin();
     </script>
 </body>
