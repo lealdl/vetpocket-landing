@@ -38,8 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
           
           showToast("Login realizado com sucesso!", "success");
           
+          // 🔥 CAMINHO ABSOLUTO - começa com /
           setTimeout(() => {
-            window.location.href = "pages/adm/index.html";
+            window.location.href = "/pages/adm/index.html";
           }, 1000);
         } else {
           showToast(result.message || "Credenciais inválidas.", "error");

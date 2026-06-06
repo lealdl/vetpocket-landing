@@ -3,9 +3,11 @@
  * Gerenciamento de Leads com Arquivamento - VetPocket ADM
  */
 
+// assets/js/adm/leads.js - início
 document.addEventListener("DOMContentLoaded", async () => {
-  if (!localStorage.getItem("isLoggedIn")) {
-    window.location.href = "login.html";
+  // Verificar login
+  if (!localStorage.getItem("isLoggedIn") || localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "/login.html";
     return;
   }
 
