@@ -3,9 +3,8 @@
  * Gerenciamento de Leads com Arquivamento - VetPocket ADM
  */
 
-// assets/js/adm/leads.js - início
 document.addEventListener("DOMContentLoaded", async () => {
-  // Verificar login
+  // 🔥 CORRIGIDO: Verificação completa e caminho absoluto
   if (!localStorage.getItem("isLoggedIn") || localStorage.getItem("isLoggedIn") !== "true") {
     window.location.href = "/login.html";
     return;
@@ -20,16 +19,24 @@ async function carregarLeads() {
   try {
     const response = await fetch(`${API_CONFIG.BASE_URL}ver-leads.php`, {
       method: "GET",
-      ...API_CONFIG.FETCH_OPTIONS, // Garanta que aqui também tenha credentials: 'include'
+      ...API_CONFIG.FETCH_OPTIONS,
     });
 
-    if (!response.ok) throw new Error("Erro na requisição ao servidor");
+    if (!response.ok) {
+      if (response.status === 401) {
+        showToast("Sessão expirada. Faça login novamente.", "error");
+        setTimeout(() => window.location.href = "/login.html", 2000);
+        return;
+      }
+      throw new Error("Erro na requisição ao servidor");
+    }
 
     const leads = await response.json();
     atualizarStats(leads);
     renderizarTabela(leads);
   } catch (error) {
     console.error("❌ Erro ao carregar leads:", error);
+    showToast("Erro ao carregar leads", "error");
   }
 }
 
@@ -73,11 +80,12 @@ function renderizarTabela(leads) {
   if (!tableBody) return;
   tableBody.innerHTML = "";
 
-  const perfilLabels = {
-    homecare: "🏠 Homecare",
-    fixa: "🏥 Clínica",
-    misto: "🚀 Misto",
-  };
+  if (!leads || leads.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#64748b;">
+      <i class="fas fa-inbox"></i> Nenhum lead encontrado.
+    </td></tr>`;
+    return;
+  }
 
   leads.forEach((lead) => {
     const dataBr = lead.data_cadastro
@@ -89,22 +97,17 @@ function renderizarTabela(leads) {
     if (isBeta) row.style.backgroundColor = "#f0fdf4";
 
     row.innerHTML = `
-    <td style="width: 40px; text-align: center;">
-        <input type="checkbox" class="lead-checkbox" value="${lead.id}" onclick="event.stopPropagation()">
-    </td>
-
-    <td>
-        <strong>${lead.nome}</strong>
-    </td>
-
-    <td>${lead.email}</td>
-
-    <td>${lead.telefone || "---"}</td>
-
-    <td class="desktop-only">${lead.perfil || "---"}</td>
-
-    <td class="desktop-only">${dataBr}</td>
-`;
+      <td style="width: 40px; text-align: center;">
+        <input type="checkbox" class="lead-checkbox" value="${escapeHtml(lead.id)}" onclick="event.stopPropagation()">
+      </td>
+      <td>
+        <strong>${escapeHtml(lead.nome)}</strong>
+      </td>
+      <td>${escapeHtml(lead.email)}</td>
+      <td>${escapeHtml(lead.telefone || "---")}</td>
+      <td class="desktop-only">${escapeHtml(lead.perfil || "---")}</td>
+      <td class="desktop-only">${dataBr}</td>
+    `;
 
     row.style.cursor = "pointer";
     row.onclick = () => abrirModal(lead, dataBr);
@@ -112,6 +115,13 @@ function renderizarTabela(leads) {
   });
 
   setupCheckboxLogic();
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 function setupCheckboxLogic() {
@@ -142,35 +152,46 @@ function setupGlobalEvents() {
       const ids = Array.from(
         document.querySelectorAll(".lead-checkbox:checked"),
       ).map((cb) => cb.value);
-      if (
-        !confirm(
-          `Arquivar ${ids.length} leads selecionados? Eles sairão do contador de vagas.`,
-        )
-      )
+      
+      if (ids.length === 0) {
+        showToast("Nenhum lead selecionado", "warning");
         return;
+      }
+      
+      if (!confirm(`Arquivar ${ids.length} leads selecionados? Eles sairão do contador de vagas.`)) return;
+
+      const originalText = btnArquivar.innerHTML;
+      btnArquivar.disabled = true;
+      btnArquivar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Arquivando...';
 
       try {
         const res = await fetch(`${API_CONFIG.BASE_URL}arquivar-leads.php`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ids }),
-          credentials: "include", // CORREÇÃO: Envia os cookies de sessão
+          credentials: "include",
         });
 
-        // Se o servidor retornar 401, redireciona para login
         if (res.status === 401) {
           showToast("Sessão expirada. Faça login novamente.", "error");
-          setTimeout(() => (window.location.href = "login.html"), 2000);
+          setTimeout(() => window.location.href = "/login.html", 2000);
           return;
         }
 
         const result = await res.json();
         if (result.status === "success") {
           showToast(result.message, "success");
-          location.reload();
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          showToast(result.message || "Erro ao arquivar", "error");
+          btnArquivar.disabled = false;
+          btnArquivar.innerHTML = originalText;
         }
       } catch (e) {
-        showToast("Erro ao arquivar", "error");
+        console.error("Erro ao arquivar:", e);
+        showToast("Erro ao arquivar leads", "error");
+        btnArquivar.disabled = false;
+        btnArquivar.innerHTML = originalText;
       }
     };
   }
@@ -193,17 +214,18 @@ function setupGlobalEvents() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(dados),
-          credentials: "include", // CORREÇÃO: Mantém a sessão ativa na atualização
+          credentials: "include",
         });
 
         const result = await resp.json();
         if (result.success || result.status === "success") {
           showToast("Lead atualizado!", "success");
           fecharModal();
-          location.reload();
+          setTimeout(() => location.reload(), 1500);
         }
       } catch (error) {
         console.error(error);
+        showToast("Erro ao atualizar lead", "error");
       }
     });
 }

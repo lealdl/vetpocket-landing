@@ -4,8 +4,9 @@
  */
 
 document.addEventListener("DOMContentLoaded", async () => {
-  if (!localStorage.getItem("isLoggedIn")) {
-    window.location.href = "login.html";
+  // 🔥 CORRIGIDO: Caminho absoluto para login
+  if (!localStorage.getItem("isLoggedIn") || localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "/login.html";
     return;
   }
 
@@ -28,7 +29,8 @@ async function carregarInativos() {
     if (!response.ok) {
       if (response.status === 401) {
         showToast("Sessão expirada. Faça login novamente.", "error");
-        setTimeout(() => window.location.href = "login.html", 2000);
+        // 🔥 CORRIGIDO: Caminho absoluto para login
+        setTimeout(() => window.location.href = "/login.html", 2000);
         return;
       }
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -117,7 +119,7 @@ function renderizarTabela(leads) {
   if (!leads || leads.length === 0) {
     tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#64748b;">
       <i class="fas fa-inbox"></i> Nenhum lead arquivado encontrado.
-     </td></tr>`;
+      </td></tr>`;
     return;
   }
 
@@ -209,7 +211,8 @@ function setupGlobalEvents() {
 
         if (res.status === 401) {
           showToast("Sessão expirada. Faça login novamente.", "error");
-          setTimeout(() => (window.location.href = "login.html"), 2000);
+          // 🔥 CORRIGIDO: Caminho absoluto para login
+          setTimeout(() => window.location.href = "/login.html", 2000);
           return;
         }
 
