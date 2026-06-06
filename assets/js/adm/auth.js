@@ -3,9 +3,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Verificar se já está logado
   if (localStorage.getItem("isLoggedIn") === "true") {
-    // Redirecionar para leads se já estiver logado
+    // Redirecionar para login se já estiver logado
     if (window.location.pathname.includes("login.html")) {
-      window.location.href = "leads.html";
+      window.location.href = "login.html";
     }
     return;
   }
