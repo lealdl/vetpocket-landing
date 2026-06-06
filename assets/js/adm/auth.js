@@ -7,13 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Se já está logado e está na página de login, redirecionar para o admin
   if (isLoggedIn === "true" && (currentPage.includes("login.html") || currentPage.includes("login"))) {
-    window.location.href = "pages/adm/index.html";
+    // Caminho absoluto a partir da raiz
+    window.location.href = "/pages/adm/index.html";
     return;
   }
   
   // Se não está logado e NÃO está na página de login, redirecionar para login
   if (isLoggedIn !== "true" && !currentPage.includes("login.html") && !currentPage.includes("login")) {
-    window.location.href = "login.html";
+    window.location.href = "/login.html";
     return;
   }
 
@@ -64,9 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
           
           showToast("Login realizado com sucesso!", "success");
           
-          // Redirecionar para o dashboard/admin
+          // Redirecionar para o dashboard/admin - caminho absoluto
           setTimeout(() => {
-            window.location.href = "pages/adm/index.html";
+            window.location.href = "/pages/adm/index.html";
           }, 1000);
         } else {
           showToast(result.message || "Credenciais inválidas.", "error");
