@@ -3,444 +3,315 @@
  * Gerenciamento de Leads Arquivados - VetPocket ADM
  */
 
-// Variável global para controle
-let currentLeads = [];
-
-// Inicialização
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("📂 Carregando leads arquivados...");
-    await carregarInativos();
-    setupGlobalEvents();
+  if (!localStorage.getItem("isLoggedIn")) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  console.log("📂 Carregando leads arquivados...");
+  await carregarInativos();
+  setupGlobalEvents();
 });
 
-// Carregar leads inativos
 async function carregarInativos() {
-    try {
-        const response = await fetch(`${API_CONFIG.BASE_URL}ver-inativos.php`, {
-            method: "GET",
-            ...API_CONFIG.FETCH_OPTIONS,
-        });
+  try {
+    const response = await fetch(`${API_CONFIG.BASE_URL}ver-inativos.php`, {
+      method: "GET",
+      ...API_CONFIG.FETCH_OPTIONS, // Inclui credentials: 'include'
+    });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Resposta de erro:", errorText);
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        
-        // 🔥 VERIFICA SE A RESPOSTA É UM ARRAY
-        if (!Array.isArray(data)) {
-            console.error("Resposta não é um array:", data);
-            // Se for um objeto com erro
-            if (data && data.error) {
-                throw new Error(data.error);
-            }
-            throw new Error("Formato de resposta inválido");
-        }
-        
-        console.log(`✅ ${data.length} leads inativos carregados`);
-        currentLeads = data;
-
-        // Atualiza os cards e renderiza a tabela
-        atualizarCardsInativos(data);
-        renderizarTabela(data);
-        
-    } catch (error) {
-        console.error("❌ Erro ao carregar inativos:", error);
-        showToast(`Erro ao carregar leads arquivados: ${error.message}`, "error");
-        
-        // Exibe mensagem amigável na tabela
-        const tableBody = document.getElementById("leads-table-body");
-        if (tableBody) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#dc2626;">
-                <i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados.<br>
-                <small>${error.message}</small>
-            </td></tr>`;
-        }
-        
-        // Reseta os cards
-        atualizarCardsInativos([]);
-    }
-}
-
-// Renderizar tabela
-function renderizarTabela(leads) {
-    const tableBody = document.getElementById("leads-table-body");
-    if (!tableBody) return;
-    tableBody.innerHTML = "";
-
-    if (!leads || leads.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#64748b;">
-            <i class="fas fa-inbox"></i> Nenhum lead arquivado encontrado.
-        </td></tr>`;
+    if (!response.ok) {
+      if (response.status === 401) {
+        showToast("Sessão expirada. Faça login novamente.", "error");
+        setTimeout(() => window.location.href = "login.html", 2000);
         return;
+      }
+      throw new Error("Erro na requisição ao servidor");
     }
 
-    leads.forEach((lead) => {
-        const dataBr = lead.data_cadastro
-            ? new Date(lead.data_cadastro).toLocaleDateString("pt-BR")
-            : "---";
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td data-label="Selecionar">
-                <input type="checkbox" class="lead-checkbox" value="${escapeHtml(lead.id)}" onclick="event.stopPropagation()">
-            </td>
-            <td data-label="Nome">
-                <strong>${escapeHtml(lead.nome || '---')}</strong>
-            </td>
-            <td data-label="E-mail">${escapeHtml(lead.email || '---')}</td>
-            <td data-label="WhatsApp">${escapeHtml(lead.telefone || '---')}</td>
-            <td class="desktop-only" data-label="Perfil">${escapeHtml(lead.perfil || '---')}</td>
-            <td class="desktop-only" data-label="Data de Cadastro">${dataBr}</td>`;
-
-        row.style.cursor = "pointer";
-        row.onclick = (e) => {
-            // Evita abrir o modal se clicou no checkbox
-            if (!e.target.classList.contains('lead-checkbox')) {
-                abrirModalInativo(lead, dataBr);
-            }
-        };
-        tableBody.appendChild(row);
-    });
-
-    setupCheckboxLogic();
-}
-
-// Prevenir XSS
-function escapeHtml(text) {
-    if (!text) return "";
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Lógica dos checkboxes
-function setupCheckboxLogic() {
-    const selectAll = document.getElementById("selectAll");
-    const checkboxes = document.querySelectorAll(".lead-checkbox");
-    const btnRestaurar = document.getElementById("btnRestaurar");
-
-    if (selectAll) {
-        selectAll.checked = false;
-        selectAll.onclick = () => {
-            checkboxes.forEach((cb) => (cb.checked = selectAll.checked));
-            toggleActionsBtn();
-        };
-    }
-
-    checkboxes.forEach((cb) => {
-        cb.onchange = toggleActionsBtn;
-    });
-
-    function toggleActionsBtn() {
-        const anyChecked = Array.from(checkboxes).some((c) => c.checked);
-        if (btnRestaurar) {
-            btnRestaurar.style.display = anyChecked ? "flex" : "none";
-        }
-    }
+    const leads = await response.json();
     
-    // Inicializa o estado do botão
-    toggleActionsBtn();
-}
-
-// Eventos globais
-function setupGlobalEvents() {
-    const btnRestaurar = document.getElementById("btnRestaurar");
-
-    if (btnRestaurar) {
-        btnRestaurar.onclick = async () => {
-            const selectedCheckboxes = document.querySelectorAll(".lead-checkbox:checked");
-            const ids = Array.from(selectedCheckboxes).map((cb) => cb.value);
-
-            if (ids.length === 0) {
-                showToast("Nenhum lead selecionado", "warning");
-                return;
-            }
-
-            if (!confirm(`Restaurar ${ids.length} lead${ids.length > 1 ? 's' : ''} para a lista ativa?`)) return;
-
-            // Desabilita o botão durante a operação
-            const originalText = btnRestaurar.innerHTML;
-            btnRestaurar.disabled = true;
-            btnRestaurar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restaurando...';
-
-            try {
-                const res = await fetch(`${API_CONFIG.BASE_URL}restaurar-leads.php`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ ids }),
-                    credentials: "include",
-                });
-
-                const result = await res.json();
-                if (result.status === "success") {
-                    showToast(result.message, "success");
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showToast(result.message || "Erro ao restaurar", "error");
-                    btnRestaurar.disabled = false;
-                    btnRestaurar.innerHTML = originalText;
-                }
-            } catch (e) {
-                console.error("Erro na restauração:", e);
-                showToast("Erro ao restaurar leads", "error");
-                btnRestaurar.disabled = false;
-                btnRestaurar.innerHTML = originalText;
-            }
-        };
-    }
-}
-
-// Abrir modal de lead inativo
-function abrirModalInativo(lead, dataBr) {
-    if (!lead) {
-        console.error("Lead inválido");
-        return;
-    }
-    
-    // Preenche os dados no modal
-    const modalId = document.getElementById("modalId");
-    const inputNome = document.getElementById("inputNome");
-    const inputEmail = document.getElementById("inputEmail");
-    const inputTelefone = document.getElementById("inputTelefone");
-    const inputPerfil = document.getElementById("inputPerfil");
-    const inputNotas = document.getElementById("inputNotas");
-    const modalData = document.getElementById("modalData");
-    const modalDataArquivamento = document.getElementById("modalDataArquivamento");
-    const statusSelect = document.getElementById("inputStatusEspecial");
-    const motivoArquivamento = document.getElementById("inputMotivoArquivamento");
-    
-    if (modalId) modalId.value = lead.id || "";
-    if (inputNome) inputNome.value = lead.nome || "";
-    if (inputEmail) inputEmail.value = lead.email || "";
-    if (inputTelefone) inputTelefone.value = lead.telefone || "";
-    if (inputPerfil) inputPerfil.value = lead.perfil || "---";
-    if (inputNotas) inputNotas.value = lead.notas_internas || "";
-    if (modalData) modalData.textContent = dataBr;
-    
-    // Data de arquivamento
-    const arquivadoEm = lead.arquivado_em || lead.data_arquivamento;
-    if (modalDataArquivamento) {
-        modalDataArquivamento.textContent = arquivadoEm 
-            ? new Date(arquivadoEm).toLocaleDateString("pt-BR")
-            : dataBr;
-    }
-    
-    // Motivo do arquivamento
-    if (motivoArquivamento) {
-        motivoArquivamento.value = lead.motivo_arquivamento || "Lead movido para arquivo";
-    }
-    
-    // Configura o status especial
-    if (statusSelect && lead.status_especial) {
-        statusSelect.value = lead.status_especial;
-    }
-    
-    // Configura o link do WhatsApp
-    const whatsappLink = document.getElementById("btnWhatsapp");
-    if (whatsappLink && lead.telefone) {
-        let telefone = lead.telefone.replace(/\D/g, '');
-        if (!telefone.startsWith('55')) {
-            telefone = '55' + telefone;
-        }
-        whatsappLink.href = `https://wa.me/${telefone}`;
-        whatsappLink.style.opacity = "1";
-        whatsappLink.style.cursor = "pointer";
-    } else if (whatsappLink) {
-        whatsappLink.href = "#";
-        whatsappLink.style.opacity = "0.5";
-        whatsappLink.style.cursor = "not-allowed";
-    }
-    
-    // Torna os campos readonly para visualização
-    const readonlyInputs = ["inputNome", "inputEmail", "inputTelefone", "inputNotas"];
-    readonlyInputs.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.readOnly = true;
-            element.style.backgroundColor = "#f4f4f4";
-            element.style.cursor = "not-allowed";
-        }
-    });
-    
-    // Desabilita o select de status especial
-    if (statusSelect) {
-        statusSelect.disabled = true;
-        statusSelect.style.backgroundColor = "#f4f4f4";
-        statusSelect.style.cursor = "not-allowed";
-    }
-    
-    // Configura o botão de restaurar no modal
-    const restaurarBtn = document.getElementById("btnRestaurarModal");
-    if (restaurarBtn) {
-        restaurarBtn.onclick = async () => {
-            if (confirm(`Restaurar "${lead.nome}" para a lista ativa?`)) {
-                restaurarBtn.disabled = true;
-                restaurarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restaurando...';
-                
-                try {
-                    const res = await fetch(`${API_CONFIG.BASE_URL}restaurar-leads.php`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ ids: [lead.id] }),
-                        credentials: "include",
-                    });
-                    
-                    const result = await res.json();
-                    if (result.status === "success") {
-                        showToast(result.message, "success");
-                        fecharModal();
-                        setTimeout(() => location.reload(), 1500);
-                    } else {
-                        showToast(result.message || "Erro ao restaurar", "error");
-                        restaurarBtn.disabled = false;
-                        restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
-                    }
-                } catch (e) {
-                    console.error("Erro na restauração:", e);
-                    showToast("Erro ao restaurar lead", "error");
-                    restaurarBtn.disabled = false;
-                    restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
-                }
-            }
-        };
-    }
-    
-    // Adiciona classe para estilização específica
-    const modal = document.getElementById("modalEdicao");
-    if (modal) {
-        modal.classList.add("modal-inativo");
-        modal.style.display = "flex";
-    }
-}
-
-// Fechar modal e restaurar estado original
-window.fecharModal = function() {
-    const modal = document.getElementById("modalEdicao");
-    if (modal) {
-        modal.style.display = "none";
-        modal.classList.remove("modal-inativo");
-    }
-    
-    // Restaura os campos para o estado editável
-    const editableInputs = ["inputNome", "inputEmail", "inputTelefone", "inputNotas"];
-    editableInputs.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.readOnly = false;
-            element.style.backgroundColor = "";
-            element.style.cursor = "";
-            element.value = "";
-        }
-    });
-    
-    // Habilita o select de status especial
-    const statusSelect = document.getElementById("inputStatusEspecial");
-    if (statusSelect) {
-        statusSelect.disabled = false;
-        statusSelect.style.backgroundColor = "";
-        statusSelect.style.cursor = "";
-        statusSelect.value = "Nenhum";
-    }
-    
-    // Reseta o botão de restaurar
-    const restaurarBtn = document.getElementById("btnRestaurarModal");
-    if (restaurarBtn) {
-        restaurarBtn.disabled = false;
-        restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
-    }
-    
-    // Limpa campos extras
-    const motivoInput = document.getElementById("inputMotivoArquivamento");
-    if (motivoInput) motivoInput.value = "";
-};
-
-// Atualizar cards de estatísticas
-function atualizarCardsInativos(leads) {
-    // Garantir que leads é um array
+    // Verificar se a resposta é um array
     if (!Array.isArray(leads)) {
-        console.error("atualizarCardsInativos: leads não é um array", leads);
-        leads = [];
+      console.error("Resposta não é um array:", leads);
+      throw new Error("Formato de resposta inválido");
     }
     
-    const total = leads.length;
-
-    const homecare = leads.filter(
-        (l) => l && l.perfil && l.perfil.toLowerCase().includes("home"),
-    ).length;
-
-    const clinica = leads.filter(
-        (l) => l && l.perfil &&
-            (l.perfil.toLowerCase().includes("clinica") ||
-             l.perfil.toLowerCase().includes("fixa")),
-    ).length;
-
-    const misto = leads.filter(
-        (l) => l && l.perfil && l.perfil.toLowerCase().includes("misto"),
-    ).length;
-
-    // Atualiza os cards com animação
-    const cards = [
-        { id: "stat-total", value: total },
-        { id: "stat-homecare", value: homecare },
-        { id: "stat-clinica", value: clinica },
-        { id: "stat-misto", value: misto }
-    ];
-
-    cards.forEach(card => {
-        const element = document.getElementById(card.id);
-        if (element && parseInt(element.textContent) !== card.value) {
-            element.style.transform = "scale(1.1)";
-            element.textContent = card.value;
-            setTimeout(() => {
-                if (element) element.style.transform = "scale(1)";
-            }, 200);
-        }
-    });
+    atualizarCardsInativos(leads);
+    renderizarTabela(leads);
+  } catch (error) {
+    console.error("❌ Erro ao carregar inativos:", error);
+    showToast("Erro ao carregar leads arquivados", "error");
     
-    console.log(`📊 Cards atualizados: Total=${total}, Homecare=${homecare}, Clínica=${clinica}, Misto=${misto}`);
+    // Exibir mensagem na tabela
+    const tableBody = document.getElementById("leads-table-body");
+    if (tableBody) {
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#dc2626;">
+        <i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados.<br>
+        <small>${error.message}</small>
+      </td></tr>`;
+    }
+  }
 }
 
-// Setup header interactions (fallback)
-if (typeof setupHeaderInteractions !== "function") {
-    window.setupHeaderInteractions = function() {
-        if (window.headerEventsBound) return;
-        window.headerEventsBound = true;
+function atualizarCardsInativos(leads) {
+  if (!leads || !Array.isArray(leads)) return;
 
-        document.addEventListener("click", (e) => {
-            const toggleBtn = e.target.closest("#mobileMenuBtn");
+  const total = leads.length;
+  const homecare = leads.filter(l => l.perfil?.toLowerCase().includes("home")).length;
+  const clinica = leads.filter(l => l.perfil?.toLowerCase().includes("clinica") || l.perfil?.toLowerCase().includes("fixa")).length;
+  const misto = leads.filter(l => l.perfil?.toLowerCase().includes("misto")).length;
 
-            if (toggleBtn) {
-                const sidebar = document.querySelector(".adm-sidebar");
-                const admOverlay = document.querySelector(".adm-overlay");
+  animarNumero("stat-total", total);
+  animarNumero("stat-homecare", homecare);
+  animarNumero("stat-clinica", clinica);
+  animarNumero("stat-misto", misto);
+}
 
-                if (sidebar) {
-                    sidebar.classList.toggle("active");
-                    if (admOverlay) {
-                        admOverlay.classList.toggle("active");
-                    }
-                }
-                return;
-            }
+function animarNumero(id, valorFinal) {
+  const elemento = document.getElementById(id);
+  if (!elemento) return;
+  let valorAtual = 0;
+  const incremento = valorFinal / 30;
+  const contagem = setInterval(() => {
+    valorAtual += incremento;
+    if (valorAtual >= valorFinal) {
+      elemento.innerText = valorFinal;
+      clearInterval(contagem);
+    } else {
+      elemento.innerText = Math.floor(valorAtual);
+    }
+  }, 30);
+}
 
-            const isOverlay = e.target.classList.contains("adm-overlay");
-            if (isOverlay) {
-                const activeSidebar = document.querySelector(".adm-sidebar.active");
-                if (activeSidebar) {
-                    activeSidebar.classList.remove("active");
-                    e.target.classList.remove("active");
-                }
-            }
-        });
+function renderizarTabela(leads) {
+  const tableBody = document.getElementById("leads-table-body");
+  if (!tableBody) return;
+  tableBody.innerHTML = "";
+
+  if (!leads || leads.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#64748b;">
+      <i class="fas fa-inbox"></i> Nenhum lead arquivado encontrado.
+    </td></tr>`;
+    return;
+  }
+
+  leads.forEach((lead) => {
+    const dataBr = lead.data_cadastro
+      ? new Date(lead.data_cadastro).toLocaleDateString("pt-BR")
+      : "---";
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td data-label="Selecionar">
+        <input type="checkbox" class="lead-checkbox" value="${lead.id}" onclick="event.stopPropagation()">
+      </td>
+      <td data-label="Nome">
+        <strong>${escapeHtml(lead.nome)}</strong>
+      </td>
+      <td data-label="E-mail">${escapeHtml(lead.email)}</td>
+      <td data-label="WhatsApp">${escapeHtml(lead.telefone || "---")}</td>
+      <td class="desktop-only" data-label="Perfil">${escapeHtml(lead.perfil || "---")}</td>
+      <td class="desktop-only" data-label="Data de Cadastro">${dataBr}</td>`;
+
+    row.style.cursor = "pointer";
+    row.onclick = () => abrirModalInativo(lead, dataBr);
+    tableBody.appendChild(row);
+  });
+
+  setupCheckboxLogic();
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function setupCheckboxLogic() {
+  const selectAll = document.getElementById("selectAll");
+  const checkboxes = document.querySelectorAll(".lead-checkbox");
+  const btnRestaurar = document.getElementById("btnRestaurar");
+
+  if (selectAll) {
+    selectAll.checked = false;
+    selectAll.onclick = () => {
+      checkboxes.forEach((cb) => (cb.checked = selectAll.checked));
+      toggleActionsBtn();
     };
+  }
+
+  checkboxes.forEach((cb) => (cb.onchange = toggleActionsBtn));
+
+  function toggleActionsBtn() {
+    const anyChecked = Array.from(checkboxes).some((c) => c.checked);
+    if (btnRestaurar) btnRestaurar.style.display = anyChecked ? "flex" : "none";
+  }
 }
 
-// Fechar modal ao clicar fora
-window.onclick = function(event) {
-    const modal = document.getElementById("modalEdicao");
-    if (event.target === modal) {
-        fecharModal();
+function setupGlobalEvents() {
+  const btnRestaurar = document.getElementById("btnRestaurar");
+
+  if (btnRestaurar) {
+    btnRestaurar.onclick = async () => {
+      const ids = Array.from(
+        document.querySelectorAll(".lead-checkbox:checked"),
+      ).map((cb) => cb.value);
+
+      if (ids.length === 0) {
+        showToast("Nenhum lead selecionado", "warning");
+        return;
+      }
+
+      if (!confirm(`Restaurar ${ids.length} leads para a lista ativa?`)) return;
+
+      const originalText = btnRestaurar.innerHTML;
+      btnRestaurar.disabled = true;
+      btnRestaurar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restaurando...';
+
+      try {
+        const res = await fetch(`${API_CONFIG.BASE_URL}restaurar-leads.php`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids }),
+          credentials: "include",
+        });
+
+        if (res.status === 401) {
+          showToast("Sessão expirada. Faça login novamente.", "error");
+          setTimeout(() => window.location.href = "login.html", 2000);
+          return;
+        }
+
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast(result.message, "success");
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          showToast(result.message || "Erro ao restaurar", "error");
+          btnRestaurar.disabled = false;
+          btnRestaurar.innerHTML = originalText;
+        }
+      } catch (e) {
+        console.error("Erro na restauração:", e);
+        showToast("Erro ao restaurar leads", "error");
+        btnRestaurar.disabled = false;
+        btnRestaurar.innerHTML = originalText;
+      }
+    };
+  }
+}
+
+function abrirModalInativo(lead, dataBr) {
+  document.getElementById("modalId").value = lead.id;
+  document.getElementById("inputNome").value = lead.nome;
+  document.getElementById("inputEmail").value = lead.email;
+  document.getElementById("inputTelefone").value = lead.telefone || "";
+  document.getElementById("inputPerfil").value = lead.perfil || "---";
+  document.getElementById("inputStatusEspecial").value = lead.status_especial || "Nenhum";
+  document.getElementById("inputNotas").value = lead.notas_internas || "";
+  document.getElementById("modalData").innerText = dataBr;
+
+  // Motivo do arquivamento (se tiver)
+  const motivoArquivamento = document.getElementById("inputMotivoArquivamento");
+  if (motivoArquivamento) {
+    motivoArquivamento.value = lead.motivo_arquivamento || "Lead movido para arquivo";
+  }
+
+  // Configurar WhatsApp
+  const btnWhats = document.getElementById("btnWhatsapp");
+  const num = String(lead.telefone || "").replace(/\D/g, "");
+  if (num.length >= 10) {
+    btnWhats.href = `https://wa.me/${num.startsWith("55") ? "" : "55"}${num}`;
+    btnWhats.style.display = "flex";
+  } else {
+    btnWhats.style.display = "none";
+  }
+
+  // Tornar campos readonly (visualização apenas)
+  const camposReadonly = ["inputNome", "inputEmail", "inputTelefone", "inputNotas"];
+  camposReadonly.forEach(id => {
+    const campo = document.getElementById(id);
+    if (campo) {
+      campo.readOnly = true;
+      campo.style.backgroundColor = "#f4f4f4";
     }
+  });
+  
+  document.getElementById("inputStatusEspecial").disabled = true;
+  
+  // Adicionar botão de restaurar no modal se não existir
+  let restaurarBtn = document.getElementById("btnRestaurarModal");
+  const actionsDiv = document.querySelector("#formEdicaoLead .actions");
+  
+  if (!restaurarBtn && actionsDiv) {
+    restaurarBtn = document.createElement("button");
+    restaurarBtn.id = "btnRestaurarModal";
+    restaurarBtn.type = "button";
+    restaurarBtn.className = "btn-save";
+    restaurarBtn.style.backgroundColor = "#10b981";
+    restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
+    restaurarBtn.onclick = async () => {
+      if (confirm(`Restaurar "${lead.nome}" para a lista ativa?`)) {
+        restaurarBtn.disabled = true;
+        restaurarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restaurando...';
+        
+        try {
+          const res = await fetch(`${API_CONFIG.BASE_URL}restaurar-leads.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ids: [lead.id] }),
+            credentials: "include",
+          });
+          
+          const result = await res.json();
+          if (result.status === "success") {
+            showToast(result.message, "success");
+            fecharModal();
+            setTimeout(() => location.reload(), 1500);
+          } else {
+            showToast(result.message || "Erro ao restaurar", "error");
+            restaurarBtn.disabled = false;
+            restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
+          }
+        } catch (e) {
+          showToast("Erro ao restaurar lead", "error");
+          restaurarBtn.disabled = false;
+          restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
+        }
+      }
+    };
+    actionsDiv.appendChild(restaurarBtn);
+  }
+  
+  // Esconder botão de salvar
+  const saveBtn = document.querySelector("#formEdicaoLead button[type='submit']");
+  if (saveBtn) saveBtn.style.display = "none";
+  
+  document.getElementById("modalEdicao").style.display = "flex";
+}
+
+window.fecharModal = () => {
+  // Restaurar campos
+  const camposReadonly = ["inputNome", "inputEmail", "inputTelefone", "inputNotas"];
+  camposReadonly.forEach(id => {
+    const campo = document.getElementById(id);
+    if (campo) {
+      campo.readOnly = false;
+      campo.style.backgroundColor = "";
+    }
+  });
+  
+  const statusSelect = document.getElementById("inputStatusEspecial");
+  if (statusSelect) statusSelect.disabled = false;
+  
+  const saveBtn = document.querySelector("#formEdicaoLead button[type='submit']");
+  if (saveBtn) saveBtn.style.display = "flex";
+  
+  const restaurarBtn = document.getElementById("btnRestaurarModal");
+  if (restaurarBtn) restaurarBtn.remove();
+  
+  document.getElementById("modalEdicao").style.display = "none";
 };
