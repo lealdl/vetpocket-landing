@@ -1,170 +1,317 @@
-/* Adicione ao final do arquivo adm-dashboard.css */
-
-/* Botão de logout no header */
-.btn-logout {
-    background: #dc2626;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.2s;
+:root {
+  --adm-header-h: 70px;
+  --adm-sidebar-w: 260px;
+  --adm-purple: #6d28d9;
+  --adm-purple-light: #f5f3ff;
+  --adm-bg: #f8fafc;
+  --adm-border: #e2e8f0;
+  --adm-text-main: #1e293b;
+  --adm-text-muted: #64748b;
 }
 
-.btn-logout:hover {
-    background: #b91c1c;
+/* 1. RESET E BASE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.btn-logout i {
-    font-size: 14px;
+body {
+  background-color: var(--adm-bg);
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: var(--adm-text-main);
+  line-height: 1.5;
+  /* Garante que o conteúdo não fique escondido sob o header fixo */
+  padding-top: var(--adm-header-h);
 }
 
-/* User menu no header */
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+/* 2. BARRA SUPERIOR (HEADER) */
+.adm-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--adm-header-h);
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--adm-border);
+  display: flex !important;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 1000; /* Base do topo */
 }
 
-.user-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--adm-text-main);
-}
-
-/* Ajuste do header para acomodar o user menu */
 .adm-header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
-/* Sidebar - link de sair destacado */
-.nav-links li:last-child {
-    margin-top: 20px;
-    border-top: 1px solid var(--adm-border);
-    padding-top: 12px;
+.adm-logo {
+  font-weight: 700;
+  color: var(--adm-purple);
+  font-size: 1.25rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.nav-links li:last-child a {
-    color: #dc2626 !important;
+/* 3. SIDEBAR (MENU LATERAL) */
+.adm-sidebar {
+  position: fixed;
+  background: #ffffff !important;
+  border-right: 1px solid var(--adm-border);
+  z-index: 3000; /* Acima do header e do conteúdo */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
 }
 
-.nav-links li:last-child a:hover {
-    background: #fee2e2 !important;
-    color: #b91c1c !important;
+/* 4. CONTEÚDO PRINCIPAL */
+.adm-content {
+  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Cards do dashboard */
-.dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    margin-bottom: 32px;
+.adm-content h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
 }
 
-.stat-card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+.adm-content p {
+  color: var(--adm-text-muted);
+  margin-bottom: 32px;
 }
 
-.stat-card:hover {
-    transform: translateY(-2px);
+/* 5. TABELA DE LEADS */
+.table-responsive {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--adm-border);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.stat-icon {
-    width: 48px;
-    height: 48px;
-    background: #f1f5f9;
-    border-radius: 12px;
-    display: flex;
+#leadsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#leadsTable th {
+  background: #f1f5f9;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--adm-text-muted);
+  border-bottom: 1px solid var(--adm-border);
+}
+
+#leadsTable td {
+  padding: 16px;
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--adm-border);
+}
+
+#leadsTable tbody tr {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#leadsTable tbody tr:hover {
+  background-color: var(--adm-purple-light);
+}
+/* No seu arquivo de CSS do Admin */
+.btn-copy {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.btn-copy:hover {
+  color: #6366f1; /* Cor primária do seu sistema */
+}
+
+.btn-copy i {
+  font-size: 0.9rem;
+}
+/* 6. NAVEGAÇÃO INTERNA */
+.adm-nav ul {
+  list-style: none;
+  padding: 20px 16px;
+}
+
+.adm-nav li a {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--adm-text-muted);
+  border-radius: 8px;
+  margin-bottom: 4px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.adm-nav li a:hover,
+.adm-nav li a.active {
+  background: var(--adm-purple-light);
+  color: var(--adm-purple) !important;
+}
+
+.adm-logout {
+  color: #ef4444 !important;
+  margin-top: 12px;
+  border-top: 1px solid var(--adm-border);
+  padding-top: 16px !important;
+}
+
+/* 7. MODAL DE EDIÇÃO */
+.adm-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+
+.adm-input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 16px 0;
+  border: 1px solid var(--adm-border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.btn-save {
+  background-color: var(--adm-purple);
+  color: white;
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn-whatsapp {
+  display: block;
+  text-align: center;
+  background: #25d366;
+  color: white;
+  padding: 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+/* --- 8. CONFIGURAÇÃO DESKTOP (> 1024px) --- */
+@media (min-width: 1025px) {
+  body {
+    padding-left: var(--adm-sidebar-w);
+  }
+
+  .adm-sidebar {
+    left: 0;
+    top: var(--adm-header-h);
+    width: var(--adm-sidebar-w);
+    height: calc(100vh - var(--adm-header-h));
+    transform: none !important;
+  }
+
+  .adm-menu-toggle,
+  .adm-overlay {
+    display: none !important;
+  }
+}
+
+/* --- 9. CONFIGURAÇÃO MOBILE (<= 1024px) --- */
+@media (max-width: 1024px) {
+  body {
+    padding-left: 0;
+  }
+
+  .adm-sidebar {
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    transform: translateX(-100%); /* Escondido */
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .adm-sidebar.active {
+    transform: translateX(0); /* Mostra */
+  }
+
+  .adm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 2500;
+    display: none;
+  }
+
+  .adm-overlay.active {
+    display: block !important;
+  }
+
+  .adm-menu-toggle {
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-}
-
-.stat-info {
-    flex: 1;
-}
-
-.stat-label {
-    font-size: 13px;
-    color: var(--adm-text-muted);
-    display: block;
-    margin-bottom: 4px;
-}
-
-.stat-info h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--adm-text-main);
-    margin: 0;
-}
-
-/* Header actions */
-.header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.header-actions h1 {
-    margin: 0;
-}
-
-/* Botão arquivar/restaurar */
-.btn-arquivar {
-    background: #e53e3e;
-    color: white;
+    background: #f1f5f9 !important;
     border: none;
-    padding: 10px 20px;
+    padding: 8px;
     border-radius: 8px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-    transition: background 0.2s;
+    color: var(--adm-purple) !important;
+  }
+
+  /* Garante que o ícone do botão seja visível e tenha cor */
+  .adm-menu-toggle svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor !important;
+  }
+}
+#header-placeholder {
+  display: block !important;
+  min-height: 70px;
+  width: 100%;
 }
 
-.btn-arquivar:hover {
-    background: #c53030;
-}
-
-/* Desktop only */
-@media (max-width: 768px) {
-    .desktop-only {
-        display: none;
-    }
-    
-    .table-responsive td {
-        display: block;
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-    }
-    
-    .table-responsive td:before {
-        content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        width: 45%;
-        text-align: left;
-        font-weight: 600;
-    }
+.adm-header {
+  display: flex !important;
+  visibility: visible !important;
+  z-index: 1000 !important;
 }
