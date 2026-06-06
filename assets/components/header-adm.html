@@ -1,7 +1,6 @@
-<!-- assets/components/header-adm.html -->
 <header class="adm-header">
     <div class="adm-header-container">
-        <span class="adm-logo">VetPocket 🐾 ADM</span>
+        <span class="adm-logo">VetHome 🐾 ADM</span>
         <button id="mobileMenuBtn" class="adm-menu-toggle" aria-label="Menu">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -16,34 +15,12 @@
 <aside class="adm-sidebar">
     <nav class="adm-nav">
         <ul class="nav-links">
-            <li><a href="/pages/adm/index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="/pages/adm/leads.html"><i class="fas fa-users"></i> Leads Ativos</a></li>
-            <li><a href="/pages/adm/inativos.html"><i class="fas fa-archive"></i> Leads Inativos</a></li>
-            <!-- 🔥 CORRIGIDO: href="javascript:void(0)" em vez de # -->
-            <li><a href="javascript:void(0)" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            <li><a href="index.html"><i class="fas fa-users"></i> Leads Ativos</a></li>
+            <li><a href="inativos.html"><i class="fas fa-archive"></i> Leads Inativos</a></li>
+            <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
+            <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
         </ul>
     </nav>
 </aside>
 
 <div class="adm-overlay"></div>
-
-<script>
-    // Logout
-    const btnLogout = document.getElementById("btnLogout");
-    if (btnLogout) {
-        btnLogout.addEventListener("click", function(e) {
-            e.preventDefault();
-            if (typeof window.fazerLogout === 'function') {
-                window.fazerLogout();
-            }
-        });
-    }
-    
-    // Fechar menu ao clicar em link (mobile)
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            document.querySelector('.adm-sidebar')?.classList.remove('active');
-            document.querySelector('.adm-overlay')?.classList.remove('active');
-        });
-    });
-</script>
