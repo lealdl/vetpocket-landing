@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
           showToast("Login realizado com sucesso!", "success");
           
           setTimeout(() => {
-            window.location.href = "leads.html";
+            window.location.href = "login.html";
           }, 1000);
         } else {
           showToast(result.message || "Credenciais inválidas.", "error");
