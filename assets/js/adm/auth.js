@@ -74,3 +74,47 @@ document.addEventListener("DOMContentLoaded", () => {
   
   console.log("✅ Sistema ADM Pronto.");
 });
+
+// 🔥 FUNÇÃO DE LOGOUT CORRIGIDA
+function fazerLogout() {
+  // Confirmar com o usuário
+  if (!confirm("Tem certeza que deseja sair?")) {
+    return;
+  }
+  
+  // 🔥 PEGAR O TOKEN ANTES DE REMOVER
+  const token = localStorage.getItem("auth_token");
+  
+  // Chamar API de logout para invalidar token (opcional)
+  if (token) {
+    fetch(`${API_CONFIG.BASE_URL}logout.php`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      credentials: "include"
+    }).catch((error) => {
+      console.error("Erro ao chamar logout.php:", error);
+    });
+  }
+  
+  // Limpar localStorage
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("auth_token");
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("user_name");
+  
+  // Mostrar mensagem de sucesso
+  if (typeof showToast === 'function') {
+    showToast("Logout realizado com sucesso!", "success");
+  }
+  
+  // Redirecionar para login
+  setTimeout(() => {
+    window.location.href = "/login.html";
+  }, 500);
+}
+
+// Expor função globalmente
+window.fazerLogout = fazerLogout;
