@@ -30,15 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (result.status === "success") {
+          // Salvar token no localStorage
           localStorage.setItem("isLoggedIn", "true");
-          
-          if (result.token) localStorage.setItem("auth_token", result.token);
-          if (result.user_id) localStorage.setItem("user_id", result.user_id);
-          if (result.user_name) localStorage.setItem("user_name", result.user_name);
+          localStorage.setItem("auth_token", result.token);
+          localStorage.setItem("user_id", result.user_id);
+          localStorage.setItem("user_name", result.user_name);
           
           showToast("Login realizado com sucesso!", "success");
           
-          // 🔥 CAMINHO ABSOLUTO - começa com /
           setTimeout(() => {
             window.location.href = "/pages/adm/index.html";
           }, 1000);

@@ -19,9 +19,26 @@ async function carregarInativos() {
   try {
     console.log("🔍 Buscando leads inativos em:", `${API_CONFIG.BASE_URL}ver-inativos.php`);
     
+    // 🔥 PEGAR O TOKEN DO LOCALSTORAGE
+    const token = localStorage.getItem("auth_token");
+    
+    // 🔥 CONFIGURAR HEADERS COM TOKEN
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      console.log("🔑 Token enviado:", token.substring(0, 20) + "...");
+    } else {
+      console.warn("⚠️ Nenhum token encontrado no localStorage");
+    }
+    
     const response = await fetch(`${API_CONFIG.BASE_URL}ver-inativos.php`, {
       method: "GET",
-      ...API_CONFIG.FETCH_OPTIONS,
+      credentials: "include",
+      headers: headers
     });
 
     console.log("📡 Status da resposta:", response.status);
@@ -29,7 +46,10 @@ async function carregarInativos() {
     if (!response.ok) {
       if (response.status === 401) {
         showToast("Sessão expirada. Faça login novamente.", "error");
-        // 🔥 CORRIGIDO: Caminho absoluto para login
+        // Limpar dados antigos
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("isLoggedIn");
+        // Redirecionar para login
         setTimeout(() => window.location.href = "/login.html", 2000);
         return;
       }
@@ -76,7 +96,7 @@ async function carregarInativos() {
         <button onclick="location.reload()" style="margin-top:10px; padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer;">
           Tentar novamente
         </button>
-      </td></tr>`;
+      </td><tr>`;
     }
   }
 }
@@ -202,16 +222,29 @@ function setupGlobalEvents() {
       btnRestaurar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restaurando...';
 
       try {
+        // 🔥 PEGAR O TOKEN
+        const token = localStorage.getItem("auth_token");
+        
+        // 🔥 CONFIGURAR HEADERS
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
         const res = await fetch(`${API_CONFIG.BASE_URL}restaurar-leads.php`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: headers,
           body: JSON.stringify({ ids }),
           credentials: "include",
         });
 
         if (res.status === 401) {
           showToast("Sessão expirada. Faça login novamente.", "error");
-          // 🔥 CORRIGIDO: Caminho absoluto para login
+          localStorage.removeItem("auth_token");
+          localStorage.removeItem("isLoggedIn");
           setTimeout(() => window.location.href = "/login.html", 2000);
           return;
         }

@@ -15,11 +15,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupGlobalEvents();
 });
 
+// assets/js/adm/leads.js - modificar a função carregarLeads
 async function carregarLeads() {
   try {
+    const token = localStorage.getItem("auth_token");
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const response = await fetch(`${API_CONFIG.BASE_URL}ver-leads.php`, {
       method: "GET",
-      ...API_CONFIG.FETCH_OPTIONS,
+      credentials: "include",
+      headers: headers
     });
 
     if (!response.ok) {
