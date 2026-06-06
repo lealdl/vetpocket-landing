@@ -21,24 +21,46 @@ async function carregarInativos() {
             ...API_CONFIG.FETCH_OPTIONS,
         });
 
-        if (!response.ok) throw new Error("Erro ao buscar inativos");
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Resposta de erro:", errorText);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
 
-        const leads = await response.json();
-        currentLeads = leads;
+        const data = await response.json();
+        
+        // 🔥 VERIFICA SE A RESPOSTA É UM ARRAY
+        if (!Array.isArray(data)) {
+            console.error("Resposta não é um array:", data);
+            // Se for um objeto com erro
+            if (data && data.error) {
+                throw new Error(data.error);
+            }
+            throw new Error("Formato de resposta inválido");
+        }
+        
+        console.log(`✅ ${data.length} leads inativos carregados`);
+        currentLeads = data;
 
         // Atualiza os cards e renderiza a tabela
-        atualizarCardsInativos(leads);
-        renderizarTabela(leads);
-    } catch (error) {
-        console.error("❌ Erro:", error);
-        showToast("Erro ao carregar leads arquivados", "error");
+        atualizarCardsInativos(data);
+        renderizarTabela(data);
         
+    } catch (error) {
+        console.error("❌ Erro ao carregar inativos:", error);
+        showToast(`Erro ao carregar leads arquivados: ${error.message}`, "error");
+        
+        // Exibe mensagem amigável na tabela
         const tableBody = document.getElementById("leads-table-body");
         if (tableBody) {
             tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#dc2626;">
-                <i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados. Tente novamente.
+                <i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados.<br>
+                <small>${error.message}</small>
             </td></tr>`;
         }
+        
+        // Reseta os cards
+        atualizarCardsInativos([]);
     }
 }
 
@@ -48,7 +70,7 @@ function renderizarTabela(leads) {
     if (!tableBody) return;
     tableBody.innerHTML = "";
 
-    if (leads.length === 0) {
+    if (!leads || leads.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#64748b;">
             <i class="fas fa-inbox"></i> Nenhum lead arquivado encontrado.
         </td></tr>`;
@@ -66,11 +88,11 @@ function renderizarTabela(leads) {
                 <input type="checkbox" class="lead-checkbox" value="${escapeHtml(lead.id)}" onclick="event.stopPropagation()">
             </td>
             <td data-label="Nome">
-                <strong>${escapeHtml(lead.nome)}</strong>
+                <strong>${escapeHtml(lead.nome || '---')}</strong>
             </td>
-            <td data-label="E-mail">${escapeHtml(lead.email)}</td>
-            <td data-label="WhatsApp">${escapeHtml(lead.telefone || "---")}</td>
-            <td class="desktop-only" data-label="Perfil">${escapeHtml(lead.perfil || "---")}</td>
+            <td data-label="E-mail">${escapeHtml(lead.email || '---')}</td>
+            <td data-label="WhatsApp">${escapeHtml(lead.telefone || '---')}</td>
+            <td class="desktop-only" data-label="Perfil">${escapeHtml(lead.perfil || '---')}</td>
             <td class="desktop-only" data-label="Data de Cadastro">${dataBr}</td>`;
 
         row.style.cursor = "pointer";
@@ -118,6 +140,9 @@ function setupCheckboxLogic() {
             btnRestaurar.style.display = anyChecked ? "flex" : "none";
         }
     }
+    
+    // Inicializa o estado do botão
+    toggleActionsBtn();
 }
 
 // Eventos globais
@@ -170,25 +195,45 @@ function setupGlobalEvents() {
 
 // Abrir modal de lead inativo
 function abrirModalInativo(lead, dataBr) {
+    if (!lead) {
+        console.error("Lead inválido");
+        return;
+    }
+    
     // Preenche os dados no modal
-    document.getElementById("modalId").value = lead.id;
-    document.getElementById("inputNome").value = lead.nome || "";
-    document.getElementById("inputEmail").value = lead.email || "";
-    document.getElementById("inputTelefone").value = lead.telefone || "";
-    document.getElementById("inputPerfil").value = lead.perfil || "---";
-    document.getElementById("inputNotas").value = lead.notas_internas || "";
-    document.getElementById("modalData").textContent = dataBr;
-    document.getElementById("modalDataArquivamento").textContent = 
-        lead.data_arquivamento ? new Date(lead.data_arquivamento).toLocaleDateString("pt-BR") : dataBr;
+    const modalId = document.getElementById("modalId");
+    const inputNome = document.getElementById("inputNome");
+    const inputEmail = document.getElementById("inputEmail");
+    const inputTelefone = document.getElementById("inputTelefone");
+    const inputPerfil = document.getElementById("inputPerfil");
+    const inputNotas = document.getElementById("inputNotas");
+    const modalData = document.getElementById("modalData");
+    const modalDataArquivamento = document.getElementById("modalDataArquivamento");
+    const statusSelect = document.getElementById("inputStatusEspecial");
+    const motivoArquivamento = document.getElementById("inputMotivoArquivamento");
+    
+    if (modalId) modalId.value = lead.id || "";
+    if (inputNome) inputNome.value = lead.nome || "";
+    if (inputEmail) inputEmail.value = lead.email || "";
+    if (inputTelefone) inputTelefone.value = lead.telefone || "";
+    if (inputPerfil) inputPerfil.value = lead.perfil || "---";
+    if (inputNotas) inputNotas.value = lead.notas_internas || "";
+    if (modalData) modalData.textContent = dataBr;
+    
+    // Data de arquivamento
+    const arquivadoEm = lead.arquivado_em || lead.data_arquivamento;
+    if (modalDataArquivamento) {
+        modalDataArquivamento.textContent = arquivadoEm 
+            ? new Date(arquivadoEm).toLocaleDateString("pt-BR")
+            : dataBr;
+    }
     
     // Motivo do arquivamento
-    const motivoArquivamento = document.getElementById("inputMotivoArquivamento");
     if (motivoArquivamento) {
-        motivoArquivamento.value = lead.motivo_arquivamento || "Não informado";
+        motivoArquivamento.value = lead.motivo_arquivamento || "Lead movido para arquivo";
     }
     
     // Configura o status especial
-    const statusSelect = document.getElementById("inputStatusEspecial");
     if (statusSelect && lead.status_especial) {
         statusSelect.value = lead.status_especial;
     }
@@ -314,21 +359,26 @@ window.fecharModal = function() {
 
 // Atualizar cards de estatísticas
 function atualizarCardsInativos(leads) {
+    // Garantir que leads é um array
+    if (!Array.isArray(leads)) {
+        console.error("atualizarCardsInativos: leads não é um array", leads);
+        leads = [];
+    }
+    
     const total = leads.length;
 
     const homecare = leads.filter(
-        (l) => l.perfil && l.perfil.toLowerCase().includes("home"),
+        (l) => l && l.perfil && l.perfil.toLowerCase().includes("home"),
     ).length;
 
     const clinica = leads.filter(
-        (l) =>
-            l.perfil &&
+        (l) => l && l.perfil &&
             (l.perfil.toLowerCase().includes("clinica") ||
              l.perfil.toLowerCase().includes("fixa")),
     ).length;
 
     const misto = leads.filter(
-        (l) => l.perfil && l.perfil.toLowerCase().includes("misto"),
+        (l) => l && l.perfil && l.perfil.toLowerCase().includes("misto"),
     ).length;
 
     // Atualiza os cards com animação
@@ -349,9 +399,11 @@ function atualizarCardsInativos(leads) {
             }, 200);
         }
     });
+    
+    console.log(`📊 Cards atualizados: Total=${total}, Homecare=${homecare}, Clínica=${clinica}, Misto=${misto}`);
 }
 
-// Setup header interactions (se não existir no components.js)
+// Setup header interactions (fallback)
 if (typeof setupHeaderInteractions !== "function") {
     window.setupHeaderInteractions = function() {
         if (window.headerEventsBound) return;
