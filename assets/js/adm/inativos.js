@@ -16,25 +16,64 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function carregarInativos() {
   try {
+    console.log("🔍 Buscando leads inativos em:", `${API_CONFIG.BASE_URL}ver-inativos.php`);
+    
     const response = await fetch(`${API_CONFIG.BASE_URL}ver-inativos.php`, {
       method: "GET",
-      ...API_CONFIG.FETCH_OPTIONS, // Mesmo do leads.js
+      ...API_CONFIG.FETCH_OPTIONS,
     });
 
-    if (!response.ok) throw new Error("Erro na requisição ao servidor");
+    console.log("📡 Status da resposta:", response.status);
+    
+    if (!response.ok) {
+      if (response.status === 401) {
+        showToast("Sessão expirada. Faça login novamente.", "error");
+        setTimeout(() => window.location.href = "login.html", 2000);
+        return;
+      }
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
 
-    const leads = await response.json();
+    // Verificar se a resposta tem conteúdo
+    const textResponse = await response.text();
+    console.log("📄 Resposta bruta:", textResponse.substring(0, 200));
+    
+    if (!textResponse || textResponse.trim() === "") {
+      throw new Error("Resposta vazia do servidor");
+    }
+    
+    let leads;
+    try {
+      leads = JSON.parse(textResponse);
+    } catch (e) {
+      console.error("❌ Erro ao fazer parse do JSON:", e);
+      throw new Error("Resposta inválida do servidor");
+    }
+    
+    if (!Array.isArray(leads)) {
+      console.error("Resposta não é um array:", leads);
+      if (leads && leads.error) {
+        throw new Error(leads.error);
+      }
+      throw new Error("Formato de resposta inválido");
+    }
+    
+    console.log(`✅ ${leads.length} leads inativos carregados`);
     atualizarCardsInativos(leads);
     renderizarTabela(leads);
+    
   } catch (error) {
     console.error("❌ Erro ao carregar inativos:", error);
-    showToast("Erro ao carregar leads arquivados", "error");
+    showToast("Erro ao carregar leads arquivados: " + error.message, "error");
     
-    // Exibir mensagem na tabela igual ao leads.js
     const tableBody = document.getElementById("leads-table-body");
     if (tableBody) {
-      tableBody.innerHTML = `<td><td colspan="6" style="text-align:center; padding:40px; color:#dc2626;">
-        <i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados.
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#dc2626;">
+        <i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados.<br>
+        <small>${error.message}</small><br>
+        <button onclick="location.reload()" style="margin-top:10px; padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer;">
+          Tentar novamente
+        </button>
       </td></tr>`;
     }
   }
@@ -78,7 +117,7 @@ function renderizarTabela(leads) {
   if (!leads || leads.length === 0) {
     tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#64748b;">
       <i class="fas fa-inbox"></i> Nenhum lead arquivado encontrado.
-    </td></tr>`;
+     </td></tr>`;
     return;
   }
 
@@ -93,7 +132,7 @@ function renderizarTabela(leads) {
 
     row.innerHTML = `
       <td style="width: 40px; text-align: center;">
-        <input type="checkbox" class="lead-checkbox" value="${lead.id}" onclick="event.stopPropagation()">
+        <input type="checkbox" class="lead-checkbox" value="${escapeHtml(lead.id)}" onclick="event.stopPropagation()">
       </td>
       <td>
         <strong>${escapeHtml(lead.nome)}</strong>
@@ -149,14 +188,23 @@ function setupGlobalEvents() {
         document.querySelectorAll(".lead-checkbox:checked"),
       ).map((cb) => cb.value);
       
-      if (!confirm(`Restaurar ${ids.length} leads selecionados? Eles voltarão para a lista ativa.`)) return;
+      if (ids.length === 0) {
+        showToast("Nenhum lead selecionado", "warning");
+        return;
+      }
+      
+      if (!confirm(`Restaurar ${ids.length} lead(s) selecionado(s)? Eles voltarão para a lista ativa.`)) return;
+
+      const originalText = btnRestaurar.innerHTML;
+      btnRestaurar.disabled = true;
+      btnRestaurar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restaurando...';
 
       try {
         const res = await fetch(`${API_CONFIG.BASE_URL}restaurar-leads.php`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ids }),
-          credentials: "include", // Mesmo do leads.js
+          credentials: "include",
         });
 
         if (res.status === 401) {
@@ -168,13 +216,17 @@ function setupGlobalEvents() {
         const result = await res.json();
         if (result.status === "success") {
           showToast(result.message, "success");
-          location.reload();
+          setTimeout(() => location.reload(), 1500);
         } else {
           showToast(result.message || "Erro ao restaurar", "error");
+          btnRestaurar.disabled = false;
+          btnRestaurar.innerHTML = originalText;
         }
       } catch (e) {
         console.error("Erro na restauração:", e);
         showToast("Erro ao restaurar leads", "error");
+        btnRestaurar.disabled = false;
+        btnRestaurar.innerHTML = originalText;
       }
     };
   }
@@ -189,12 +241,6 @@ function abrirModalInativo(lead, dataFormatada) {
   document.getElementById("inputStatusEspecial").value = lead.status_especial || "Nenhum";
   document.getElementById("inputNotas").value = lead.notas_internas || "";
   document.getElementById("modalData").innerText = dataFormatada;
-
-  // Adicionar campo motivo do arquivamento se existir no HTML
-  const motivoArquivamento = document.getElementById("inputMotivoArquivamento");
-  if (motivoArquivamento) {
-    motivoArquivamento.value = lead.motivo_arquivamento || "Lead movido para arquivo";
-  }
 
   // Configurar WhatsApp
   const btnWhats = document.getElementById("btnWhatsapp");
@@ -253,6 +299,7 @@ function abrirModalInativo(lead, dataFormatada) {
             restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
           }
         } catch (e) {
+          console.error("Erro na restauração:", e);
           showToast("Erro ao restaurar lead", "error");
           restaurarBtn.disabled = false;
           restaurarBtn.innerHTML = '<i class="fas fa-undo"></i> Restaurar Lead';
@@ -270,7 +317,7 @@ window.fecharModal = () => {
   document.getElementById("inputNome").readOnly = false;
   document.getElementById("inputEmail").readOnly = false;
   document.getElementById("inputTelefone").readOnly = false;
-  document.getElementById("inputPerfil").readOnly = true; // Perfil sempre readonly
+  document.getElementById("inputPerfil").readOnly = true;
   document.getElementById("inputNotas").readOnly = false;
   document.getElementById("inputStatusEspecial").disabled = false;
   
