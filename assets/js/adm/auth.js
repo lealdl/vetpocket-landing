@@ -112,7 +112,7 @@ function fazerLogout() {
   
   // Redirecionar para login
   setTimeout(() => {
-    window.location.href = "/login.html";
+    window.location.href = "login.html";
   }, 500);
 }
 
