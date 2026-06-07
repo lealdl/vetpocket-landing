@@ -18,7 +18,8 @@
             <li><a href="index.html"><i class="fas fa-users"></i> Leads Ativos</a></li>
             <li><a href="inativos.html"><i class="fas fa-archive"></i> Leads Inativos</a></li>
             <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
-            <li><a href="javascript:void(0)" id="btnLogoutSair"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            <!-- 🔥 USANDO onclick DIRETO NO HTML -->
+            <li><a href="javascript:void(0)" onclick="mostrarModalLogout()"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
         </ul>
     </nav>
 </aside>
@@ -32,8 +33,8 @@
         <h3>Sair do Sistema</h3>
         <p>Tem certeza que deseja sair? Você precisará fazer login novamente para acessar o painel.</p>
         <div class="modal-confirm-buttons">
-            <button class="btn-confirm-no" id="btnCancelLogout">Cancelar</button>
-            <button class="btn-confirm-yes" id="btnConfirmLogout">Sair</button>
+            <button class="btn-confirm-no" onclick="fecharModalLogout()">Cancelar</button>
+            <button class="btn-confirm-yes" onclick="confirmarLogout()">Sair</button>
         </div>
     </div>
 </div>
@@ -47,11 +48,23 @@
 </div>
 
 <script>
-    // 🔥 FUNÇÃO DE LOGOUT
-    function fazerLogout() {
-        console.log("🚪 Iniciando logout...");
+    // Funções globais para o logout
+    window.mostrarModalLogout = function() {
+        console.log("🖱️ Mostrando modal de confirmação");
+        const modal = document.getElementById('modalLogoutConfirm');
+        if (modal) modal.style.display = 'flex';
+    };
+    
+    window.fecharModalLogout = function() {
+        console.log("❌ Fechando modal");
+        const modal = document.getElementById('modalLogoutConfirm');
+        if (modal) modal.style.display = 'none';
+    };
+    
+    window.confirmarLogout = function() {
+        console.log("🚪 Confirmando logout...");
         
-        // Esconder modal de confirmação
+        // Fechar modal de confirmação
         const modalConfirm = document.getElementById('modalLogoutConfirm');
         if (modalConfirm) modalConfirm.style.display = 'none';
         
@@ -59,10 +72,10 @@
         const modalLoading = document.getElementById('modalLogoutLoading');
         if (modalLoading) modalLoading.style.display = 'flex';
         
-        // Pegar token antes de remover
+        // Pegar token
         const token = localStorage.getItem("auth_token");
         
-        // Chamar API de logout para invalidar token
+        // Chamar API de logout
         if (token && typeof API_CONFIG !== 'undefined') {
             fetch(`${API_CONFIG.BASE_URL}logout.php`, {
                 method: "POST",
@@ -71,77 +84,28 @@
                     'Authorization': `Bearer ${token}`
                 },
                 credentials: "include"
-            }).catch((error) => {
-                console.error("Erro ao chamar logout.php:", error);
-            });
+            }).catch(() => {});
         }
         
-        // Limpar localStorage após 500ms
+        // Limpar localStorage e redirecionar
         setTimeout(() => {
             localStorage.removeItem("isLoggedIn");
             localStorage.removeItem("auth_token");
             localStorage.removeItem("user_id");
             localStorage.removeItem("user_name");
             
-            // Mostrar toast de sucesso
             if (typeof showToast === 'function') {
                 showToast("Logout realizado com sucesso!", "success");
             }
             
-            // Redirecionar para login
             setTimeout(() => {
                 window.location.href = "login.html";
             }, 500);
         }, 500);
-    }
+    };
     
-    // 🔥 CONFIGURAR EVENTOS (sem esperar DOMContentLoaded)
-    // O header já está no DOM quando este script executa
-    (function() {
-        console.log("🔧 Configurando eventos do header...");
-        
-        // Configurar o botão de logout
-        const btnLogout = document.getElementById("btnLogoutSair");
-        if (btnLogout) {
-            console.log("✅ Botão Sair encontrado");
-            btnLogout.addEventListener("click", function(e) {
-                e.preventDefault();
-                console.log("🖱️ Clique no Sair detectado!");
-                const modalConfirm = document.getElementById('modalLogoutConfirm');
-                if (modalConfirm) modalConfirm.style.display = 'flex';
-            });
-        } else {
-            console.error("❌ Botão Sair NÃO encontrado");
-        }
-        
-        // Configurar botão cancelar
-        const btnCancel = document.getElementById('btnCancelLogout');
-        if (btnCancel) {
-            btnCancel.addEventListener('click', function() {
-                const modalConfirm = document.getElementById('modalLogoutConfirm');
-                if (modalConfirm) modalConfirm.style.display = 'none';
-            });
-        }
-        
-        // Configurar botão confirmar
-        const btnConfirm = document.getElementById('btnConfirmLogout');
-        if (btnConfirm) {
-            btnConfirm.addEventListener('click', function() {
-                fazerLogout();
-            });
-        }
-        
-        // Fechar modal ao clicar fora
-        const modalConfirm = document.getElementById('modalLogoutConfirm');
-        if (modalConfirm) {
-            modalConfirm.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.style.display = 'none';
-                }
-            });
-        }
-        
-        // Menu mobile
+    // Menu mobile
+    document.addEventListener('DOMContentLoaded', function() {
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const sidebar = document.querySelector('.adm-sidebar');
         const overlay = document.querySelector('.adm-overlay');
@@ -158,6 +122,14 @@
             });
         }
         
-        console.log("✅ Eventos do header configurados");
-    })();
+        // Fechar modal ao clicar fora
+        const modalConfirm = document.getElementById('modalLogoutConfirm');
+        if (modalConfirm) {
+            modalConfirm.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    window.fecharModalLogout();
+                }
+            });
+        }
+    });
 </script>
