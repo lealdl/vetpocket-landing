@@ -315,3 +315,97 @@ body {
   visibility: visible !important;
   z-index: 1000 !important;
 }
+/* Modal de loading e confirmação */
+.modal-confirm {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-confirm-content {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-confirm-content i {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.modal-confirm-content h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.modal-confirm-content p {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.modal-confirm-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.modal-confirm-buttons button {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-confirm-yes {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-confirm-yes:hover {
+    background: #b91c1c;
+}
+
+.btn-confirm-no {
+    background: #e5e7eb;
+    color: #333;
+}
+
+.btn-confirm-no:hover {
+    background: #d1d5db;
+}
+
+/* Loading spinner */
+.spinner-logout {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #dc2626;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #666;
+    font-size: 14px;
+}

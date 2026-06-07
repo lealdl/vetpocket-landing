@@ -18,33 +18,103 @@
             <li><a href="index.html"><i class="fas fa-users"></i> Leads Ativos</a></li>
             <li><a href="inativos.html"><i class="fas fa-archive"></i> Leads Inativos</a></li>
             <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
-            <!-- 🔥 USANDO onclick DIRETO NO HTML -->
-            <li><a href="javascript:void(0)" onclick="fazerLogoutHeader()"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            <li><a href="javascript:void(0)" id="btnLogoutSair"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
         </ul>
     </nav>
 </aside>
 
 <div class="adm-overlay"></div>
 
+<!-- Modal de confirmação de logout -->
+<div id="modalLogoutConfirm" class="modal-confirm">
+    <div class="modal-confirm-content">
+        <i class="fas fa-sign-out-alt" style="color: #dc2626;"></i>
+        <h3>Sair do Sistema</h3>
+        <p>Tem certeza que deseja sair? Você precisará fazer login novamente para acessar o painel.</p>
+        <div class="modal-confirm-buttons">
+            <button class="btn-confirm-no" id="btnCancelLogout">Cancelar</button>
+            <button class="btn-confirm-yes" id="btnConfirmLogout">Sair</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de loading -->
+<div id="modalLogoutLoading" class="modal-confirm" style="display: none;">
+    <div class="modal-confirm-content">
+        <div class="spinner-logout"></div>
+        <h3>Fazendo logout...</h3>
+        <p class="loading-text">Aguarde um momento enquanto encerramos sua sessão.</p>
+    </div>
+</div>
+
 <script>
-    // 🔥 FUNÇÃO DE LOGOUT GLOBAL
-    window.fazerLogoutHeader = function() {
-        if (confirm("Tem certeza que deseja sair?")) {
+    // Função de logout com modal personalizado
+    function fazerLogout() {
+        // Esconder modal de confirmação
+        document.getElementById('modalLogoutConfirm').style.display = 'none';
+        
+        // Mostrar modal de loading
+        document.getElementById('modalLogoutLoading').style.display = 'flex';
+        
+        // Pegar token antes de remover
+        const token = localStorage.getItem("auth_token");
+        
+        // Chamar API de logout para invalidar token (opcional)
+        if (token) {
+            fetch(`${API_CONFIG.BASE_URL}logout.php`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: "include"
+            }).catch((error) => {
+                console.error("Erro ao chamar logout.php:", error);
+            });
+        }
+        
+        // Limpar localStorage após 500ms
+        setTimeout(() => {
             localStorage.removeItem("isLoggedIn");
             localStorage.removeItem("auth_token");
             localStorage.removeItem("user_id");
             localStorage.removeItem("user_name");
             
+            // Mostrar toast de sucesso
             if (typeof showToast === 'function') {
                 showToast("Logout realizado com sucesso!", "success");
             }
             
-            setTimeout(function() {
-                window.location.href = "/login.html";
+            // Redirecionar para login
+            setTimeout(() => {
+                window.location.href = "login.html";
             }, 500);
-        }
-    };
+        }, 500);
+    }
     
-    // Para garantir que a função está disponível
-    console.log("✅ Função fazerLogoutHeader registrada");
+    // Configurar o botão de logout
+    const btnLogout = document.getElementById("btnLogoutSair");
+    if (btnLogout) {
+        btnLogout.addEventListener("click", function(e) {
+            e.preventDefault();
+            // Mostrar modal de confirmação
+            document.getElementById('modalLogoutConfirm').style.display = 'flex';
+        });
+    }
+    
+    // Configurar botões do modal
+    document.getElementById('btnCancelLogout')?.addEventListener('click', function() {
+        document.getElementById('modalLogoutConfirm').style.display = 'none';
+    });
+    
+    document.getElementById('btnConfirmLogout')?.addEventListener('click', function() {
+        fazerLogout();
+    });
+    
+    // Fechar modal ao clicar fora
+    document.getElementById('modalLogoutConfirm')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+        }
+    });
 </script>
