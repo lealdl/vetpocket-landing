@@ -47,8 +47,10 @@
 </div>
 
 <script>
-    // Função de logout com modal personalizado
+    // 🔥 FUNÇÃO DE LOGOUT
     function fazerLogout() {
+        console.log("🚪 Iniciando logout...");
+        
         // Esconder modal de confirmação
         const modalConfirm = document.getElementById('modalLogoutConfirm');
         if (modalConfirm) modalConfirm.style.display = 'none';
@@ -60,8 +62,8 @@
         // Pegar token antes de remover
         const token = localStorage.getItem("auth_token");
         
-        // Chamar API de logout para invalidar token (opcional)
-        if (token) {
+        // Chamar API de logout para invalidar token
+        if (token && typeof API_CONFIG !== 'undefined') {
             fetch(`${API_CONFIG.BASE_URL}logout.php`, {
                 method: "POST",
                 headers: {
@@ -93,17 +95,23 @@
         }, 500);
     }
     
-    // Aguardar o DOM carregar completamente antes de configurar os eventos
-    document.addEventListener('DOMContentLoaded', function() {
+    // 🔥 CONFIGURAR EVENTOS (sem esperar DOMContentLoaded)
+    // O header já está no DOM quando este script executa
+    (function() {
+        console.log("🔧 Configurando eventos do header...");
+        
         // Configurar o botão de logout
         const btnLogout = document.getElementById("btnLogoutSair");
         if (btnLogout) {
+            console.log("✅ Botão Sair encontrado");
             btnLogout.addEventListener("click", function(e) {
                 e.preventDefault();
-                // Mostrar modal de confirmação
+                console.log("🖱️ Clique no Sair detectado!");
                 const modalConfirm = document.getElementById('modalLogoutConfirm');
                 if (modalConfirm) modalConfirm.style.display = 'flex';
             });
+        } else {
+            console.error("❌ Botão Sair NÃO encontrado");
         }
         
         // Configurar botão cancelar
@@ -132,5 +140,24 @@
                 }
             });
         }
-    });
+        
+        // Menu mobile
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.querySelector('.adm-sidebar');
+        const overlay = document.querySelector('.adm-overlay');
+        
+        if (mobileMenuBtn && sidebar && overlay) {
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+        
+        console.log("✅ Eventos do header configurados");
+    })();
 </script>
