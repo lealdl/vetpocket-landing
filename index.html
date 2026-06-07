@@ -464,6 +464,24 @@
         </div>
     </div>
 
+    <!-- 🔥 AVISO PARA USUÁRIOS DO BRAVE - Colocar AQUI -->
+    <div id="brave-notice"
+        style="display: none; position: fixed; bottom: 120px; left: 20px; right: 20px; background: #ff9800; color: #000; padding: 12px 15px; border-radius: 8px; font-size: 13px; z-index: 99999; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+        <i class="fas fa-shield-alt"></i>
+        <strong>Atenção usuários do Brave:</strong> Se o banner de cookies não aparecer, desative o "Shields" (ícone do
+        leão 🦁) para este site.
+        <button onclick="this.parentElement.style.display='none'"
+            style="background: none; border: none; margin-left: 10px; cursor: pointer; font-size: 16px;">&times;</button>
+    </div>
+
+    <script>
+        // Detectar Brave e mostrar aviso
+        if (navigator.brave && navigator.brave.isBrave) {
+            document.getElementById('brave-notice').style.display = 'block';
+            console.log('🛡️ Brave detectado - exibindo aviso');
+        }
+    </script>
+
     <!-- MODAL DE CONFIGURAÇÃO DE COOKIES -->
     <div id="cookie-modal" class="cookie-modal" style="display: none;">
         <div class="cookie-modal-content">
@@ -521,38 +539,38 @@
 
     <!-- SCRIPT DE EMERGÊNCIA PARA O BANNER DE COOKIES -->
     <script>
-        (function() {
+        (function () {
             // Aguardar o DOM carregar
             function initCookieBanner() {
                 const banner = document.getElementById('cookie-banner');
                 const consentido = localStorage.getItem('vetpocket_cookie_consent');
-                
+
                 if (banner && !consentido) {
                     banner.style.display = 'block';
                     console.log('✅ Banner de cookies exibido');
                 }
-                
+
                 // Configurar botão Aceitar
                 const acceptBtn = document.getElementById('cookie-accept');
                 if (acceptBtn) {
-                    acceptBtn.onclick = function() {
+                    acceptBtn.onclick = function () {
                         localStorage.setItem('vetpocket_cookie_consent', 'accepted');
                         document.getElementById('cookie-banner').style.display = 'none';
                         console.log('✅ Cookies aceitos');
                     };
                 }
-                
+
                 // Configurar botão Recusar
                 const rejectBtn = document.getElementById('cookie-reject');
                 if (rejectBtn) {
-                    rejectBtn.onclick = function() {
+                    rejectBtn.onclick = function () {
                         localStorage.setItem('vetpocket_cookie_consent', 'rejected');
                         document.getElementById('cookie-banner').style.display = 'none';
                         console.log('✅ Cookies recusados');
                     };
                 }
             }
-            
+
             // Executar quando o DOM estiver pronto
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initCookieBanner);
