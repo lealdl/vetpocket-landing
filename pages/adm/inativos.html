@@ -147,10 +147,42 @@
     </script>
     <!-- Adicione antes do fechamento do body em inativos.html -->
 <script>
-    // 🔥 FUNÇÃO DE LOGOUT GLOBAL
-    window.fazerLogoutHeader = function() {
-        console.log("Logout chamado!");
-        if (confirm("Tem certeza que deseja sair?")) {
+    // 🔥 FUNÇÕES DE LOGOUT GLOBAIS (definidas antes do header carregar)
+    window.mostrarModalLogout = function() {
+        console.log("🖱️ Mostrando modal de confirmação");
+        const modal = document.getElementById('modalLogoutConfirm');
+        if (modal) modal.style.display = 'flex';
+    };
+    
+    window.fecharModalLogout = function() {
+        console.log("❌ Fechando modal");
+        const modal = document.getElementById('modalLogoutConfirm');
+        if (modal) modal.style.display = 'none';
+    };
+    
+    window.confirmarLogout = function() {
+        console.log("🚪 Confirmando logout...");
+        
+        const modalConfirm = document.getElementById('modalLogoutConfirm');
+        if (modalConfirm) modalConfirm.style.display = 'none';
+        
+        const modalLoading = document.getElementById('modalLogoutLoading');
+        if (modalLoading) modalLoading.style.display = 'flex';
+        
+        const token = localStorage.getItem("auth_token");
+        
+        if (token && typeof API_CONFIG !== 'undefined') {
+            fetch(`${API_CONFIG.BASE_URL}logout.php`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: "include"
+            }).catch(() => {});
+        }
+        
+        setTimeout(() => {
             localStorage.removeItem("isLoggedIn");
             localStorage.removeItem("auth_token");
             localStorage.removeItem("user_id");
@@ -160,12 +192,13 @@
                 showToast("Logout realizado com sucesso!", "success");
             }
             
-            setTimeout(function() {
+            setTimeout(() => {
                 window.location.href = "login.html";
             }, 500);
-        }
+        }, 500);
     };
-    console.log("✅ Função fazerLogoutHeader registrada na página");
+    
+    console.log("✅ Funções de logout registradas globalmente");
 </script>
 </body>
 
