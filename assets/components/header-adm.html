@@ -25,10 +25,10 @@
 
 <div class="adm-overlay"></div>
 
-<!-- Modal de confirmação de logout -->
-<div id="modalLogoutConfirm" class="modal-confirm">
+<!-- Modais de logout -->
+<div id="modalLogoutConfirm" class="modal-confirm" style="display: none;">
     <div class="modal-confirm-content">
-        <i class="fas fa-sign-out-alt" style="color: #dc2626;"></i>
+        <i class="fas fa-sign-out-alt" style="color: #dc2626; font-size: 48px;"></i>
         <h3>Sair do Sistema</h3>
         <p>Tem certeza que deseja sair? Você precisará fazer login novamente para acessar o painel.</p>
         <div class="modal-confirm-buttons">
@@ -38,7 +38,6 @@
     </div>
 </div>
 
-<!-- Modal de loading -->
 <div id="modalLogoutLoading" class="modal-confirm" style="display: none;">
     <div class="modal-confirm-content">
         <div class="spinner-logout"></div>
@@ -51,10 +50,12 @@
     // Função de logout com modal personalizado
     function fazerLogout() {
         // Esconder modal de confirmação
-        document.getElementById('modalLogoutConfirm').style.display = 'none';
+        const modalConfirm = document.getElementById('modalLogoutConfirm');
+        if (modalConfirm) modalConfirm.style.display = 'none';
         
         // Mostrar modal de loading
-        document.getElementById('modalLogoutLoading').style.display = 'flex';
+        const modalLoading = document.getElementById('modalLogoutLoading');
+        if (modalLoading) modalLoading.style.display = 'flex';
         
         // Pegar token antes de remover
         const token = localStorage.getItem("auth_token");
@@ -92,29 +93,44 @@
         }, 500);
     }
     
-    // Configurar o botão de logout
-    const btnLogout = document.getElementById("btnLogoutSair");
-    if (btnLogout) {
-        btnLogout.addEventListener("click", function(e) {
-            e.preventDefault();
-            // Mostrar modal de confirmação
-            document.getElementById('modalLogoutConfirm').style.display = 'flex';
-        });
-    }
-    
-    // Configurar botões do modal
-    document.getElementById('btnCancelLogout')?.addEventListener('click', function() {
-        document.getElementById('modalLogoutConfirm').style.display = 'none';
-    });
-    
-    document.getElementById('btnConfirmLogout')?.addEventListener('click', function() {
-        fazerLogout();
-    });
-    
-    // Fechar modal ao clicar fora
-    document.getElementById('modalLogoutConfirm')?.addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.style.display = 'none';
+    // Aguardar o DOM carregar completamente antes de configurar os eventos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configurar o botão de logout
+        const btnLogout = document.getElementById("btnLogoutSair");
+        if (btnLogout) {
+            btnLogout.addEventListener("click", function(e) {
+                e.preventDefault();
+                // Mostrar modal de confirmação
+                const modalConfirm = document.getElementById('modalLogoutConfirm');
+                if (modalConfirm) modalConfirm.style.display = 'flex';
+            });
+        }
+        
+        // Configurar botão cancelar
+        const btnCancel = document.getElementById('btnCancelLogout');
+        if (btnCancel) {
+            btnCancel.addEventListener('click', function() {
+                const modalConfirm = document.getElementById('modalLogoutConfirm');
+                if (modalConfirm) modalConfirm.style.display = 'none';
+            });
+        }
+        
+        // Configurar botão confirmar
+        const btnConfirm = document.getElementById('btnConfirmLogout');
+        if (btnConfirm) {
+            btnConfirm.addEventListener('click', function() {
+                fazerLogout();
+            });
+        }
+        
+        // Fechar modal ao clicar fora
+        const modalConfirm = document.getElementById('modalLogoutConfirm');
+        if (modalConfirm) {
+            modalConfirm.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
         }
     });
 </script>
