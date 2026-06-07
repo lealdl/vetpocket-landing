@@ -92,7 +92,6 @@
                     atendimentos domiciliares.</p>
             </div>
 
-            <!-- Card Agendamentos Online -->
             <div class="feature-card ai-highlight">
                 <div class="ai-badge">EM BREVE</div>
                 <i class="fas fa-calendar-alt"></i>
@@ -101,7 +100,6 @@
                     WhatsApp. Com lembretes automáticos e gestão de horários.</p>
             </div>
 
-            <!-- Card Gestão Inteligente com IA -->
             <div class="feature-card ai-highlight">
                 <div class="ai-badge">EM BREVE</div>
                 <i class="fas fa-brain"></i>
@@ -296,20 +294,17 @@
     <div id="waitlistModal" class="modal">
         <div class="modal-content" style="min-height: 480px; display: flex; flex-direction: column;">
             <span class="close-modal">&times;</span>
-
             <div id="chat-container">
                 <div class="msg-bubble bot-msg">
                     Olá! Sou o assistente virtual da VetPocket. 🐾 Com quem eu falo?
                 </div>
             </div>
-
             <div id="chat-input-area" class="chat-input-group" style="display: none;">
                 <input type="text" id="chat-user-input" placeholder="Digite sua resposta...">
                 <button id="chat-send-btn" class="btn-chat-send">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
-
             <div id="chat-options-area" class="chat-options-group" style="display: none;"></div>
         </div>
     </div>
@@ -318,7 +313,6 @@
         <div class="modal-content-gallery">
             <span class="close-demo">&times;</span>
             <h2>Conheça o VetPocket por dentro</h2>
-
             <div class="demo-slider">
                 <div class="slide">
                     <img src="assets/img/og-vet-pocket.webp" alt="Agenda de Vacinas e Retornos">
@@ -393,8 +387,6 @@
                 </div>
                 <button class="miya-close-btn" id="miya-close-btn">&times;</button>
             </div>
-
-            <!-- 🔥 MENSAGEM INICIAL SEM OPÇÕES -->
             <div class="miya-modal-body" id="miya-chat-messages">
                 <div class="miya-message bot">
                     <div class="miya-avatar">
@@ -405,7 +397,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="miya-modal-footer">
                 <input type="text" id="miya-user-input" placeholder="Digite seu nome..." autocomplete="off">
                 <button id="miya-send-btn">
@@ -414,6 +405,8 @@
             </div>
         </div>
     </div>
+
+    <!-- SCRIPTS -->
     <script src="assets/js/cookies.js"></script>
     <script src="assets/js/config.js"></script>
     <script src="assets/js/faq.js"></script>
@@ -452,6 +445,7 @@
             }
         });
     </script>
+
     <!-- BANNER DE COOKIES LGPD -->
     <div id="cookie-banner" class="cookie-banner" style="display: none;">
         <div class="cookie-content">
@@ -524,25 +518,50 @@
             </div>
         </div>
     </div>
+
+    <!-- SCRIPT DE EMERGÊNCIA PARA O BANNER DE COOKIES -->
     <script>
-    // Banner de Cookies - Emergência
-    (function() {
-        if (!localStorage.getItem('vetpocket_cookie_consent')) {
-            const banner = document.getElementById('cookie-banner');
-            if (banner) banner.style.display = 'block';
-        }
-        
-        document.getElementById('cookie-accept')?.addEventListener('click', function() {
-            localStorage.setItem('vetpocket_cookie_consent', JSON.stringify({ accepted: true }));
-            document.getElementById('cookie-banner').style.display = 'none';
-        });
-        
-        document.getElementById('cookie-reject')?.addEventListener('click', function() {
-            localStorage.setItem('vetpocket_cookie_consent', JSON.stringify({ accepted: false }));
-            document.getElementById('cookie-banner').style.display = 'none';
-        });
-    })();
-</script>
+        (function() {
+            // Aguardar o DOM carregar
+            function initCookieBanner() {
+                const banner = document.getElementById('cookie-banner');
+                const consentido = localStorage.getItem('vetpocket_cookie_consent');
+                
+                if (banner && !consentido) {
+                    banner.style.display = 'block';
+                    console.log('✅ Banner de cookies exibido');
+                }
+                
+                // Configurar botão Aceitar
+                const acceptBtn = document.getElementById('cookie-accept');
+                if (acceptBtn) {
+                    acceptBtn.onclick = function() {
+                        localStorage.setItem('vetpocket_cookie_consent', 'accepted');
+                        document.getElementById('cookie-banner').style.display = 'none';
+                        console.log('✅ Cookies aceitos');
+                    };
+                }
+                
+                // Configurar botão Recusar
+                const rejectBtn = document.getElementById('cookie-reject');
+                if (rejectBtn) {
+                    rejectBtn.onclick = function() {
+                        localStorage.setItem('vetpocket_cookie_consent', 'rejected');
+                        document.getElementById('cookie-banner').style.display = 'none';
+                        console.log('✅ Cookies recusados');
+                    };
+                }
+            }
+            
+            // Executar quando o DOM estiver pronto
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initCookieBanner);
+            } else {
+                initCookieBanner();
+            }
+        })();
+    </script>
+
 </body>
 
 </html>
