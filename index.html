@@ -414,7 +414,7 @@
             </div>
         </div>
     </div>
-
+    <script src="assets/js/cookies.js"></script>
     <script src="assets/js/config.js"></script>
     <script src="assets/js/faq.js"></script>
     <script src="assets/js/bot.js"></script>
@@ -452,6 +452,78 @@
             }
         });
     </script>
+    <!-- BANNER DE COOKIES LGPD -->
+    <div id="cookie-banner" class="cookie-banner" style="display: none;">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <i class="fas fa-cookie-bite"></i>
+                <strong>🍪 Nós usamos cookies!</strong>
+                <p>Utilizamos cookies para melhorar sua experiência, personalizar conteúdo e analisar nosso tráfego. Ao
+                    continuar navegando, você concorda com nossa <a href="pages/politica-privacidade.html"
+                        target="_blank">Política de Privacidade</a>.</p>
+            </div>
+            <div class="cookie-buttons">
+                <button id="cookie-accept" class="cookie-btn accept">Aceitar Todos</button>
+                <button id="cookie-reject" class="cookie-btn reject">Apenas Essenciais</button>
+                <button id="cookie-config" class="cookie-btn config">Configurar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÃO DE COOKIES -->
+    <div id="cookie-modal" class="cookie-modal" style="display: none;">
+        <div class="cookie-modal-content">
+            <div class="cookie-modal-header">
+                <h3>Configuração de Cookies</h3>
+                <button id="close-cookie-modal" class="cookie-modal-close">&times;</button>
+            </div>
+            <div class="cookie-modal-body">
+                <div class="cookie-option">
+                    <label class="cookie-switch">
+                        <input type="checkbox" id="cookie-essential" checked disabled>
+                        <span class="cookie-slider"></span>
+                    </label>
+                    <div class="cookie-option-text">
+                        <strong>Cookies Essenciais (Sempre ativos)</strong>
+                        <small>Necessários para o funcionamento básico do site, como login e navegação.</small>
+                    </div>
+                </div>
+                <div class="cookie-option">
+                    <label class="cookie-switch">
+                        <input type="checkbox" id="cookie-functional">
+                        <span class="cookie-slider"></span>
+                    </label>
+                    <div class="cookie-option-text">
+                        <strong>Cookies Funcionais</strong>
+                        <small>Permitem lembrar suas preferências, como idioma e região.</small>
+                    </div>
+                </div>
+                <div class="cookie-option">
+                    <label class="cookie-switch">
+                        <input type="checkbox" id="cookie-analytics">
+                        <span class="cookie-slider"></span>
+                    </label>
+                    <div class="cookie-option-text">
+                        <strong>Cookies de Análise</strong>
+                        <small>Nos ajudam a entender como você usa o site para melhorarmos.</small>
+                    </div>
+                </div>
+                <div class="cookie-option">
+                    <label class="cookie-switch">
+                        <input type="checkbox" id="cookie-marketing">
+                        <span class="cookie-slider"></span>
+                    </label>
+                    <div class="cookie-option-text">
+                        <strong>Cookies de Marketing</strong>
+                        <small>Usados para exibir anúncios relevantes para você.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="cookie-modal-footer">
+                <button id="cookie-save-preferences" class="cookie-btn accept">Salvar Preferências</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
