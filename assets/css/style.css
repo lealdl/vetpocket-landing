@@ -167,23 +167,26 @@ nav {
   font-size: 1.1rem;
 }
 
+/* ==========================================================================
+   BOTÃO FLUTUANTE - CORRIGIDO PARA NÃO SOBREPOR FOOTER
+   ========================================================================== */
 .btn-flutuante {
   position: fixed;
-  bottom: 70px;
-  left: 45%;
+  bottom: 30px;
+  left: 50%;
   transform: translateX(-50%);
   background-color: var(--primary);
   color: white !important;
-  padding: 12px 28px;
+  padding: 14px 28px;
   border-radius: 50px;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: bold;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
+  box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
+  z-index: 999;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   transition: 0.3s;
   white-space: nowrap;
 }
@@ -191,6 +194,53 @@ nav {
 .btn-flutuante:hover {
   transform: translateX(-50%) translateY(-3px);
   background-color: var(--primary-hover);
+  box-shadow: 0 12px 25px rgba(109, 40, 217, 0.4);
+}
+
+/* 🔥 CORREÇÃO PARA MOBILE - Ajustar posição e não atrapalhar o footer */
+@media (max-width: 768px) {
+  .btn-flutuante {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    z-index: 999;
+  }
+  
+  .btn-flutuante:hover {
+    transform: translateX(-50%) translateY(-2px);
+  }
+  
+  /* Garantir que o footer tenha espaço suficiente */
+  footer {
+    padding-bottom: 80px !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Último elemento antes do footer precisa de margem extra */
+  .faq:last-of-type {
+    margin-bottom: 30px;
+  }
+}
+
+/* Para telas muito pequenas (<= 480px) */
+@media (max-width: 480px) {
+  .btn-flutuante {
+    bottom: 15px;
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+  
+  .btn-flutuante i {
+    font-size: 12px;
+  }
+  
+  footer {
+    padding-bottom: 70px !important;
+  }
 }
 
 /* ==========================================================================
