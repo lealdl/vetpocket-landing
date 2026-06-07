@@ -34,7 +34,6 @@ const botFlow = {
     const container = document.getElementById("chat-container");
     if (!container) return;
     
-    // Remove typing existente
     const existingTyping = document.getElementById("typing-id");
     if (existingTyping) existingTyping.remove();
     
@@ -87,7 +86,6 @@ const botFlow = {
       this.appendMsg(q, "bot");
 
       if (this.step === 2) {
-        // Pergunta do WhatsApp (opcional)
         setTimeout(() => {
           this.showTyping();
           setTimeout(() => {
@@ -102,7 +100,6 @@ const botFlow = {
           }, 1000);
         }, 400);
       } else if (this.step === 3) {
-        // Pergunta do perfil (última)
         this.showOptions();
       } else {
         if (inputField) inputField.placeholder = "Digite sua resposta...";
@@ -171,7 +168,6 @@ const botFlow = {
     const val = input.value.trim();
 
     if (this.step === 0) {
-      // Nome
       if (!val) return;
       this.data.nome = val;
       this.appendMsg(val, "user");
@@ -179,7 +175,6 @@ const botFlow = {
       this.askNext();
     } 
     else if (this.step === 1) {
-      // Email
       if (!val) return;
       if (!val.includes("@") || !val.includes(".")) {
         this.appendMsg(
@@ -216,7 +211,6 @@ const botFlow = {
       }
     } 
     else if (this.step === 2) {
-      // Telefone (opcional)
       this.data.telefone = val || "Não informado";
       this.appendMsg(val || "Vou deixar em branco por enquanto.", "user");
       this.step++;
@@ -224,6 +218,52 @@ const botFlow = {
     }
 
     input.value = "";
+  },
+
+  // 🔥 FUNÇÃO PARA ATUALIZAR O BADGE DE VAGAS NO FRONT
+  async atualizarBadgeVagas() {
+    try {
+      const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
+      const data = await response.json();
+      const numVagas = parseInt(data.vagas_restantes);
+      
+      const badge = document.getElementById('badge-vagas');
+      const vagasCounter = document.getElementById('vagas-counter');
+      const vagasNumero = document.getElementById('vagas-numero');
+      
+      if (badge) {
+        if (numVagas > 0) {
+          const termoVerbo = numVagas === 1 ? "RESTA" : "RESTAM";
+          const sufixoS = numVagas === 1 ? "" : "S";
+          badge.innerHTML = `🔥 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
+          badge.style.opacity = "1";
+        } else {
+          badge.innerHTML = "🎯 Lista VIP - Aguarde Novas Vagas";
+          badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important;";
+        }
+      }
+      
+      if (vagasCounter && vagasNumero && numVagas > 0) {
+        vagasNumero.textContent = numVagas;
+        vagasCounter.style.display = 'block';
+      } else if (vagasCounter) {
+        vagasCounter.style.display = 'none';
+      }
+      
+      console.log(`✅ Badge atualizado: ${numVagas} vagas restantes`);
+    } catch (e) {
+      console.warn("Erro ao atualizar badge:", e);
+    }
+  },
+
+  // 🔥 FUNÇÃO PARA FECHAR O CHAT
+  fecharChat() {
+    const modal = document.getElementById("waitlistModal");
+    if (modal) {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+      console.log("✅ Chat fechado após cadastro");
+    }
   },
 
   async sendToPHP() {
@@ -248,7 +288,7 @@ const botFlow = {
 
         setTimeout(() => {
           this.showTyping();
-          setTimeout(() => {
+          setTimeout(async () => {
             this.hideTyping();
             
             if (result.ganhou_beneficio === true) {
@@ -267,6 +307,13 @@ const botFlow = {
                 "bot"
               );
             }
+            
+            // 🔥 AGUARDAR 3 SEGUNDOS, ATUALIZAR BADGE E FECHAR CHAT
+            setTimeout(() => {
+              this.atualizarBadgeVagas();
+              this.fecharChat();
+            }, 3000);
+            
           }, 2000);
         }, 1500);
       } 
@@ -275,6 +322,11 @@ const botFlow = {
           "📋 Este e-mail já está cadastrado em nossa lista! Entraremos em contato em breve. 🐾",
           "bot"
         );
+        
+        // Fechar chat após 3 segundos mesmo para email existente
+        setTimeout(() => {
+          this.fecharChat();
+        }, 3000);
       } 
       else {
         this.appendMsg(
@@ -311,7 +363,6 @@ const botFlow = {
 // GESTÃO GLOBAL DE EVENTOS
 // ============================================
 document.addEventListener("click", (e) => {
-  // Abrir modal do chatbot
   if (e.target.closest(".abrir-modal")) {
     const modal = document.getElementById("waitlistModal");
     if (modal) {
@@ -321,7 +372,6 @@ document.addEventListener("click", (e) => {
     }
   }
 
-  // Fechar modal
   if (
     e.target.classList.contains("close-modal") ||
     e.target.id === "waitlistModal"
@@ -333,13 +383,11 @@ document.addEventListener("click", (e) => {
     }
   }
 
-  // Botão enviar
   if (e.target.closest("#chat-send-btn")) {
     botFlow.handleInput();
   }
 });
 
-// Enviar com Enter
 document.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && document.activeElement.id === "chat-user-input") {
     botFlow.handleInput();
