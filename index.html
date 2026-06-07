@@ -524,6 +524,25 @@
             </div>
         </div>
     </div>
+    <script>
+    // Banner de Cookies - Emergência
+    (function() {
+        if (!localStorage.getItem('vetpocket_cookie_consent')) {
+            const banner = document.getElementById('cookie-banner');
+            if (banner) banner.style.display = 'block';
+        }
+        
+        document.getElementById('cookie-accept')?.addEventListener('click', function() {
+            localStorage.setItem('vetpocket_cookie_consent', JSON.stringify({ accepted: true }));
+            document.getElementById('cookie-banner').style.display = 'none';
+        });
+        
+        document.getElementById('cookie-reject')?.addEventListener('click', function() {
+            localStorage.setItem('vetpocket_cookie_consent', JSON.stringify({ accepted: false }));
+            document.getElementById('cookie-banner').style.display = 'none';
+        });
+    })();
+</script>
 </body>
 
 </html>
