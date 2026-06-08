@@ -18,156 +18,8 @@
     <link rel="stylesheet" href="assets/css/qr-code.css">
     <link rel="stylesheet" href="assets/css/miya-chat.css">
     
-    <style>
-        /* ============================================
-           BANNER DE COOKIES INFERIOR COM BLOQUEIO
-           ============================================ */
-        
-        /* Overlay de bloqueio (escurece e trava a página) */
-        .cookie-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 99998;
-            display: none;
-        }
-        
-        .cookie-overlay.active {
-            display: block;
-        }
-        
-        /* Banner inferior (estilo original) */
-        .cookie-banner {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 20px;
-            z-index: 99999;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.5s ease-out;
-            transform: translateY(0);
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        
-        .cookie-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .cookie-text {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        
-        .cookie-text i {
-            font-size: 32px;
-            color: #f59e0b;
-        }
-        
-        .cookie-text strong {
-            font-size: 1rem;
-        }
-        
-        .cookie-text p {
-            margin: 0;
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-        
-        .cookie-text a {
-            color: #f59e0b;
-            text-decoration: underline;
-        }
-        
-        .cookie-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .cookie-btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .cookie-btn.accept {
-            background: #10b981;
-            color: white;
-        }
-        
-        .cookie-btn.accept:hover {
-            background: #059669;
-            transform: scale(1.02);
-        }
-        
-        .cookie-btn.reject {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .cookie-btn.reject:hover {
-            background: #dc2626;
-            transform: scale(1.02);
-        }
-        
-        .cookie-btn.config {
-            background: #3b82f6;
-            color: white;
-        }
-        
-        .cookie-btn.config:hover {
-            background: #2563eb;
-            transform: scale(1.02);
-        }
-        
-        /* Conteúdo principal com blur */
-        .main-content {
-            transition: filter 0.3s ease;
-        }
-        
-        .main-content.blurred {
-            filter: blur(5px);
-            pointer-events: none;
-            user-select: none;
-        }
-        
-        /* Responsivo */
-        @media (max-width: 768px) {
-            .cookie-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            .cookie-text {
-                justify-content: center;
-            }
-            .cookie-buttons {
-                justify-content: center;
-            }
-        }
-    </style>
+    <!-- CSS DO BANNER DE COOKIES -->
+    <link rel="stylesheet" href="assets/css/index.css">
 
     <meta name="description"
         content="VetPocket - Gestão profissional e autoconfigurável para veterinários homecare e clínicas. Modernize seus atendimentos domiciliares.">
@@ -194,7 +46,7 @@
     <div id="cookieOverlay" class="cookie-overlay"></div>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <div id="mainContent" class="main-content blurred">
+    <div id="mainContent" class="main-content">
         <div id="header-placeholder"></div>
 
         <header class="hero" style="position: relative;">
@@ -224,7 +76,6 @@
             <i class="fas fa-rocket"></i> Tenho Interesse
         </a>
 
-        <!-- Demais seções (features, steps, precos, faq, etc.) -->
         <section id="funcionalidades" class="features container">
             <div class="section-title">
                 <h2 style="text-align: center;">Seu consultório, suas regras.</h2>
@@ -425,7 +276,7 @@
         </div>
     </div>
 
-    <!-- BANNER DE COOKIES INFERIOR -->
+    <!-- BANNER DE COOKIES INFERIOR (FORA do mainContent para ser clicável) -->
     <div id="cookieBanner" class="cookie-banner" style="display: none;">
         <div class="cookie-content">
             <div class="cookie-text">
@@ -473,6 +324,13 @@
         </div>
     </div>
 
+    <!-- AVISO PARA USUÁRIOS DO BRAVE -->
+    <div id="braveNotice" class="brave-notice">
+        <i class="fas fa-shield-alt"></i>
+        <strong>🦁 Você está usando o Brave!</strong> Se o banner de cookies não aparecer, desative o "Shields" (ícone do leão) para este site.
+        <button onclick="this.parentElement.style.display='none'">&times;</button>
+    </div>
+
     <!-- SCRIPTS -->
     <script src="assets/js/config.js"></script>
     <script src="assets/js/faq.js"></script>
@@ -511,7 +369,7 @@
 
     <script>
         // ============================================
-        // GERENCIAMENTO DE COOKIES COM BLOQUEIO (BANNER INFERIOR)
+        // GERENCIAMENTO DE COOKIES COM BLOQUEIO - VERSÃO FUNCIONAL
         // ============================================
         (function() {
             const COOKIE_KEY = 'vetpocket_cookie_consent';
@@ -520,34 +378,45 @@
             const banner = document.getElementById('cookieBanner');
             const modal = document.getElementById('cookieModal');
             
-            // Verificar se já consentiu
+            // Função para liberar a página
+            function liberarPagina() {
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    overlay.style.display = 'none';
+                }
+                if (mainContent) mainContent.classList.remove('blurred');
+                if (banner) banner.style.display = 'none';
+                console.log('✅ Página liberada');
+            }
+            
+            // Função para bloquear a página
+            function bloquearPagina() {
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.style.display = 'block';
+                }
+                if (mainContent) mainContent.classList.add('blurred');
+                if (banner) banner.style.display = 'block';
+                console.log('🔒 Página bloqueada');
+            }
+            
+            // Verificar consentimento
             const hasConsent = localStorage.getItem(COOKIE_KEY);
             
             if (!hasConsent) {
-                if (overlay) overlay.classList.add('active');
-                if (mainContent) mainContent.classList.add('blurred');
-                if (banner) banner.style.display = 'block';
+                bloquearPagina();
             } else {
-                if (overlay) overlay.style.display = 'none';
-                if (mainContent) mainContent.classList.remove('blurred');
-                if (banner) banner.style.display = 'none';
+                liberarPagina();
             }
             
             // Aceitar todos
             const acceptBtn = document.getElementById('cookieAcceptBtn');
             if (acceptBtn) {
                 acceptBtn.addEventListener('click', function() {
-                    const preferences = {
-                        essential: true,
-                        functional: true,
-                        analytics: true,
-                        marketing: true
-                    };
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify(preferences));
-                    if (overlay) overlay.style.display = 'none';
-                    if (mainContent) mainContent.classList.remove('blurred');
-                    if (banner) banner.style.display = 'none';
-                    console.log('✅ Cookies aceitos - página liberada');
+                    localStorage.setItem(COOKIE_KEY, JSON.stringify({
+                        essential: true, functional: true, analytics: true, marketing: true
+                    }));
+                    liberarPagina();
                 });
             }
             
@@ -555,21 +424,14 @@
             const rejectBtn = document.getElementById('cookieRejectBtn');
             if (rejectBtn) {
                 rejectBtn.addEventListener('click', function() {
-                    const preferences = {
-                        essential: true,
-                        functional: false,
-                        analytics: false,
-                        marketing: false
-                    };
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify(preferences));
-                    if (overlay) overlay.style.display = 'none';
-                    if (mainContent) mainContent.classList.remove('blurred');
-                    if (banner) banner.style.display = 'none';
-                    console.log('✅ Apenas cookies essenciais - página liberada');
+                    localStorage.setItem(COOKIE_KEY, JSON.stringify({
+                        essential: true, functional: false, analytics: false, marketing: false
+                    }));
+                    liberarPagina();
                 });
             }
             
-            // Abrir modal de configuração
+            // Abrir modal
             const configBtn = document.getElementById('cookieConfigBtn');
             if (configBtn) {
                 configBtn.addEventListener('click', function() {
@@ -577,20 +439,21 @@
                     if (saved) {
                         try {
                             const prefs = JSON.parse(saved);
-                            document.getElementById('cookieFunctional').checked = prefs.functional || false;
-                            document.getElementById('cookieAnalytics').checked = prefs.analytics || false;
-                            document.getElementById('cookieMarketing').checked = prefs.marketing || false;
+                            if (document.getElementById('cookieFunctional')) document.getElementById('cookieFunctional').checked = prefs.functional || false;
+                            if (document.getElementById('cookieAnalytics')) document.getElementById('cookieAnalytics').checked = prefs.analytics || false;
+                            if (document.getElementById('cookieMarketing')) document.getElementById('cookieMarketing').checked = prefs.marketing || false;
                         } catch(e) {}
                     }
                     if (modal) modal.style.display = 'flex';
                 });
             }
             
-            // Fechar modal
+            // Fechar modal sem salvar (mantém bloqueio)
             const closeModalBtn = document.getElementById('closeCookieModal');
             if (closeModalBtn) {
                 closeModalBtn.addEventListener('click', function() {
                     if (modal) modal.style.display = 'none';
+                    console.log('Modal fechado sem salvar - página continua bloqueada');
                 });
             }
             
@@ -606,10 +469,7 @@
                     };
                     localStorage.setItem(COOKIE_KEY, JSON.stringify(preferences));
                     if (modal) modal.style.display = 'none';
-                    if (overlay) overlay.style.display = 'none';
-                    if (mainContent) mainContent.classList.remove('blurred');
-                    if (banner) banner.style.display = 'none';
-                    console.log('✅ Preferências salvas - página liberada');
+                    liberarPagina();
                 });
             }
             
@@ -618,6 +478,7 @@
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) {
                         modal.style.display = 'none';
+                        console.log('Modal fechado sem salvar - página continua bloqueada');
                     }
                 });
             }
@@ -625,7 +486,7 @@
     </script>
 
     <script>
-        // Detectar Brave e mostrar aviso (apenas no console)
+        // Detectar Brave e mostrar aviso
         (function() {
             function detectarBrave() {
                 if (navigator.userAgent.includes('Brave')) return true;
@@ -637,7 +498,9 @@
             
             Promise.resolve(detectarBrave()).then(isBrave => {
                 if (isBrave) {
-                    console.log('🦁 Brave detectado - Se o banner de cookies não aparecer, desative o Shields');
+                    const aviso = document.getElementById('braveNotice');
+                    if (aviso) aviso.style.display = 'block';
+                    console.log('🦁 Brave detectado - exibindo aviso');
                 }
             });
         })();
