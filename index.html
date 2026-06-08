@@ -33,6 +33,122 @@
         content="Modernize sua gestão e impressione seus clientes com o sistema VetPocket.">
     <meta property="twitter:image"
         content="https://vetpocket-landing-phi.vercel.app/assets/img/og-vetpocket-miyako.png">
+    
+    <style>
+        /* CSS para o modal de cookies */
+        .cookie-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+        }
+        .cookie-modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .cookie-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .cookie-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        .cookie-modal-body {
+            padding: 20px;
+        }
+        .cookie-option {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .cookie-option-text {
+            flex: 1;
+        }
+        .cookie-option-text small {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .cookie-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .cookie-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .cookie-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        .cookie-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .cookie-slider {
+            background-color: #10b981;
+        }
+        input:checked + .cookie-slider:before {
+            transform: translateX(26px);
+        }
+        .cookie-modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        .cookie-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .cookie-btn.accept {
+            background: #10b981;
+            color: white;
+        }
+        .cookie-btn.reject {
+            background: #ef4444;
+            color: white;
+        }
+        .cookie-btn.config {
+            background: #3b82f6;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -464,22 +580,36 @@
         </div>
     </div>
 
-    <!-- 🔥 AVISO PARA USUÁRIOS DO BRAVE - Colocar AQUI -->
-    <div id="brave-notice"
-        style="display: none; position: fixed; bottom: 120px; left: 20px; right: 20px; background: #ff9800; color: #000; padding: 12px 15px; border-radius: 8px; font-size: 13px; z-index: 99999; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+    <!-- 🔥 AVISO PARA USUÁRIOS DO BRAVE (APENAS BRAVE VÊ) -->
+    <div id="brave-notice" style="display: none; position: fixed; bottom: 120px; left: 20px; right: 20px; background: #ff9800; color: #000; padding: 12px 15px; border-radius: 8px; font-size: 13px; z-index: 99999; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
         <i class="fas fa-shield-alt"></i>
-        <strong>Atenção usuários do Brave:</strong> Se o banner de cookies não aparecer, desative o "Shields" (ícone do
-        leão 🦁) para este site.
-        <button onclick="this.parentElement.style.display='none'"
-            style="background: none; border: none; margin-left: 10px; cursor: pointer; font-size: 16px;">&times;</button>
+        <strong>🦁 Você está usando o Brave!</strong> Se o banner de cookies não aparecer, desative o "Shields" (ícone do leão) para este site.
+        <button onclick="this.parentElement.style.display='none'" style="background: none; border: none; margin-left: 10px; cursor: pointer; font-size: 16px;">&times;</button>
     </div>
 
     <script>
-        // Detectar Brave e mostrar aviso
-        if (navigator.brave && navigator.brave.isBrave) {
-            document.getElementById('brave-notice').style.display = 'block';
-            console.log('🛡️ Brave detectado - exibindo aviso');
-        }
+        // 🔥 DETECTAR BRAVE E MOSTRAR AVISO APENAS PARA ELE
+        (function() {
+            function detectarBrave() {
+                // Método 1: User Agent
+                if (navigator.userAgent.includes('Brave')) {
+                    return true;
+                }
+                // Método 2: API do Brave
+                if (navigator.brave && typeof navigator.brave.isBrave === 'function') {
+                    return navigator.brave.isBrave();
+                }
+                return false;
+            }
+            
+            Promise.resolve(detectarBrave()).then(isBrave => {
+                if (isBrave) {
+                    const aviso = document.getElementById('brave-notice');
+                    if (aviso) aviso.style.display = 'block';
+                    console.log('🦁 Brave detectado - exibindo aviso');
+                }
+            });
+        })();
     </script>
 
     <!-- MODAL DE CONFIGURAÇÃO DE COOKIES -->
@@ -539,8 +669,7 @@
 
     <!-- SCRIPT DE EMERGÊNCIA PARA O BANNER DE COOKIES -->
     <script>
-        (function () {
-            // Aguardar o DOM carregar
+        (function() {
             function initCookieBanner() {
                 const banner = document.getElementById('cookie-banner');
                 const consentido = localStorage.getItem('vetpocket_cookie_consent');
@@ -550,20 +679,18 @@
                     console.log('✅ Banner de cookies exibido');
                 }
 
-                // Configurar botão Aceitar
                 const acceptBtn = document.getElementById('cookie-accept');
                 if (acceptBtn) {
-                    acceptBtn.onclick = function () {
+                    acceptBtn.onclick = function() {
                         localStorage.setItem('vetpocket_cookie_consent', 'accepted');
                         document.getElementById('cookie-banner').style.display = 'none';
                         console.log('✅ Cookies aceitos');
                     };
                 }
 
-                // Configurar botão Recusar
                 const rejectBtn = document.getElementById('cookie-reject');
                 if (rejectBtn) {
-                    rejectBtn.onclick = function () {
+                    rejectBtn.onclick = function() {
                         localStorage.setItem('vetpocket_cookie_consent', 'rejected');
                         document.getElementById('cookie-banner').style.display = 'none';
                         console.log('✅ Cookies recusados');
@@ -571,7 +698,6 @@
                 }
             }
 
-            // Executar quando o DOM estiver pronto
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initCookieBanner);
             } else {
