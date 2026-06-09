@@ -1,16 +1,11 @@
 /**
  * LÓGICA DO CHATBOT VETPOCKET - MIYA-KO
- * VERSÃO SIMPLIFICADA E FUNCIONAL
+ * VERSÃO COMPLETAMENTE CORRIGIDA
  */
 const botFlow = {
   step: 0,
   isProcessing: false,
   data: { nome: "", email: "", telefone: "", perfil: "" },
-  questions: [
-    "🐾 Olá! Sou a Miya-ko, assistente virtual da VetPocket! 😊<br><br>Como posso chamar você?",
-    "Prazer em te conhecer, {nome}! 🐶<br><br>Qual o seu melhor e-mail para contato?",
-    "📱 Agora, me conta seu WhatsApp para contato? (É opcional, mas agiliza muito!)",
-  ],
 
   init() {
     console.log("🚀 Inicializando chat da Miya-ko...");
@@ -26,7 +21,7 @@ const botFlow = {
       container.innerHTML = "";
       if (inputArea) inputArea.style.display = "none";
       if (optionsArea) optionsArea.style.display = "none";
-      this.fazerPergunta();
+      this.perguntarNome();
     }
   },
 
@@ -79,36 +74,6 @@ const botFlow = {
     }
   },
 
-  fazerPergunta() {
-    const inputField = document.getElementById("chat-user-input");
-    const inputArea = document.getElementById("chat-input-area");
-    const optionsArea = document.getElementById("chat-options-area");
-
-    if (inputArea) inputArea.style.display = "none";
-    if (optionsArea) optionsArea.style.display = "none";
-    
-    this.mostrarDigitando();
-
-    setTimeout(() => {
-      this.esconderDigitando();
-      
-      let pergunta = this.questions[this.step].replace("{nome}", this.data.nome);
-      this.appendMsg(pergunta, "bot");
-
-      if (this.step === 2) {
-        // Pergunta do WhatsApp - campo opcional
-        if (inputField) inputField.placeholder = "WhatsApp (opcional) ou Enter para pular...";
-        this.mostrarInput();
-      } else if (this.step < 2) {
-        // Perguntas de nome e email
-        if (inputField) inputField.placeholder = "Digite sua resposta...";
-        this.mostrarInput();
-      }
-      
-      this.isProcessing = false;
-    }, 1000);
-  },
-
   mostrarInput() {
     const area = document.getElementById("chat-input-area");
     const input = document.getElementById("chat-user-input");
@@ -119,6 +84,52 @@ const botFlow = {
       if (optionsArea) optionsArea.style.display = "none";
       setTimeout(() => input.focus(), 200);
     }
+  },
+
+  perguntarNome() {
+    this.mostrarDigitando();
+    setTimeout(() => {
+      this.esconderDigitando();
+      this.appendMsg("🐾 Olá! Sou a Miya-ko, assistente virtual da VetPocket! 😊<br><br>Como posso chamar você?", "bot");
+      this.mostrarInput();
+      const input = document.getElementById("chat-user-input");
+      if (input) input.placeholder = "Digite seu nome...";
+      this.isProcessing = false;
+    }, 1000);
+  },
+
+  perguntarEmail() {
+    this.mostrarDigitando();
+    setTimeout(() => {
+      this.esconderDigitando();
+      this.appendMsg(`Prazer em te conhecer, ${this.data.nome}! 🐶<br><br>Qual o seu melhor e-mail para contato?`, "bot");
+      this.mostrarInput();
+      const input = document.getElementById("chat-user-input");
+      if (input) input.placeholder = "Digite seu e-mail...";
+      this.isProcessing = false;
+    }, 1000);
+  },
+
+  perguntarWhatsApp() {
+    this.mostrarDigitando();
+    setTimeout(() => {
+      this.esconderDigitando();
+      this.appendMsg("📱 Agora, me conta seu WhatsApp para contato? (É opcional, mas agiliza muito!)", "bot");
+      this.mostrarInput();
+      const input = document.getElementById("chat-user-input");
+      if (input) input.placeholder = "WhatsApp (opcional) ou Enter para pular...";
+      this.isProcessing = false;
+    }, 1000);
+  },
+
+  perguntarPerfil() {
+    this.mostrarDigitando();
+    setTimeout(() => {
+      this.esconderDigitando();
+      this.appendMsg("🎯 Pra finalizar: qual o seu perfil de atendimento?", "bot");
+      this.mostrarOpcoesPerfil();
+      this.isProcessing = false;
+    }, 1000);
   },
 
   mostrarOpcoesPerfil() {
@@ -167,15 +178,15 @@ const botFlow = {
     const input = document.getElementById("chat-user-input");
     const valor = input.value.trim();
 
-    // Step 0: Nome
+    // Step 0: processando nome
     if (this.step === 0) {
       if (!valor) return;
       this.data.nome = valor;
       this.appendMsg(valor, "user");
-      this.step++;
-      this.fazerPergunta();
+      this.step = 1;
+      this.perguntarEmail();
     } 
-    // Step 1: Email
+    // Step 1: processando email
     else if (this.step === 1) {
       if (!valor) return;
       if (!valor.includes("@") || !valor.includes(".")) {
@@ -197,8 +208,8 @@ const botFlow = {
           return;
         }
         this.data.email = valor;
-        this.step++;
-        this.fazerPergunta();
+        this.step = 2;
+        this.perguntarWhatsApp();
       } catch (e) {
         this.esconderDigitando();
         console.error("Erro na verificação:", e);
@@ -206,19 +217,12 @@ const botFlow = {
         input.value = "";
       }
     } 
-    // Step 2: WhatsApp (opcional) - após isso mostra opções de perfil
+    // Step 2: processando WhatsApp (opcional)
     else if (this.step === 2) {
       this.data.telefone = valor || "";
       this.appendMsg(valor || "⏩ Pular (vou deixar em branco por enquanto)", "user");
-      this.step++;
-      
-      // Mostrar pergunta do perfil e opções
-      this.mostrarDigitando();
-      setTimeout(() => {
-        this.esconderDigitando();
-        this.appendMsg("🎯 Pra finalizar: qual o seu perfil de atendimento?", "bot");
-        this.mostrarOpcoesPerfil();
-      }, 1000);
+      this.step = 3;
+      this.perguntarPerfil();
     }
 
     input.value = "";
@@ -272,7 +276,7 @@ const botFlow = {
     console.log("🔄 Recarregando página para atualizar vagas...");
     setTimeout(() => {
       window.location.reload();
-    }, 2000);
+    }, 2500);
   },
 
   async enviarParaPHP() {
