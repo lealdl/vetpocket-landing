@@ -8,8 +8,8 @@ const botFlow = {
   questions: [
     "🐾 Olá! Sou a Miya-ko, assistente virtual da VetPocket! 😊<br><br>Como posso chamar você?",
     "Prazer em te conhecer, {nome}! 🐶<br><br>Qual o seu melhor e-mail para contato?",
-    "📱 E o seu WhatsApp? (Prometo não mandar spam! É opcional, mas agiliza nosso contato)",
-    "🎯 Para finalizar: qual o seu perfil de atendimento atual?",
+    "📱 Agora, me conta seu WhatsApp para contato? (É opcional, mas agiliza muito!)",
+    "🎯 Pra finalizar: qual o seu perfil de atendimento?",
   ],
 
   init() {
@@ -86,10 +86,7 @@ const botFlow = {
     if (inputArea) inputArea.style.display = "none";
     this.showTyping();
 
-    const typingTime = Math.min(
-      1800,
-      Math.max(1000, this.questions[this.step].length * 30),
-    );
+    const typingTime = Math.min(1800, Math.max(1000, this.questions[this.step].length * 30));
 
     setTimeout(() => {
       this.hideTyping();
@@ -97,24 +94,15 @@ const botFlow = {
       this.appendMsg(q, "bot");
 
       if (this.step === 2) {
-        setTimeout(() => {
-          this.showTyping();
-          setTimeout(() => {
-            this.hideTyping();
-            this.appendMsg(
-              "💡 Dica: Seu WhatsApp vai nos ajudar a te avisar sobre as novidades mais rápido! 📱",
-              "bot",
-            );
-            if (inputField)
-              inputField.placeholder = "WhatsApp ou Enter para pular...";
-            this.showInput();
-          }, 1000);
-        }, 400);
+        // Pergunta do WhatsApp (opcional)
+        if (inputField) inputField.placeholder = "WhatsApp (opcional) ou Enter para pular...";
+        setTimeout(() => this.showInput(), 500);
       } else if (this.step === 3) {
-        this.showOptions();
+        // Pergunta do perfil - mostra opções
+        setTimeout(() => this.showOptions(), 500);
       } else {
         if (inputField) inputField.placeholder = "Digite sua resposta...";
-        this.showInput();
+        setTimeout(() => this.showInput(), 500);
       }
       this.isProcessing = false;
     }, typingTime);
@@ -178,6 +166,7 @@ const botFlow = {
     const input = document.getElementById("chat-user-input");
     const val = input.value.trim();
 
+    // Step 0: Nome
     if (this.step === 0) {
       if (!val) return;
       this.data.nome = val;
@@ -185,13 +174,11 @@ const botFlow = {
       this.step++;
       this.askNext();
     } 
+    // Step 1: Email
     else if (this.step === 1) {
       if (!val) return;
       if (!val.includes("@") || !val.includes(".")) {
-        this.appendMsg(
-          "🔍 Hum, esse e-mail parece incompleto... Pode conferir e digitar novamente? 🐾",
-          "bot",
-        );
+        this.appendMsg("🔍 Hum, esse e-mail parece incompleto... Pode conferir e digitar novamente? 🐾", "bot");
         input.value = "";
         return;
       }
@@ -199,17 +186,12 @@ const botFlow = {
       this.showTyping();
 
       try {
-        const resp = await fetch(
-          `${API_CONFIG.BASE_URL}save_lead.php?check_email=${encodeURIComponent(val)}`,
-        );
+        const resp = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?check_email=${encodeURIComponent(val)}`);
         const result = await resp.json();
         this.hideTyping();
         
         if (result.exists) {
-          this.appendMsg(
-            "😕 Ooops... este email já está cadastrado conosco! Quer tentar outro? 🐾",
-            "bot",
-          );
+          this.appendMsg("😕 Ooops... este email já está cadastrado conosco! Quer tentar outro? 🐾", "bot");
           input.value = "";
           return;
         }
@@ -223,9 +205,10 @@ const botFlow = {
         input.value = "";
       }
     } 
+    // Step 2: WhatsApp (opcional)
     else if (this.step === 2) {
-      this.data.telefone = val || "Não informado";
-      this.appendMsg(val || "✅ Vou deixar em branco por enquanto.", "user");
+      this.data.telefone = val || "";
+      this.appendMsg(val || "⏩ Pular (vou deixar em branco por enquanto)", "user");
       this.step++;
       this.askNext();
     }
@@ -233,7 +216,7 @@ const botFlow = {
     input.value = "";
   },
 
-  // 🔥 ATUALIZAR BADGE DE VAGAS
+  // Atualizar badge de vagas no frontend
   async atualizarBadgeVagas() {
     try {
       const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
@@ -279,6 +262,14 @@ const botFlow = {
       document.body.style.overflow = "auto";
       console.log("✅ Chat fechado");
     }
+  },
+
+  // Recarregar a página para atualizar o badge de vagas
+  recarregarPagina() {
+    console.log("🔄 Recarregando página para atualizar vagas...");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
   },
 
   async sendToPHP() {
@@ -335,11 +326,12 @@ const botFlow = {
               );
             }
             
-            // 🔥 ATUALIZAR O BADGE DE VAGAS E FECHAR O CHAT
+            // Atualizar badge e recarregar página
             setTimeout(async () => {
               await this.atualizarBadgeVagas();
               this.fecharChat();
-            }, 2000);
+              this.recarregarPagina();
+            }, 3000);
             
           }, 2000);
         }, 1500);
@@ -383,10 +375,7 @@ document.addEventListener("click", (e) => {
     }
   }
 
-  if (
-    e.target.classList.contains("close-modal") ||
-    e.target.id === "waitlistModal"
-  ) {
+  if (e.target.classList.contains("close-modal") || e.target.id === "waitlistModal") {
     const modal = document.getElementById("waitlistModal");
     if (modal) {
       modal.style.display = "none";
