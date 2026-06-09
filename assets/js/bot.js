@@ -233,6 +233,54 @@ const botFlow = {
     input.value = "";
   },
 
+  // 🔥 ATUALIZAR BADGE DE VAGAS
+  async atualizarBadgeVagas() {
+    try {
+      const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
+      const data = await response.json();
+      const numVagas = parseInt(data.vagas_restantes);
+      const vagasOcupadas = parseInt(data.vagas_ocupadas) || 0;
+      
+      const badge = document.getElementById('badge-vagas');
+      const vagasCounter = document.getElementById('vagas-counter');
+      const vagasNumero = document.getElementById('vagas-numero');
+      
+      if (badge) {
+        if (numVagas > 0) {
+          const termoVerbo = numVagas === 1 ? "RESTA" : "RESTAM";
+          const sufixoS = numVagas === 1 ? "" : "S";
+          badge.innerHTML = `🔥 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
+          badge.style.opacity = "1";
+        } else {
+          badge.innerHTML = "🎯 Lista VIP - Aguarde Novas Vagas";
+          badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important;";
+        }
+      }
+      
+      if (vagasCounter && vagasNumero && numVagas > 0) {
+        vagasNumero.textContent = numVagas;
+        vagasCounter.style.display = 'block';
+      } else if (vagasCounter) {
+        vagasCounter.style.display = 'none';
+      }
+      
+      console.log(`✅ Badge atualizado: ${numVagas} vagas restantes, ${vagasOcupadas} ocupadas`);
+      return { numVagas, vagasOcupadas };
+    } catch (e) {
+      console.warn("Erro ao atualizar badge:", e);
+      return { numVagas: 0, vagasOcupadas: 0 };
+    }
+  },
+
+  fecharChat() {
+    const modal = document.getElementById("waitlistModal");
+    if (modal) {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+      console.log("✅ Chat fechado");
+    }
+  },
+
   async sendToPHP() {
     try {
       const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php`, {
@@ -266,29 +314,32 @@ const botFlow = {
 
         setTimeout(() => {
           this.showTyping();
-          setTimeout(() => {
+          setTimeout(async () => {
             this.hideTyping();
             
             if (result.ganhou_beneficio === true) {
+              const vagasRestantes = result.vagas_restantes || 0;
               this.appendMsg(
                 `🎉 <b>PARABÉNS! Você é um dos primeiros!</b> 🎉<br><br>` +
-                `🐾 Você garantiu uma das vagas com <b>30% OFF</b> no plano vitalício! 🚀<br><br>` +
-                `💚 Em breve nossa equipe entrará em contato.<br><br>` +
+                `🐾 Você garantiu uma das ${vagasRestantes + 1} últimas vagas com <b>30% OFF</b> no plano vitalício! 🚀<br><br>` +
+                `💚 Em breve nossa equipe entrará em contato com as instruções para garantir seu desconto especial.<br><br>` +
                 `✨ Obrigada pelo interesse! 💜`,
                 "bot"
               );
             } else {
               this.appendMsg(
                 `💝 As vagas com 30% OFF se esgotaram, mas você está na <b>Lista VIP</b>! 😊<br><br>` +
-                `🐾 Você receberá notificações sobre próximas oportunidades.<br><br>` +
+                `🐾 Você receberá notificações sobre próximas oportunidades, lançamentos e novidades em primeira mão.<br><br>` +
                 `✨ Obrigada pelo interesse! 💜`,
                 "bot"
               );
             }
             
-            setTimeout(() => {
+            // 🔥 ATUALIZAR O BADGE DE VAGAS E FECHAR O CHAT
+            setTimeout(async () => {
+              await this.atualizarBadgeVagas();
               this.fecharChat();
-            }, 4000);
+            }, 2000);
             
           }, 2000);
         }, 1500);
@@ -315,15 +366,6 @@ const botFlow = {
         "❌ Erro de conexão com o servidor. Por favor, recarregue a página e tente novamente. 🐾",
         "bot"
       );
-    }
-  },
-
-  fecharChat() {
-    const modal = document.getElementById("waitlistModal");
-    if (modal) {
-      modal.style.display = "none";
-      document.body.style.overflow = "auto";
-      console.log("✅ Chat fechado");
     }
   }
 };
