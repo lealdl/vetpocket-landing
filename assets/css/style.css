@@ -32,15 +32,16 @@ body {
   overflow-x: hidden;
   transition: padding-top 0.3s ease;
 }
+
 .pricing-features li span {
   font-size: 0.9rem;
   vertical-align: super;
   margin-left: 3px;
   font-weight: bold;
   display: inline-block;
-
   cursor: help;
 }
+
 #waitlistForm .txt-opcional {
   display: block !important;
   width: 100% !important;
@@ -50,6 +51,7 @@ body {
   margin: 3px 0 15px 0 !important;
   font-weight: 500;
 }
+
 /* Tipografia Base */
 h1 {
   font-size: clamp(2rem, 5vw, 3.5rem);
@@ -168,11 +170,11 @@ nav {
 }
 
 /* ==========================================================================
-   BOTÃO FLUTUANTE - CORRIGIDO PARA NÃO SOBREPOR FOOTER
+   BOTÃO FLUTUANTE DE INTERESSE - CORRIGIDO
    ========================================================================== */
 .btn-flutuante {
   position: fixed;
-  bottom: 30px;
+  bottom: 70px;
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--primary);
@@ -197,50 +199,58 @@ nav {
   box-shadow: 0 12px 25px rgba(109, 40, 217, 0.4);
 }
 
-/* 🔥 CORREÇÃO PARA MOBILE - Ajustar posição e não atrapalhar o footer */
-@media (max-width: 768px) {
-  .btn-flutuante {
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    z-index: 999;
-  }
-  
-  .btn-flutuante:hover {
-    transform: translateX(-50%) translateY(-2px);
-  }
-  
-  /* Garantir que o footer tenha espaço suficiente */
-  footer {
-    padding-bottom: 80px !important;
-    margin-bottom: 0 !important;
-  }
-  
-  /* Último elemento antes do footer precisa de margem extra */
-  .faq:last-of-type {
-    margin-bottom: 30px;
-  }
+/* ==========================================================================
+   BOTÃO FLUTUANTE MIYA-KO (Chat) - CORRIGIDO
+   ========================================================================== */
+.miya-floating-container {
+  position: fixed;
+  bottom: 140px;
+  right: 20px;
+  z-index: 1000;
 }
 
-/* Para telas muito pequenas (<= 480px) */
-@media (max-width: 480px) {
-  .btn-flutuante {
-    bottom: 15px;
-    padding: 8px 16px;
-    font-size: 0.75rem;
-    gap: 6px;
-  }
-  
-  .btn-flutuante i {
-    font-size: 12px;
-  }
-  
-  footer {
-    padding-bottom: 70px !important;
-  }
+.miya-floating-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6d28d9, #4c1d95);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(109, 40, 217, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.miya-floating-btn:hover {
+  transform: scale(1.05);
+}
+
+.miya-floating-btn img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.miya-floating-text {
+  position: absolute;
+  right: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+.miya-floating-btn:hover .miya-floating-text {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* ==========================================================================
@@ -389,6 +399,7 @@ nav {
   display: flex;
   align-items: center;
 }
+
 /* Estilo para recursos que serão lançados (Em Breve) */
 .badge-soon {
   background: linear-gradient(135deg, #ff9800, #f57c00);
@@ -399,7 +410,6 @@ nav {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  /* Sombras suaves em vez de animação */
   box-shadow: 0 2px 4px rgba(245, 124, 0, 0.2);
   display: inline-block;
   vertical-align: middle;
@@ -409,10 +419,11 @@ nav {
 /* O item da lista fica apenas com opacidade reduzida, indicando que ainda não está ativo */
 .feature-pending {
   opacity: 0.7;
-  filter: grayscale(0.5); /* Deixa levemente acinzentado */
+  filter: grayscale(0.5);
   display: flex;
   align-items: center;
 }
+
 /* Ajuste opcional para o ícone no li */
 .pricing-features li.feature-pending i {
   color: #94a3b8;
@@ -431,6 +442,7 @@ nav {
   max-width: 800px;
   margin: 0 auto;
 }
+
 .faq-item {
   background: var(--white);
   margin-bottom: 10px;
@@ -477,16 +489,15 @@ nav {
 }
 
 /* --- ESTILIZAÇÃO DO MODAL DE FORMULÁRIO --- */
-
 .modal-content {
   background: var(--white);
-  margin: 5% auto; /* Aproxima do topo em telas menores */
+  margin: 5% auto;
   padding: 40px 30px;
   border-radius: 24px;
   max-width: 480px;
-  width: 90%; /* Responsividade para mobile */
+  width: 90%;
   position: relative;
-  max-height: 90vh; /* Não deixa o modal ser maior que 90% da altura da tela */
+  max-height: 90vh;
   overflow-y: auto;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
@@ -528,14 +539,14 @@ nav {
 #waitlistForm {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Espaço entre os campos */
+  gap: 15px;
 }
 
 #waitlistForm input {
   width: 100%;
   padding: 14px 18px;
   border-radius: 12px;
-  border: 2px solid #e5e7eb; /* Borda visível e limpa */
+  border: 2px solid #e5e7eb;
   background: #f9fafb;
   font-family: inherit;
   font-size: 1rem;
@@ -544,7 +555,7 @@ nav {
 }
 
 #waitlistForm input:focus {
-  border-color: var(--primary); /* Destaque ao clicar */
+  border-color: var(--primary);
   background: var(--white);
   box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.1);
 }
@@ -571,9 +582,10 @@ nav {
   font-weight: 600;
   font-size: 0.95rem;
 }
+
 /* Destaque para o Card de IA */
 .feature-card.ai-highlight {
-  border: 2px solid #6d28d9; /* Cor indigo para diferenciar */
+  border: 2px solid #6d28d9;
   background: linear-gradient(145deg, #ffffff, #f5f3ff);
   position: relative;
   overflow: hidden;
@@ -596,7 +608,6 @@ nav {
   font-weight: bold;
   padding: 5px 35px;
   transform: rotate(45deg);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ==========================================================================
@@ -641,6 +652,8 @@ nav {
   opacity: 1;
   visibility: visible;
 }
+
+/* Chat */
 #chat-container {
   flex-grow: 1;
   overflow-y: auto;
@@ -649,6 +662,7 @@ nav {
   gap: 10px;
   padding: 10px;
 }
+
 .bot-msg {
   background: #f0f2f5;
   color: #1c1e21;
@@ -658,6 +672,7 @@ nav {
   max-width: 85%;
   font-size: 0.95rem;
 }
+
 .user-msg {
   background: #6d28d9;
   color: white;
@@ -667,18 +682,21 @@ nav {
   max-width: 85%;
   font-size: 0.95rem;
 }
+
 .chat-input-group {
   display: none;
   padding: 15px 0;
   border-top: 1px solid #eee;
   gap: 10px;
 }
+
 .chat-input-group input {
   flex-grow: 1;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 10px;
 }
+
 .btn-chat-send {
   background: #6d28d9;
   color: white;
@@ -687,6 +705,7 @@ nav {
   border-radius: 10px;
   cursor: pointer;
 }
+
 .chat-options-group {
   display: none;
   flex-wrap: wrap;
@@ -694,6 +713,7 @@ nav {
   justify-content: center;
   padding: 15px 0;
 }
+
 .btn-chat-opt {
   background: white;
   border: 1px solid #6d28d9;
@@ -703,10 +723,12 @@ nav {
   cursor: pointer;
   transition: 0.3s;
 }
+
 .btn-chat-opt:hover {
   background: #6d28d9;
   color: white;
 }
+
 /* Layout do Chat */
 #chat-container {
   flex-grow: 1;
@@ -730,14 +752,14 @@ nav {
 }
 
 .bot-msg {
-  background: #f1f5f9; /* Tom neutro Light Mode */
+  background: #f1f5f9;
   color: #334155;
   align-self: flex-start;
   border-bottom-left-radius: 4px;
 }
 
 .user-msg {
-  background: #6d28d9; /* Seu roxo padrão */
+  background: #6d28d9;
   color: white;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
@@ -781,10 +803,11 @@ nav {
   background: #6d28d9;
   color: white;
 }
+
 /* ==========================================================================
    7. RESPONSIVIDADE (MEDIA QUERIES)
    ========================================================================== */
-/* @media (max-width: 930px) {
+@media (max-width: 930px) {
   #mobileMenuBtn {
     display: flex;
   }
@@ -809,109 +832,31 @@ nav {
 
   .nav-links li {
     width: 100%;
-  }
-
-  .nav-links li a:not(.btn-nav-demo):not(.btn-primary) {
-    display: block;
-    padding: 15px 0;
-    border-bottom: 1px solid #f1f2f6;
-    color: var(--text-main);
-  }
-
-  .nav-links .btn-nav-demo,
-  .nav-links .btn-primary {
-    display: block !important;
-    width: 100% !important;
-    margin: 15px 0 !important;
-    padding: 12px 10px !important;
-    border-bottom: none !important;
-  }
-
-  .nav-links .btn-nav-demo {
-    border: 2px solid var(--primary) !important;
-    color: var(--primary) !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero {
-    padding-top: 40px !important;
-  }
-
-  .hero-btns {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero-btns .btn-primary,
-  .hero-btns .btn-outline {
-    width: 100%;
-    max-width: 320px;
-  }
-  .btn-flutuante {
-    right: 30px; 
-    bottom: 10px;
-    padding: 10px 20px;
-    font-size: 0.9rem;
-  }
-} */
-/* Menu Mobile e Ajustes Intermediários */
-/* ==========================================================================
-   AJUSTE CORRETIVO: MENU MOBILE (Bordas e Espaçamento)
-   ========================================================================== */
-@media (max-width: 930px) {
-  #mobileMenuBtn {
-    display: flex;
-  }
-
-  .nav-links {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 280px;
-    height: 100vh;
-    background: var(--white);
-    flex-direction: column;
-    padding: 80px 20px 40px; /* Padding lateral de 20px garante respiro para os botões */
-    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2);
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000000;
-  }
-
-  .nav-links.active {
-    left: 0 !important;
-  }
-
-  .nav-links li {
-    width: 100%;
     list-style: none;
-    margin: 0; /* Remove margens que podem deslocar o botão */
+    margin: 0;
   }
 
-  /* Links normais com borda apenas embaixo */
   .nav-links li a:not(.btn-nav-demo):not(.btn-primary) {
     display: block;
     padding: 15px 10px;
     border-bottom: 1px solid #f1f2f6;
     color: var(--text-main);
-    margin-left: 0; /* Reseta o margin-left 30px do desktop */
+    margin-left: 0;
   }
 
-  /* O AJUSTE DO BOTÃO (IMAGEM 3) */
   .nav-links .btn-nav-demo {
     display: block !important;
     width: 100% !important;
-    margin: 20px 0 10px 0 !important; /* Espaçamento vertical */
+    margin: 20px 0 10px 0 !important;
     padding: 14px 10px !important;
-    border: 2px solid var(--primary) !important; /* Borda completa */
-    border-radius: 12px !important; /* Borda arredondada profissional */
+    border: 2px solid var(--primary) !important;
+    border-radius: 12px !important;
     color: var(--primary) !important;
     background: transparent !important;
     text-align: center;
-    box-sizing: border-box; /* Garante que a borda não 'vaze' para fora */
+    box-sizing: border-box;
   }
 
-  /* Botão Área Admin no Mobile */
   .nav-links .btn-primary {
     display: block !important;
     width: 100% !important;
@@ -923,6 +868,304 @@ nav {
     text-align: center;
   }
 }
+
+/* ==========================================================================
+   BOTÕES FLUTUANTES - CORREÇÃO MOBILE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .btn-flutuante {
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    z-index: 999;
+  }
+  
+  .btn-flutuante:hover {
+    transform: translateX(-50%) translateY(-2px);
+  }
+  
+  .miya-floating-container {
+    bottom: 120px;
+    right: 15px;
+  }
+  
+  .miya-floating-btn {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .miya-floating-btn img {
+    width: 42px;
+    height: 42px;
+  }
+  
+  /* Garantir que o footer tenha espaço suficiente */
+  footer {
+    padding-bottom: 80px !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .faq:last-of-type {
+    margin-bottom: 30px;
+  }
+  
+  /* Ajustes de seções */
+  .hero {
+    padding: 30px 0 40px !important;
+  }
+  
+  section {
+    padding: 30px 0 !important;
+  }
+  
+  .section-title {
+    margin-bottom: 25px !important;
+  }
+  
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  .section-title h2 {
+    font-size: 1.3rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .section-title p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  
+  .features-grid {
+    gap: 12px;
+  }
+  
+  .feature-card {
+    padding: 15px !important;
+    margin-bottom: 0px !important;
+  }
+  
+  .feature-card h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .feature-card i {
+    font-size: 1.3rem !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .steps-grid {
+    gap: 15px;
+  }
+  
+  .step-item {
+    padding: 10px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .step-number {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+  
+  .pricing-section {
+    padding-top: 20px !important;
+  }
+  
+  .pricing-card {
+    padding: 20px 15px !important;
+    margin-top: 10px !important;
+    transform: scale(1);
+  }
+  
+  .main-price .amount {
+    font-size: 2.2rem !important;
+  }
+  
+  .hero-btns {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px !important;
+  }
+  
+  .faq-question {
+    font-size: 0.9rem !important;
+    padding: 10px !important;
+  }
+}
+
+/* ==========================================================================
+   FAQ - RESPONSIVIDADE MOBILE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .faq .section-title h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .faq-question {
+    font-size: 0.85rem !important;
+    padding: 14px 12px !important;
+    gap: 12px !important;
+  }
+  
+  .faq-question .icon {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 14px !important;
+  }
+  
+  .faq-answer {
+    padding: 0 12px 16px 12px !important;
+  }
+  
+  .faq-answer p {
+    font-size: 0.8rem !important;
+    line-height: 1.45 !important;
+  }
+}
+
+/* ==========================================================================
+   FAQ - ACORDEON
+   ========================================================================== */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding: 0 16px;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 300px;
+  transition: max-height 0.4s ease-in;
+  padding: 0 16px 16px 16px;
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.faq-question:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.faq-question .icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e2e8f0;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 700;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.faq-item.active .faq-question .icon {
+  background: #7c4dff;
+  color: white;
+}
+
+.faq-answer p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.faq-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .faq .section-title h2 {
+    font-size: 1.3rem !important;
+  }
+  
+  .faq-question {
+    font-size: 0.8rem !important;
+    padding: 12px 10px !important;
+  }
+  
+  .faq-answer p {
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .btn-flutuante {
+    bottom: 50px;
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+  
+  .btn-flutuante i {
+    font-size: 12px;
+  }
+  
+  .miya-floating-container {
+    bottom: 110px;
+    right: 10px;
+  }
+  
+  footer {
+    padding-bottom: 70px !important;
+  }
+}
+
+/* ==========================================================================
+   FAQ - CORREÇÃO URGENTE (Forçar esconder respostas)
+   ========================================================================== */
+.faq-answer {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  padding: 0 16px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: max-height 0.3s ease-out, opacity 0.2s ease, padding 0.2s ease !important;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 300px !important;
+  padding: 0 16px 16px 16px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.faq-item.active .faq-question .icon {
+  background: #7c4dff !important;
+  color: white !important;
+}
+
+.faq-question {
+  cursor: pointer !important;
+}
+
+/* ==========================================================================
+   VAGAS ALERT
+   ========================================================================== */
 .vagas-alert {
   background: rgba(255, 77, 77, 0.1);
   border: 1px solid #ff4d4d;
@@ -935,27 +1178,23 @@ nav {
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.03);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
 }
-/* Estilo para o preço original riscado */
+
+/* ==========================================================================
+   PREÇOS
+   ========================================================================== */
 .old-price {
   display: block;
-  color: #94a3b8; /* Cinza suave */
-  text-decoration: line-through; /* O riscado propriamente dito */
+  color: #94a3b8;
+  text-decoration: line-through;
   font-size: 1.1rem;
   margin-bottom: -5px;
   font-weight: 400;
 }
 
-/* Ajuste na cor do preço principal para destacar os 30% OFF */
 .main-price .amount {
   color: #1e293b;
   font-size: 3rem;
@@ -963,10 +1202,9 @@ nav {
   letter-spacing: -1px;
 }
 
-/* Badge de desconto ao lado do preço */
 .discount-tag {
-  background: #dcfce7; /* Verde clarinho */
-  color: #166534; /* Verde escuro para contraste */
+  background: #dcfce7;
+  color: #166534;
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -975,18 +1213,21 @@ nav {
   margin-left: 5px;
 }
 
-/* Animação sutil para a badge de vagas no topo do card */
 #badge-vagas {
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-/* Animação de digitação do Bot */
+
+/* ==========================================================================
+   ANIMAÇÕES DE DIGITAÇÃO
+   ========================================================================== */
 .typing-dots {
   display: flex;
   gap: 4px;
   padding: 10px;
 }
+
 .typing-dots span {
   width: 8px;
   height: 8px;
@@ -994,16 +1235,17 @@ nav {
   border-radius: 50%;
   animation: typing 1s infinite ease-in-out;
 }
+
 .typing-dots span:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .typing-dots span:nth-child(3) {
   animation-delay: 0.4s;
 }
 
 @keyframes typing {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateY(0);
     opacity: 0.4;
   }
@@ -1012,7 +1254,7 @@ nav {
     opacity: 1;
   }
 }
-/* Animação de Digitando */
+
 .typing-indicator {
   display: inline-flex;
   align-items: center;
@@ -1035,14 +1277,13 @@ nav {
 .typing-indicator span:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .typing-indicator span:nth-child(3) {
   animation-delay: 0.4s;
 }
 
 @keyframes typing {
-  0%,
-  80%,
-  100% {
+  0%, 80%, 100% {
     transform: scale(0.6);
     opacity: 0.4;
   }
@@ -1051,565 +1292,58 @@ nav {
     opacity: 1;
   }
 }
+
+/* ==========================================================================
+   PRICING FEATURES
+   ========================================================================== */
 .pricing-features {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0 0 0;
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0 0;
 }
 
 .pricing-feature-item {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    margin-bottom: 16px;
-    padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 16px;
+  padding: 0;
 }
 
 .pricing-feature-item:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .pricing-feature-item i {
-    width: 20px;
-    color: #10b981;
-    font-size: 14px;
+  width: 20px;
+  color: #10b981;
+  font-size: 14px;
 }
 
 .pricing-feature-item .badge-soon {
-    background: #f59e0b;
-    color: white;
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    margin-left: 8px;
+  background: #f59e0b;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 8px;
 }
 
 .pricing-feature-item .asterisk {
-    color: #ef4444;
-    margin-left: 4px;
+  color: #ef4444;
+  margin-left: 4px;
 }
+
 .pricing-card .btn-primary {
-    display: block;
-    text-align: center;
-    margin-top: 28px;
+  display: block;
+  text-align: center;
+  margin-top: 28px;
 }
 
 .hosting-note {
-    margin-top: 16px;
-    font-size: 0.75rem;
-    color: #6b7280;
-    line-height: 1.4;
-}
-/* Ajustes Específicos para Celulares (Onde o conteúdo diminui) */
-@media (max-width: 768px) {
-  /* Diminuindo drasticamente o topo e os vãos entre seções */
-  .hero {
-    padding: 30px 0 40px !important; /* Reduzido de 60px para 40px no bottom */
-  }
-
-  section {
-    padding: 30px 0 !important; /* Reduzido de 40px para 30px */
-  }
-
-  /* Reduz o espaço abaixo dos títulos de seção para aproximar do conteúdo/cards */
-  .section-title {
-    margin-bottom: 25px !important;
-  }
-
-  /* Redução dos Títulos Principais */
-  h1 {
-    font-size: 1.5rem !important;
-  }
-  .section-title h2 {
-    font-size: 1.3rem !important; /* Leve redução extra para harmonia */
-    margin-bottom: 8px !important;
-  }
-  .section-title p {
-    font-size: 0.85rem;
-    line-height: 1.4;
-  }
-
-  /* Ajuste dos Cards de Funcionalidades */
-  .features-grid {
-    gap: 12px; /* Espaço entre cards menor */
-  }
-  .feature-card {
-    padding: 15px !important; /* Mais compacto */
-    margin-bottom: 0px !important;
-  }
-  .feature-card h3 {
-    font-size: 1.1rem !important;
-    margin-bottom: 8px !important;
-  }
-  .feature-card i {
-    font-size: 1.3rem !important;
-    margin-bottom: 10px !important;
-  }
-
-  /* Ajuste dos Passos (Steps) */
-  .steps-grid {
-    gap: 15px;
-  }
-  .step-item {
-    padding: 10px !important;
-    margin-bottom: 5px !important;
-  }
-  .step-number {
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
-  }
-
-  /* Ajuste dos Preços (Removendo o vácuo exagerado) */
-  .pricing-section {
-    padding-top: 20px !important;
-  }
-  .pricing-card {
-    padding: 20px 15px !important;
-    margin-top: 10px !important;
-    transform: scale(
-      1
-    ); /* Removi o scale para evitar distorção visual em telas finas */
-  }
-  .main-price .amount {
-    font-size: 2.2rem !important;
-  }
-
-  /* Botões e Flutuante */
-  .hero-btns {
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px !important;
-  }
-
-  .btn-flutuante {
-    right: 15px;
-    bottom: 15px;
-    padding: 8px 12px;
-    font-size: 0.8rem;
-  }
-
-  /* FAQ */
-  .faq-question {
-    font-size: 0.9rem !important;
-    padding: 10px !important;
-  }
-}
-/* ==========================================================================
-   FAQ - RESPONSIVIDADE MOBILE
-   ========================================================================== */
-
-@media (max-width: 768px) {
-    .faq .section-title h2 {
-        font-size: 1.5rem !important;
-    }
-    
-    .faq-question {
-        font-size: 0.85rem !important;
-        padding: 14px 12px !important;
-        gap: 12px !important;
-    }
-    
-    .faq-question .icon {
-        width: 24px !important;
-        height: 24px !important;
-        font-size: 14px !important;
-    }
-    
-    .faq-answer {
-        padding: 0 12px 16px 12px !important;
-    }
-    
-    .faq-answer p {
-        font-size: 0.8rem !important;
-        line-height: 1.45 !important;
-    }
-}
-/* ==========================================================================
-   FAQ - ACORDEON
-   ========================================================================== */
-
-/* Esconde a resposta inicialmente */
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    padding: 0 16px;
-}
-
-/* Mostra a resposta quando o item está ativo */
-.faq-item.active .faq-answer {
-    max-height: 300px; /* Ajuste conforme necessário */
-    transition: max-height 0.4s ease-in;
-    padding: 0 16px 16px 16px;
-}
-
-/* Estilo do botão da pergunta */
-.faq-question {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 16px 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1e293b;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
-}
-
-.faq-question:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-}
-
-/* Ícone (+ / -) */
-.faq-question .icon {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #e2e8f0;
-    border-radius: 50%;
-    font-size: 18px;
-    font-weight: 700;
-    color: #64748b;
-    transition: all 0.2s;
-}
-
-.faq-item.active .faq-question .icon {
-    background: #7c4dff;
-    color: white;
-}
-
-/* Conteúdo da resposta */
-.faq-answer p {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #475569;
-}
-
-/* Espaçamento entre itens */
-.faq-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-@media (max-width: 480px) {
-    .faq .section-title h2 {
-        font-size: 1.3rem !important;
-    }
-    
-    .faq-question {
-        font-size: 0.8rem !important;
-        padding: 12px 10px !important;
-    }
-    
-    .faq-answer p {
-        font-size: 0.75rem !important;
-        line-height: 1.4 !important;
-    }
-}
-/* ==========================================================================
-   FAQ - CORREÇÃO URGENTE (Forçar esconder respostas)
-   ========================================================================== */
-
-/* FORÇA todas as respostas a ficarem escondidas inicialmente */
-.faq-answer {
-    max-height: 0 !important;
-    overflow: hidden !important;
-    padding: 0 16px !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: max-height 0.3s ease-out, opacity 0.2s ease, padding 0.2s ease !important;
-}
-
-/* FORÇA a resposta a aparecer APENAS quando o item estiver ativo */
-.faq-item.active .faq-answer {
-    max-height: 300px !important;
-    padding: 0 16px 16px 16px !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* Garante que o ícone muda cor quando ativo */
-.faq-item.active .faq-question .icon {
-    background: #7c4dff !important;
-    color: white !important;
-}
-
-/* Garante que o cursor é pointer */
-.faq-question {
-    cursor: pointer !important;
-}
-/* ==========================================================================
-   BANNER DE COOKIES (LGPD/GDPR)
-   ========================================================================== */
-.cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    color: white;
-    padding: 20px;
-    z-index: 10000;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.5s ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-    to {
-        transform: translateY(0);
-    }
-}
-
-.cookie-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.cookie-text {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.cookie-text i {
-    font-size: 32px;
-    color: #f59e0b;
-}
-
-.cookie-text strong {
-    font-size: 1rem;
-}
-
-.cookie-text p {
-    margin: 0;
-    font-size: 0.85rem;
-    opacity: 0.9;
-}
-
-.cookie-text a {
-    color: #f59e0b;
-    text-decoration: underline;
-}
-
-.cookie-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.cookie-btn {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.cookie-btn.accept {
-    background: #10b981;
-    color: white;
-}
-
-.cookie-btn.accept:hover {
-    background: #059669;
-    transform: scale(1.02);
-}
-
-.cookie-btn.reject {
-    background: #ef4444;
-    color: white;
-}
-
-.cookie-btn.reject:hover {
-    background: #dc2626;
-}
-
-.cookie-btn.config {
-    background: #3b82f6;
-    color: white;
-}
-
-.cookie-btn.config:hover {
-    background: #2563eb;
-}
-
-/* MODAL DE CONFIGURAÇÃO */
-.cookie-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 10001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cookie-modal-content {
-    background: white;
-    border-radius: 16px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.cookie-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.cookie-modal-header h3 {
-    margin: 0;
-    color: #1f2937;
-}
-
-.cookie-modal-close {
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: #9ca3af;
-}
-
-.cookie-modal-body {
-    padding: 20px;
-}
-
-.cookie-option {
-    display: flex;
-    gap: 15px;
-    padding: 15px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.cookie-option:last-child {
-    border-bottom: none;
-}
-
-.cookie-option-text {
-    flex: 1;
-}
-
-.cookie-option-text strong {
-    display: block;
-    margin-bottom: 5px;
-    color: #1f2937;
-}
-
-.cookie-option-text small {
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-/* TOGGLE SWITCH */
-.cookie-switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-}
-
-.cookie-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.cookie-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.3s;
-    border-radius: 24px;
-}
-
-.cookie-slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-}
-
-input:checked + .cookie-slider {
-    background-color: #10b981;
-}
-
-input:checked + .cookie-slider:before {
-    transform: translateX(26px);
-}
-
-input:disabled + .cookie-slider {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.cookie-modal-footer {
-    padding: 20px;
-    border-top: 1px solid #e5e7eb;
-    text-align: center;
-}
-
-/* Responsivo */
-@media (max-width: 768px) {
-    .cookie-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .cookie-text {
-        justify-content: center;
-    }
-    
-    .cookie-buttons {
-        justify-content: center;
-    }
-    
-    .cookie-option {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.4;
 }
