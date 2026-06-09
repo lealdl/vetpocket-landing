@@ -6,20 +6,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   faqItems.forEach((item) => {
     const question = item.querySelector(".faq-question");
+    const icon = question.querySelector(".icon");
 
     question.addEventListener("click", () => {
       const isOpen = item.classList.contains("active");
 
-      // Fecha todos os outros itens (opcional, para efeito sanfona)
-      faqItems.forEach((i) => {
-        i.classList.remove("active");
-        i.querySelector(".icon").innerText = "+";
+      // Fecha todos os outros itens (sanfona)
+      faqItems.forEach((otherItem) => {
+        if (otherItem !== item && otherItem.classList.contains("active")) {
+          otherItem.classList.remove("active");
+          const otherIcon = otherItem.querySelector(".icon");
+          if (otherIcon) otherIcon.textContent = "+";
+        }
       });
 
-      // Se o item clicado não estava aberto, abre ele
-      if (!isOpen) {
+      // Alterna o item clicado
+      if (isOpen) {
+        item.classList.remove("active");
+        if (icon) icon.textContent = "+";
+      } else {
         item.classList.add("active");
-        question.querySelector(".icon").innerText = "-";
+        if (icon) icon.textContent = "-";
       }
     });
   });
