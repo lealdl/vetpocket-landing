@@ -1,6 +1,6 @@
 /**
  * LÓGICA DO CHATBOT VETPOCKET - MIYA-KO
- * VERSÃO COMPLETAMENTE CORRIGIDA
+ * VERSÃO SIMPLIFICADA MÁXIMA
  */
 const botFlow = {
   step: 0,
@@ -21,17 +21,22 @@ const botFlow = {
       container.innerHTML = "";
       if (inputArea) inputArea.style.display = "none";
       if (optionsArea) optionsArea.style.display = "none";
-      this.perguntarNome();
+      
+      // Mostrar primeira mensagem
+      this.mostrarDigitando();
+      setTimeout(() => {
+        this.esconderDigitando();
+        this.appendMsg("🐾 Olá! Sou a Miya-ko, assistente virtual da VetPocket! 😊<br><br>Como posso chamar você?", "bot");
+        this.mostrarInput("Digite seu nome...");
+      }, 1000);
     }
   },
 
   mostrarDigitando() {
     const container = document.getElementById("chat-container");
     if (!container) return;
-    
-    const existingTyping = document.getElementById("typing-id");
-    if (existingTyping) existingTyping.remove();
-    
+    const existing = document.getElementById("typing-id");
+    if (existing) existing.remove();
     const typing = document.createElement("div");
     typing.id = "typing-id";
     typing.className = "typing-indicator bot-msg msg-bubble";
@@ -48,94 +53,41 @@ const botFlow = {
   appendMsg(text, type) {
     const container = document.getElementById("chat-container");
     if (!container) return;
-    
     const msg = document.createElement("div");
     msg.className = `msg-bubble ${type === "bot" ? "bot-msg" : "user-msg"}`;
-    
     if (type === "bot") {
-      msg.innerHTML = `
-        <div style="display: flex; align-items: flex-start; gap: 10px;">
-          <img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya-ko" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
-          <div style="flex: 1;">${text}</div>
-        </div>
-      `;
+      msg.innerHTML = `<div style="display: flex; align-items: flex-start; gap: 10px;">
+        <img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya-ko" style="width: 35px; height: 35px; border-radius: 50%;">
+        <div style="flex:1">${text}</div>
+      </div>`;
     } else {
       msg.innerHTML = text;
     }
-    
     container.appendChild(msg);
     this.scrollToBottom();
   },
 
   scrollToBottom() {
     const container = document.getElementById("chat-container");
-    if (container) {
-      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
-    }
+    if (container) container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
   },
 
-  mostrarInput() {
+  mostrarInput(placeholder) {
     const area = document.getElementById("chat-input-area");
     const input = document.getElementById("chat-user-input");
     const optionsArea = document.getElementById("chat-options-area");
-    
     if (area && input) {
       area.style.display = "flex";
       if (optionsArea) optionsArea.style.display = "none";
+      input.placeholder = placeholder || "Digite sua resposta...";
+      input.value = "";
       setTimeout(() => input.focus(), 200);
     }
-  },
-
-  perguntarNome() {
-    this.mostrarDigitando();
-    setTimeout(() => {
-      this.esconderDigitando();
-      this.appendMsg("🐾 Olá! Sou a Miya-ko, assistente virtual da VetPocket! 😊<br><br>Como posso chamar você?", "bot");
-      this.mostrarInput();
-      const input = document.getElementById("chat-user-input");
-      if (input) input.placeholder = "Digite seu nome...";
-      this.isProcessing = false;
-    }, 1000);
-  },
-
-  perguntarEmail() {
-    this.mostrarDigitando();
-    setTimeout(() => {
-      this.esconderDigitando();
-      this.appendMsg(`Prazer em te conhecer, ${this.data.nome}! 🐶<br><br>Qual o seu melhor e-mail para contato?`, "bot");
-      this.mostrarInput();
-      const input = document.getElementById("chat-user-input");
-      if (input) input.placeholder = "Digite seu e-mail...";
-      this.isProcessing = false;
-    }, 1000);
-  },
-
-  perguntarWhatsApp() {
-    this.mostrarDigitando();
-    setTimeout(() => {
-      this.esconderDigitando();
-      this.appendMsg("📱 Agora, me conta seu WhatsApp para contato? (É opcional, mas agiliza muito!)", "bot");
-      this.mostrarInput();
-      const input = document.getElementById("chat-user-input");
-      if (input) input.placeholder = "WhatsApp (opcional) ou Enter para pular...";
-      this.isProcessing = false;
-    }, 1000);
-  },
-
-  perguntarPerfil() {
-    this.mostrarDigitando();
-    setTimeout(() => {
-      this.esconderDigitando();
-      this.appendMsg("🎯 Pra finalizar: qual o seu perfil de atendimento?", "bot");
-      this.mostrarOpcoesPerfil();
-      this.isProcessing = false;
-    }, 1000);
   },
 
   mostrarOpcoesPerfil() {
     const inputArea = document.getElementById("chat-input-area");
     const optionsArea = document.getElementById("chat-options-area");
-    
     if (inputArea) inputArea.style.display = "none";
     if (optionsArea) {
       optionsArea.style.display = "flex";
@@ -152,12 +104,7 @@ const botFlow = {
     if (this.isProcessing) return;
     this.isProcessing = true;
 
-    const labels = {
-      homecare: "🏠 Só Homecare",
-      fixa: "🏥 Clínica Fixa",
-      misto: "🚀 Misto",
-    };
-    
+    const labels = { homecare: "🏠 Só Homecare", fixa: "🏥 Clínica Fixa", misto: "🚀 Misto" };
     this.data.perfil = perfil;
     this.appendMsg(labels[perfil], "user");
     
@@ -165,33 +112,41 @@ const botFlow = {
     if (optionsArea) optionsArea.style.display = "none";
 
     this.mostrarDigitando();
-    setTimeout(async () => {
+    setTimeout(() => {
       this.esconderDigitando();
       this.appendMsg("🎉 Perfeito! Estou processando seu cadastro... Um momentinho! 🐾", "bot");
-      await this.enviarParaPHP();
+      this.enviarParaPHP();
     }, 1000);
   },
 
   async processarInput() {
     if (this.isProcessing) return;
+    this.isProcessing = true;
     
     const input = document.getElementById("chat-user-input");
     const valor = input.value.trim();
 
-    // Step 0: processando nome
+    // Step 0: Nome
     if (this.step === 0) {
-      if (!valor) return;
+      if (!valor) { this.isProcessing = false; return; }
       this.data.nome = valor;
       this.appendMsg(valor, "user");
       this.step = 1;
-      this.perguntarEmail();
+      this.mostrarDigitando();
+      setTimeout(() => {
+        this.esconderDigitando();
+        this.appendMsg(`Prazer em te conhecer, ${this.data.nome}! 🐶<br><br>Qual o seu melhor e-mail para contato?`, "bot");
+        this.mostrarInput("Digite seu e-mail...");
+        this.isProcessing = false;
+      }, 1000);
     } 
-    // Step 1: processando email
+    // Step 1: Email
     else if (this.step === 1) {
-      if (!valor) return;
+      if (!valor) { this.isProcessing = false; return; }
       if (!valor.includes("@") || !valor.includes(".")) {
         this.appendMsg("🔍 Hum, esse e-mail parece incompleto... Pode conferir e digitar novamente? 🐾", "bot");
         input.value = "";
+        this.isProcessing = false;
         return;
       }
       this.appendMsg(valor, "user");
@@ -205,24 +160,34 @@ const botFlow = {
         if (result.exists) {
           this.appendMsg("😕 Ooops... este email já está cadastrado conosco! Quer tentar outro? 🐾", "bot");
           input.value = "";
+          this.isProcessing = false;
           return;
         }
         this.data.email = valor;
         this.step = 2;
-        this.perguntarWhatsApp();
+        this.appendMsg("📱 Agora, me conta seu WhatsApp para contato? (É opcional, mas agiliza muito!)", "bot");
+        this.mostrarInput("WhatsApp (opcional) ou Enter para pular...");
+        this.isProcessing = false;
       } catch (e) {
         this.esconderDigitando();
-        console.error("Erro na verificação:", e);
-        this.appendMsg("⚠️ Erro ao verificar email. Por favor, tente novamente! 🙏", "bot");
+        console.error(e);
+        this.appendMsg("⚠️ Erro ao verificar email. Tente novamente! 🙏", "bot");
         input.value = "";
+        this.isProcessing = false;
       }
     } 
-    // Step 2: processando WhatsApp (opcional)
+    // Step 2: WhatsApp (opcional)
     else if (this.step === 2) {
       this.data.telefone = valor || "";
       this.appendMsg(valor || "⏩ Pular (vou deixar em branco por enquanto)", "user");
       this.step = 3;
-      this.perguntarPerfil();
+      this.mostrarDigitando();
+      setTimeout(() => {
+        this.esconderDigitando();
+        this.appendMsg("🎯 Pra finalizar: qual o seu perfil de atendimento?", "bot");
+        this.mostrarOpcoesPerfil();
+        this.isProcessing = false;
+      }, 1000);
     }
 
     input.value = "";
@@ -233,7 +198,6 @@ const botFlow = {
       const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
       const data = await response.json();
       const numVagas = parseInt(data.vagas_restantes);
-      
       const badge = document.getElementById('badge-vagas');
       const vagasCounter = document.getElementById('vagas-counter');
       const vagasNumero = document.getElementById('vagas-numero');
@@ -243,21 +207,16 @@ const botFlow = {
           const termoVerbo = numVagas === 1 ? "RESTA" : "RESTAM";
           const sufixoS = numVagas === 1 ? "" : "S";
           badge.innerHTML = `🔥 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
-          badge.style.opacity = "1";
         } else {
           badge.innerHTML = "🎯 Lista VIP - Aguarde Novas Vagas";
-          badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important;";
         }
       }
-      
       if (vagasCounter && vagasNumero && numVagas > 0) {
         vagasNumero.textContent = numVagas;
         vagasCounter.style.display = 'block';
       } else if (vagasCounter) {
         vagasCounter.style.display = 'none';
       }
-      
-      console.log(`✅ Badge atualizado: ${numVagas} vagas restantes`);
     } catch (e) {
       console.warn("Erro ao atualizar badge:", e);
     }
@@ -268,15 +227,7 @@ const botFlow = {
     if (modal) {
       modal.style.display = "none";
       document.body.style.overflow = "auto";
-      console.log("✅ Chat fechado");
     }
-  },
-
-  recarregarPagina() {
-    console.log("🔄 Recarregando página para atualizar vagas...");
-    setTimeout(() => {
-      window.location.reload();
-    }, 2500);
   },
 
   async enviarParaPHP() {
@@ -286,89 +237,45 @@ const botFlow = {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       });
-      
       const result = await response.json();
 
       if (result.status === "success") {
-        const perfilLabel = this.data.perfil === "homecare" 
-          ? "🏠 Só Homecare" 
-          : this.data.perfil === "fixa" 
-            ? "🏥 Clínica Fixa" 
-            : "🚀 Misto";
-        
-        const resumo = `
-          <div style="text-align: center;">
-            <img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya-ko" style="width: 50px; height: 50px; border-radius: 50%; margin-bottom: 10px;">
-            <br>
-            <b>Parabéns, ${this.data.nome}! 🎉</b>
-          </div>
-          <br>
-          Recebemos seu interesse. Confira seus dados:<br><br>
-          📧 ${this.data.email}<br>
-          📱 ${this.data.telefone || "Não informado"}<br>
-          🎯 ${perfilLabel}
-        `;
+        const perfilLabel = this.data.perfil === "homecare" ? "🏠 Só Homecare" : this.data.perfil === "fixa" ? "🏥 Clínica Fixa" : "🚀 Misto";
+        const resumo = `<div style="text-align:center"><img src="assets/img/Miya-Ko_original_mascote.webp" style="width:50px;height:50px;border-radius:50%;margin-bottom:10px"><br><b>Parabéns, ${this.data.nome}! 🎉</b></div><br>Recebemos seu interesse. Confira seus dados:<br><br>📧 ${this.data.email}<br>📱 ${this.data.telefone || "Não informado"}<br>🎯 ${perfilLabel}`;
         this.appendMsg(resumo, "bot");
 
         setTimeout(() => {
           this.mostrarDigitando();
           setTimeout(() => {
             this.esconderDigitando();
-            
             if (result.ganhou_beneficio === true) {
-              this.appendMsg(
-                `🎉 <b>PARABÉNS! Você é um dos primeiros!</b> 🎉<br><br>` +
-                `🐾 Você garantiu uma das vagas com <b>30% OFF</b> no plano vitalício! 🚀<br><br>` +
-                `💚 Em breve nossa equipe entrará em contato.<br><br>` +
-                `✨ Obrigada pelo interesse! 💜`,
-                "bot"
-              );
+              this.appendMsg(`🎉 <b>PARABÉNS! Você é um dos primeiros!</b> 🎉<br><br>🐾 Você garantiu uma das vagas com <b>30% OFF</b>! 🚀<br><br>💚 Em breve nossa equipe entrará em contato.<br><br>✨ Obrigada pelo interesse! 💜`, "bot");
             } else {
-              this.appendMsg(
-                `💝 As vagas com 30% OFF se esgotaram, mas você está na <b>Lista VIP</b>! 😊<br><br>` +
-                `🐾 Você receberá notificações sobre próximas oportunidades.<br><br>` +
-                `✨ Obrigada pelo interesse! 💜`,
-                "bot"
-              );
+              this.appendMsg(`💝 As vagas com 30% OFF se esgotaram, mas você está na <b>Lista VIP</b>! 😊<br><br>🐾 Você receberá notificações sobre próximas oportunidades.<br><br>✨ Obrigada pelo interesse! 💜`, "bot");
             }
-            
             setTimeout(async () => {
               await this.atualizarBadgeVagas();
               this.fecharChat();
-              this.recarregarPagina();
+              setTimeout(() => window.location.reload(), 2000);
             }, 4000);
-            
           }, 2000);
         }, 1500);
-      } 
-      else if (result.status === "exists") {
-        this.appendMsg(
-          "📋 Este e-mail já está cadastrado em nossa lista! 💜<br><br>Obrigada pelo interesse! 🐾",
-          "bot"
-        );
-        setTimeout(() => {
-          this.fecharChat();
-        }, 3000);
-      } 
-      else {
-        this.appendMsg(
-          "❌ Ops! Ocorreu um erro ao processar seu cadastro. Por favor, tente novamente! 🐾",
-          "bot"
-        );
+      } else if (result.status === "exists") {
+        this.appendMsg("📋 Este e-mail já está cadastrado em nossa lista! 💜<br><br>Obrigada pelo interesse! 🐾", "bot");
+        setTimeout(() => this.fecharChat(), 3000);
+      } else {
+        this.appendMsg("❌ Ops! Ocorreu um erro. Tente novamente! 🐾", "bot");
       }
     } catch (e) {
       this.esconderDigitando();
-      console.error("Erro no envio:", e);
-      this.appendMsg(
-        "❌ Erro de conexão com o servidor. Por favor, recarregue a página e tente novamente. 🐾",
-        "bot"
-      );
+      console.error(e);
+      this.appendMsg("❌ Erro de conexão. Recarregue a página e tente novamente! 🐾", "bot");
     }
   }
 };
 
 // ============================================
-// EVENTOS GLOBAIS
+// EVENTOS
 // ============================================
 document.addEventListener("click", (e) => {
   if (e.target.closest(".abrir-modal")) {
@@ -379,24 +286,16 @@ document.addEventListener("click", (e) => {
       setTimeout(() => botFlow.init(), 150);
     }
   }
-
   if (e.target.classList.contains("close-modal") || e.target.id === "waitlistModal") {
     const modal = document.getElementById("waitlistModal");
-    if (modal) {
-      modal.style.display = "none";
-      document.body.style.overflow = "auto";
-    }
+    if (modal) modal.style.display = "none";
+    document.body.style.overflow = "auto";
   }
-
-  if (e.target.closest("#chat-send-btn")) {
-    botFlow.processarInput();
-  }
+  if (e.target.closest("#chat-send-btn")) botFlow.processarInput();
 });
 
 document.addEventListener("keypress", (e) => {
-  if (e.key === "Enter" && document.activeElement.id === "chat-user-input") {
-    botFlow.processarInput();
-  }
+  if (e.key === "Enter" && document.activeElement.id === "chat-user-input") botFlow.processarInput();
 });
 
-console.log("✅ Chat da Miya-ko carregado com sucesso!");
+console.log("✅ Chat da Miya-ko carregado!");
