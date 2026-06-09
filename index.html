@@ -361,144 +361,172 @@
         });
     </script>
 
-    <script>
-        // ============================================
-        // GERENCIAMENTO DE COOKIES COM BLOQUEIO - VERSÃO FUNCIONAL
-        // ============================================
-        (function() {
-            const COOKIE_KEY = 'vetpocket_cookie_consent';
-            const overlay = document.getElementById('cookieOverlay');
-            const mainContent = document.getElementById('mainContent');
-            const banner = document.getElementById('cookieBanner');
-            const modal = document.getElementById('cookieModal');
-            
-            // Função para liberar a página
-            function liberarPagina() {
-                if (overlay) {
-                    overlay.classList.remove('active');
-                    overlay.style.display = 'none';
-                }
-                if (mainContent) mainContent.classList.remove('blurred');
-                if (banner) banner.style.display = 'none';
-                console.log('✅ Página liberada');
+   <script>
+    // ============================================
+    // GERENCIAMENTO DE COOKIES COM BLOQUEIO - VERSÃO FUNCIONAL
+    // ============================================
+    (function() {
+        const COOKIE_KEY = 'vetpocket_cookie_consent';
+        const overlay = document.getElementById('cookieOverlay');
+        const mainContent = document.getElementById('mainContent');
+        const banner = document.getElementById('cookieBanner');
+        const modal = document.getElementById('cookieModal');
+        
+        // Função para esconder o aviso do Brave
+        function esconderAvisoBrave() {
+            const aviso = document.getElementById('braveNotice');
+            if (aviso) aviso.style.display = 'none';
+            console.log('🔒 Aviso do Brave ocultado');
+        }
+        
+        // Função para liberar a página
+        function liberarPagina() {
+            if (overlay) {
+                overlay.classList.remove('active');
+                overlay.style.display = 'none';
             }
+            if (mainContent) mainContent.classList.remove('blurred');
+            if (banner) banner.style.display = 'none';
             
-            // Função para bloquear a página
-            function bloquearPagina() {
-                if (overlay) {
-                    overlay.classList.add('active');
-                    overlay.style.display = 'block';
-                }
-                if (mainContent) mainContent.classList.add('blurred');
-                if (banner) banner.style.display = 'block';
-                console.log('🔒 Página bloqueada');
+            // Esconder aviso do Brave ao liberar a página
+            esconderAvisoBrave();
+            
+            console.log('✅ Página liberada');
+        }
+        
+        // Função para bloquear a página
+        function bloquearPagina() {
+            if (overlay) {
+                overlay.classList.add('active');
+                overlay.style.display = 'block';
             }
-            
-            // Verificar consentimento
-            const hasConsent = localStorage.getItem(COOKIE_KEY);
-            
-            if (!hasConsent) {
-                bloquearPagina();
-            } else {
+            if (mainContent) mainContent.classList.add('blurred');
+            if (banner) banner.style.display = 'block';
+            console.log('🔒 Página bloqueada');
+        }
+        
+        // Verificar consentimento
+        const hasConsent = localStorage.getItem(COOKIE_KEY);
+        
+        if (!hasConsent) {
+            bloquearPagina();
+        } else {
+            liberarPagina();
+        }
+        
+        // Aceitar todos
+        const acceptBtn = document.getElementById('cookieAcceptBtn');
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', function() {
+                localStorage.setItem(COOKIE_KEY, JSON.stringify({
+                    essential: true, functional: true, analytics: true, marketing: true
+                }));
                 liberarPagina();
-            }
-            
-            // Aceitar todos
-            const acceptBtn = document.getElementById('cookieAcceptBtn');
-            if (acceptBtn) {
-                acceptBtn.addEventListener('click', function() {
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify({
-                        essential: true, functional: true, analytics: true, marketing: true
-                    }));
-                    liberarPagina();
-                });
-            }
-            
-            // Apenas essenciais
-            const rejectBtn = document.getElementById('cookieRejectBtn');
-            if (rejectBtn) {
-                rejectBtn.addEventListener('click', function() {
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify({
-                        essential: true, functional: false, analytics: false, marketing: false
-                    }));
-                    liberarPagina();
-                });
-            }
-            
-            // Abrir modal
-            const configBtn = document.getElementById('cookieConfigBtn');
-            if (configBtn) {
-                configBtn.addEventListener('click', function() {
-                    const saved = localStorage.getItem(COOKIE_KEY);
-                    if (saved) {
-                        try {
-                            const prefs = JSON.parse(saved);
-                            if (document.getElementById('cookieFunctional')) document.getElementById('cookieFunctional').checked = prefs.functional || false;
-                            if (document.getElementById('cookieAnalytics')) document.getElementById('cookieAnalytics').checked = prefs.analytics || false;
-                            if (document.getElementById('cookieMarketing')) document.getElementById('cookieMarketing').checked = prefs.marketing || false;
-                        } catch(e) {}
-                    }
-                    if (modal) modal.style.display = 'flex';
-                });
-            }
-            
-            // Fechar modal sem salvar (mantém bloqueio)
-            const closeModalBtn = document.getElementById('closeCookieModal');
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', function() {
-                    if (modal) modal.style.display = 'none';
-                    console.log('Modal fechado sem salvar - página continua bloqueada');
-                });
-            }
-            
-            // Salvar preferências
-            const savePrefsBtn = document.getElementById('savePreferencesBtn');
-            if (savePrefsBtn) {
-                savePrefsBtn.addEventListener('click', function() {
-                    const preferences = {
-                        essential: true,
-                        functional: document.getElementById('cookieFunctional')?.checked || false,
-                        analytics: document.getElementById('cookieAnalytics')?.checked || false,
-                        marketing: document.getElementById('cookieMarketing')?.checked || false
-                    };
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify(preferences));
-                    if (modal) modal.style.display = 'none';
-                    liberarPagina();
-                });
-            }
-            
-            // Fechar modal ao clicar fora
-            if (modal) {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                        console.log('Modal fechado sem salvar - página continua bloqueada');
-                    }
-                });
-            }
-        })();
-    </script>
-
-    <script>
-        // Detectar Brave e mostrar aviso
-        (function() {
-            function detectarBrave() {
-                if (navigator.userAgent.includes('Brave')) return true;
-                if (navigator.brave && typeof navigator.brave.isBrave === 'function') {
-                    return navigator.brave.isBrave();
+                console.log('✅ Cookies aceitos - aviso do Brave ocultado');
+            });
+        }
+        
+        // Apenas essenciais
+        const rejectBtn = document.getElementById('cookieRejectBtn');
+        if (rejectBtn) {
+            rejectBtn.addEventListener('click', function() {
+                localStorage.setItem(COOKIE_KEY, JSON.stringify({
+                    essential: true, functional: false, analytics: false, marketing: false
+                }));
+                liberarPagina();
+                console.log('✅ Apenas cookies essenciais - aviso do Brave ocultado');
+            });
+        }
+        
+        // Abrir modal
+        const configBtn = document.getElementById('cookieConfigBtn');
+        if (configBtn) {
+            configBtn.addEventListener('click', function() {
+                const saved = localStorage.getItem(COOKIE_KEY);
+                if (saved) {
+                    try {
+                        const prefs = JSON.parse(saved);
+                        if (document.getElementById('cookieFunctional')) document.getElementById('cookieFunctional').checked = prefs.functional || false;
+                        if (document.getElementById('cookieAnalytics')) document.getElementById('cookieAnalytics').checked = prefs.analytics || false;
+                        if (document.getElementById('cookieMarketing')) document.getElementById('cookieMarketing').checked = prefs.marketing || false;
+                    } catch(e) {}
                 }
-                return false;
+                if (modal) modal.style.display = 'flex';
+            });
+        }
+        
+        // Fechar modal sem salvar (mantém bloqueio)
+        const closeModalBtn = document.getElementById('closeCookieModal');
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', function() {
+                if (modal) modal.style.display = 'none';
+                console.log('Modal fechado sem salvar - página continua bloqueada');
+            });
+        }
+        
+        // Salvar preferências
+        const savePrefsBtn = document.getElementById('savePreferencesBtn');
+        if (savePrefsBtn) {
+            savePrefsBtn.addEventListener('click', function() {
+                const preferences = {
+                    essential: true,
+                    functional: document.getElementById('cookieFunctional')?.checked || false,
+                    analytics: document.getElementById('cookieAnalytics')?.checked || false,
+                    marketing: document.getElementById('cookieMarketing')?.checked || false
+                };
+                localStorage.setItem(COOKIE_KEY, JSON.stringify(preferences));
+                if (modal) modal.style.display = 'none';
+                liberarPagina();
+                console.log('✅ Preferências salvas - aviso do Brave ocultado');
+            });
+        }
+        
+        // Fechar modal ao clicar fora
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    console.log('Modal fechado sem salvar - página continua bloqueada');
+                }
+            });
+        }
+    })();
+</script>
+
+<script>
+    // ============================================
+    // DETECTAR BRAVE E MOSTRAR AVISO (APENAS SEM CONSENTIMENTO)
+    // ============================================
+    (function() {
+        const COOKIE_KEY = 'vetpocket_cookie_consent';
+        
+        function detectarBrave() {
+            if (navigator.userAgent.includes('Brave')) return true;
+            if (navigator.brave && typeof navigator.brave.isBrave === 'function') {
+                return navigator.brave.isBrave();
             }
-            
+            return false;
+        }
+        
+        // Verificar se o usuário já consentiu
+        const hasConsent = localStorage.getItem(COOKIE_KEY);
+        
+        // Só exibe aviso do Brave se:
+        // 1. For navegador Brave
+        // 2. AINDA NÃO consentiu com cookies
+        if (!hasConsent) {
             Promise.resolve(detectarBrave()).then(isBrave => {
                 if (isBrave) {
                     const aviso = document.getElementById('braveNotice');
                     if (aviso) aviso.style.display = 'block';
-                    console.log('🦁 Brave detectado - exibindo aviso');
+                    console.log('🦁 Brave detectado - exibindo aviso (usuário ainda não consentiu)');
                 }
             });
-        })();
-    </script>
+        } else {
+            console.log('✅ Usuário já consentiu cookies - aviso do Brave não será exibido');
+        }
+    })();
+</script>
 
 </body>
 
