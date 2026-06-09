@@ -13,7 +13,6 @@ const botFlow = {
   ],
 
   init() {
-    console.log("🚀 Inicializando botFlow...");
     this.step = 0;
     this.isProcessing = false;
     this.data = { nome: "", email: "", telefone: "", perfil: "" };
@@ -32,11 +31,6 @@ const botFlow = {
 
   showTyping() {
     const container = document.getElementById("chat-container");
-    if (!container) return;
-    
-    const existingTyping = document.getElementById("typing-id");
-    if (existingTyping) existingTyping.remove();
-    
     const typing = document.createElement("div");
     typing.id = "typing-id";
     typing.className = "typing-indicator bot-msg msg-bubble";
@@ -52,8 +46,6 @@ const botFlow = {
 
   appendMsg(text, type) {
     const container = document.getElementById("chat-container");
-    if (!container) return;
-    
     const msg = document.createElement("div");
     msg.className = `msg-bubble ${type === "bot" ? "bot-msg" : "user-msg"}`;
     msg.innerHTML = text;
@@ -95,7 +87,7 @@ const botFlow = {
               "bot",
             );
             if (inputField)
-              inputField.placeholder = "WhatsApp ou Enter para pular...";
+              inputField.placeholder = "Whats ou Enter para pular...";
             this.showInput();
           }, 1000);
         }, 400);
@@ -112,28 +104,22 @@ const botFlow = {
   showInput() {
     const area = document.getElementById("chat-input-area");
     const input = document.getElementById("chat-user-input");
-    const optionsArea = document.getElementById("chat-options-area");
-    
     if (area && input) {
-      area.style.display = "flex";
-      if (optionsArea) optionsArea.style.display = "none";
+      area.setAttribute("style", "display: flex !important;");
+      document.getElementById("chat-options-area").style.display = "none";
       setTimeout(() => input.focus(), 300);
     }
   },
 
   showOptions() {
-    const inputArea = document.getElementById("chat-input-area");
+    document.getElementById("chat-input-area").style.display = "none";
     const optionsArea = document.getElementById("chat-options-area");
-    
-    if (inputArea) inputArea.style.display = "none";
-    if (optionsArea) {
-      optionsArea.style.display = "flex";
-      optionsArea.innerHTML = `
-        <button class="btn-chat-opt" onclick="botFlow.handleOption('homecare')">🏠 Só Homecare</button>
-        <button class="btn-chat-opt" onclick="botFlow.handleOption('fixa')">🏥 Clínica Fixa</button>
-        <button class="btn-chat-opt" onclick="botFlow.handleOption('misto')">🚀 Misto</button>
-      `;
-    }
+    optionsArea.style.display = "flex";
+    optionsArea.innerHTML = `
+            <button class="btn-chat-opt" onclick="botFlow.handleOption('homecare')">🏠 Só Homecare</button>
+            <button class="btn-chat-opt" onclick="botFlow.handleOption('fixa')">🏥 Clínica Fixa</button>
+            <button class="btn-chat-opt" onclick="botFlow.handleOption('misto')">🚀 Misto</button>
+        `;
     this.scrollToBottom();
   },
 
@@ -142,16 +128,13 @@ const botFlow = {
     this.isProcessing = true;
 
     const labels = {
-      homecare: "🏠 Só Homecare",
-      fixa: "🏥 Clínica Fixa",
-      misto: "🚀 Misto",
+      homecare: "Só Homecare",
+      fixa: "Clínica Fixa",
+      misto: "Misto",
     };
-    
     this.data.perfil = opt;
     this.appendMsg(labels[opt], "user");
-    
-    const optionsArea = document.getElementById("chat-options-area");
-    if (optionsArea) optionsArea.style.display = "none";
+    document.getElementById("chat-options-area").style.display = "none";
 
     this.showTyping();
     setTimeout(async () => {
@@ -163,7 +146,6 @@ const botFlow = {
 
   async handleInput() {
     if (this.isProcessing) return;
-    
     const input = document.getElementById("chat-user-input");
     const val = input.value.trim();
 
@@ -171,10 +153,7 @@ const botFlow = {
       if (!val) return;
       this.data.nome = val;
       this.appendMsg(val, "user");
-      this.step++;
-      this.askNext();
-    } 
-    else if (this.step === 1) {
+    } else if (this.step === 1) {
       if (!val) return;
       if (!val.includes("@") || !val.includes(".")) {
         this.appendMsg(
@@ -188,11 +167,10 @@ const botFlow = {
 
       try {
         const resp = await fetch(
-          `${API_CONFIG.BASE_URL}save_lead.php?check_email=${encodeURIComponent(val)}`,
+          `${API_CONFIG.BASE_URL}save_lead.php?check_email=${val}`,
         );
         const result = await resp.json();
         this.hideTyping();
-        
         if (result.exists) {
           this.appendMsg(
             "Ooops... este email já está cadastrado conosco, tente outro! 🐾",
@@ -202,68 +180,18 @@ const botFlow = {
           return;
         }
         this.data.email = val;
-        this.step++;
-        this.askNext();
       } catch (e) {
         this.hideTyping();
-        console.error("Erro na verificação:", e);
-        this.appendMsg("Erro ao verificar email. Tente novamente.", "bot");
+        console.error("Erro na verificação");
       }
-    } 
-    else if (this.step === 2) {
+    } else if (this.step === 2) {
       this.data.telefone = val || "Não informado";
       this.appendMsg(val || "Vou deixar em branco por enquanto.", "user");
-      this.step++;
-      this.askNext();
     }
 
     input.value = "";
-  },
-
-  // 🔥 FUNÇÃO PARA ATUALIZAR O BADGE DE VAGAS NO FRONT
-  async atualizarBadgeVagas() {
-    try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
-      const data = await response.json();
-      const numVagas = parseInt(data.vagas_restantes);
-      
-      const badge = document.getElementById('badge-vagas');
-      const vagasCounter = document.getElementById('vagas-counter');
-      const vagasNumero = document.getElementById('vagas-numero');
-      
-      if (badge) {
-        if (numVagas > 0) {
-          const termoVerbo = numVagas === 1 ? "RESTA" : "RESTAM";
-          const sufixoS = numVagas === 1 ? "" : "S";
-          badge.innerHTML = `🔥 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
-          badge.style.opacity = "1";
-        } else {
-          badge.innerHTML = "🎯 Lista VIP - Aguarde Novas Vagas";
-          badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important;";
-        }
-      }
-      
-      if (vagasCounter && vagasNumero && numVagas > 0) {
-        vagasNumero.textContent = numVagas;
-        vagasCounter.style.display = 'block';
-      } else if (vagasCounter) {
-        vagasCounter.style.display = 'none';
-      }
-      
-      console.log(`✅ Badge atualizado: ${numVagas} vagas restantes`);
-    } catch (e) {
-      console.warn("Erro ao atualizar badge:", e);
-    }
-  },
-
-  // 🔥 FUNÇÃO PARA FECHAR O CHAT
-  fecharChat() {
-    const modal = document.getElementById("waitlistModal");
-    if (modal) {
-      modal.style.display = "none";
-      document.body.style.overflow = "auto";
-      console.log("✅ Chat fechado após cadastro");
-    }
+    this.step++;
+    this.askNext();
   },
 
   async sendToPHP() {
@@ -273,74 +201,40 @@ const botFlow = {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       });
-      
       const result = await response.json();
 
-      if (result.status === "success") {
-        const perfilLabel = this.data.perfil === "homecare" 
-          ? "🏠 Só Homecare" 
-          : this.data.perfil === "fixa" 
-            ? "🏥 Clínica Fixa" 
-            : "🚀 Misto";
-        
-        const resumo = `<b>Parabéns, ${this.data.nome}! 🎉</b><br><br>Recebemos seu interesse. Confira seus dados:<br><br>📧 ${this.data.email}<br>📱 ${this.data.telefone || "Não informado"}<br>🎯 ${perfilLabel}`;
+      if (result.status === "success" || result.status === "exists") {
+        const perfilLabel =
+          this.data.perfil === "homecare"
+            ? "🏠 Só Homecare"
+            : this.data.perfil === "fixa"
+              ? "🏥 Clínica Fixa"
+              : "🚀 Misto";
+        const resumo = `<b>Parabéns, ${this.data.nome}! 🎉</b><br>Recebemos seu interesse. Confira seus dados:<br><br>📧 ${this.data.email}<br>📱 ${this.data.telefone}<br>🎯 ${perfilLabel}`;
         this.appendMsg(resumo, "bot");
 
         setTimeout(() => {
           this.showTyping();
-          setTimeout(async () => {
+          setTimeout(() => {
             this.hideTyping();
-            
-            if (result.ganhou_beneficio === true) {
-              const vagasRestantes = result.vagas_restantes || 0;
+            if (result.ganhou_beneficio) {
               this.appendMsg(
-                `🎉 <b>PARABÉNS! Você é um dos primeiros!</b> 🎉<br><br>` +
-                `Você garantiu uma das ${vagasRestantes + 1} últimas vagas com <b>30% OFF</b> no plano vitalício! 🚀<br><br>` +
-                `Em breve nossa equipe entrará em contato com as instruções para garantir seu desconto especial.`,
-                "bot"
+                `Você garantiu uma das 10 vagas com 30% OFF! 🚀`,
+                "bot",
               );
               this.mostrarBotaoFinal();
             } else {
               this.appendMsg(
-                `💝 As vagas com 30% OFF se esgotaram, mas você está na <b>Lista VIP</b>! 😊<br><br>` +
-                `Você receberá notificações sobre próximas oportunidades, lançamentos e novidades em primeira mão.`,
-                "bot"
+                `As vagas com 30% OFF acabaram, mas você está na <b>Lista VIP</b>! 🐾`,
+                "bot",
               );
             }
-            
-            // 🔥 AGUARDAR 3 SEGUNDOS, ATUALIZAR BADGE E FECHAR CHAT
-            setTimeout(() => {
-              this.atualizarBadgeVagas();
-              this.fecharChat();
-            }, 3000);
-            
           }, 2000);
         }, 1500);
-      } 
-      else if (result.status === "exists") {
-        this.appendMsg(
-          "📋 Este e-mail já está cadastrado em nossa lista! Entraremos em contato em breve. 🐾",
-          "bot"
-        );
-        
-        // Fechar chat após 3 segundos mesmo para email existente
-        setTimeout(() => {
-          this.fecharChat();
-        }, 3000);
-      } 
-      else {
-        this.appendMsg(
-          "❌ Ops! Ocorreu um erro ao processar seu cadastro. Por favor, tente novamente.",
-          "bot"
-        );
       }
     } catch (e) {
       this.hideTyping();
-      console.error("Erro no envio:", e);
-      this.appendMsg(
-        "❌ Erro de conexão com o servidor. Por favor, recarregue a página e tente novamente.",
-        "bot"
-      );
+      this.appendMsg("Erro no servidor. Pode atualizar a página?", "bot");
     }
   },
 
@@ -350,18 +244,18 @@ const botFlow = {
     btnDiv.style.textAlign = "center";
     btnDiv.style.padding = "15px 0";
     btnDiv.innerHTML = `
-      <a href="https://pay.hotmart.com/VETHOME_CHECKOUT" target="_blank"
-         style="background: #6f42c1; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block; transition: background 0.3s;">
-         🔥 Aproveitar Desconto Agora
-      </a>`;
+            <a href="" target="_blank"
+               style="background: #6f42c1; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">
+               🔥 Aproveitar Desconto Agora
+            </a>`;
     container.appendChild(btnDiv);
     this.scrollToBottom();
   },
 };
 
-// ============================================
-// GESTÃO GLOBAL DE EVENTOS
-// ============================================
+/** https://pay.hotmart.com/VETHOME_CHECKOUT
+ * GESTÃO GLOBAL DE EVENTOS
+ */
 document.addEventListener("click", (e) => {
   if (e.target.closest(".abrir-modal")) {
     const modal = document.getElementById("waitlistModal");
@@ -376,16 +270,11 @@ document.addEventListener("click", (e) => {
     e.target.classList.contains("close-modal") ||
     e.target.id === "waitlistModal"
   ) {
-    const modal = document.getElementById("waitlistModal");
-    if (modal) {
-      modal.style.display = "none";
-      document.body.style.overflow = "auto";
-    }
+    document.getElementById("waitlistModal").style.display = "none";
+    document.body.style.overflow = "auto";
   }
 
-  if (e.target.closest("#chat-send-btn")) {
-    botFlow.handleInput();
-  }
+  if (e.target.closest("#chat-send-btn")) botFlow.handleInput();
 });
 
 document.addEventListener("keypress", (e) => {
@@ -393,5 +282,3 @@ document.addEventListener("keypress", (e) => {
     botFlow.handleInput();
   }
 });
-
-console.log("✅ BotFlow carregado com sucesso!");
