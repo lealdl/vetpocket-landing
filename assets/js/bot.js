@@ -1,6 +1,6 @@
 /**
  * LÓGICA DO CHATBOT VETPOCKET - MIYA-KO
- * VERSÃO SIMPLIFICADA MÁXIMA
+ * VERSÃO COM LOGS PARA DEBUG
  */
 const botFlow = {
   step: 0,
@@ -8,7 +8,7 @@ const botFlow = {
   data: { nome: "", email: "", telefone: "", perfil: "" },
 
   init() {
-    console.log("🚀 Inicializando chat da Miya-ko...");
+    console.log("🚀 [1/10] Inicializando chat da Miya-ko...");
     this.step = 0;
     this.isProcessing = false;
     this.data = { nome: "", email: "", telefone: "", perfil: "" };
@@ -18,17 +18,20 @@ const botFlow = {
     const optionsArea = document.getElementById("chat-options-area");
 
     if (container) {
+      console.log("✅ [2/10] Container encontrado");
       container.innerHTML = "";
       if (inputArea) inputArea.style.display = "none";
       if (optionsArea) optionsArea.style.display = "none";
       
-      // Mostrar primeira mensagem
+      console.log("✅ [3/10] Mostrando primeira mensagem");
       this.mostrarDigitando();
       setTimeout(() => {
         this.esconderDigitando();
         this.appendMsg("🐾 Olá! Sou a Miya-ko, assistente virtual da VetPocket! 😊<br><br>Como posso chamar você?", "bot");
         this.mostrarInput("Digite seu nome...");
       }, 1000);
+    } else {
+      console.error("❌ Container não encontrado!");
     }
   },
 
@@ -73,6 +76,7 @@ const botFlow = {
   },
 
   mostrarInput(placeholder) {
+    console.log("📝 [mostrarInput] Chamado com placeholder:", placeholder);
     const area = document.getElementById("chat-input-area");
     const input = document.getElementById("chat-user-input");
     const optionsArea = document.getElementById("chat-options-area");
@@ -82,10 +86,14 @@ const botFlow = {
       input.placeholder = placeholder || "Digite sua resposta...";
       input.value = "";
       setTimeout(() => input.focus(), 200);
+      console.log("✅ [mostrarInput] Input exibido");
+    } else {
+      console.error("❌ [mostrarInput] Area ou input não encontrado");
     }
   },
 
   mostrarOpcoesPerfil() {
+    console.log("🎯 [mostrarOpcoesPerfil] Chamado");
     const inputArea = document.getElementById("chat-input-area");
     const optionsArea = document.getElementById("chat-options-area");
     if (inputArea) inputArea.style.display = "none";
@@ -96,11 +104,15 @@ const botFlow = {
         <button class="btn-chat-opt" onclick="botFlow.escolherPerfil('fixa')">🏥 Clínica Fixa</button>
         <button class="btn-chat-opt" onclick="botFlow.escolherPerfil('misto')">🚀 Misto</button>
       `;
+      console.log("✅ [mostrarOpcoesPerfil] Opções exibidas");
+    } else {
+      console.error("❌ [mostrarOpcoesPerfil] OptionsArea não encontrado");
     }
     this.scrollToBottom();
   },
 
   async escolherPerfil(perfil) {
+    console.log("🎯 [escolherPerfil] Perfil selecionado:", perfil);
     if (this.isProcessing) return;
     this.isProcessing = true;
 
@@ -120,30 +132,41 @@ const botFlow = {
   },
 
   async processarInput() {
-    if (this.isProcessing) return;
+    console.log("⌨️ [processarInput] step atual:", this.step, "isProcessing:", this.isProcessing);
+    
+    if (this.isProcessing) {
+      console.log("⚠️ [processarInput] Já processando, ignorando...");
+      return;
+    }
     this.isProcessing = true;
     
     const input = document.getElementById("chat-user-input");
     const valor = input.value.trim();
+    console.log("📝 [processarInput] Valor digitado:", valor);
 
     // Step 0: Nome
     if (this.step === 0) {
-      if (!valor) { this.isProcessing = false; return; }
+      console.log("📝 [step 0] Processando nome...");
+      if (!valor) { console.log("⚠️ Nome vazio"); this.isProcessing = false; return; }
       this.data.nome = valor;
       this.appendMsg(valor, "user");
       this.step = 1;
+      console.log("📝 [step 0] Nome salvo:", this.data.nome, "step agora:", this.step);
       this.mostrarDigitando();
       setTimeout(() => {
         this.esconderDigitando();
         this.appendMsg(`Prazer em te conhecer, ${this.data.nome}! 🐶<br><br>Qual o seu melhor e-mail para contato?`, "bot");
         this.mostrarInput("Digite seu e-mail...");
         this.isProcessing = false;
+        console.log("✅ [step 0] Pergunta de email exibida");
       }, 1000);
     } 
     // Step 1: Email
     else if (this.step === 1) {
-      if (!valor) { this.isProcessing = false; return; }
+      console.log("📝 [step 1] Processando email...");
+      if (!valor) { console.log("⚠️ Email vazio"); this.isProcessing = false; return; }
       if (!valor.includes("@") || !valor.includes(".")) {
+        console.log("⚠️ Email inválido");
         this.appendMsg("🔍 Hum, esse e-mail parece incompleto... Pode conferir e digitar novamente? 🐾", "bot");
         input.value = "";
         this.isProcessing = false;
@@ -153,11 +176,14 @@ const botFlow = {
       this.mostrarDigitando();
 
       try {
+        console.log("📡 [step 1] Verificando email no servidor...");
         const resp = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?check_email=${encodeURIComponent(valor)}`);
         const result = await resp.json();
         this.esconderDigitando();
+        console.log("📡 [step 1] Resposta do servidor:", result);
         
         if (result.exists) {
+          console.log("⚠️ [step 1] Email já existe");
           this.appendMsg("😕 Ooops... este email já está cadastrado conosco! Quer tentar outro? 🐾", "bot");
           input.value = "";
           this.isProcessing = false;
@@ -165,12 +191,14 @@ const botFlow = {
         }
         this.data.email = valor;
         this.step = 2;
+        console.log("✅ [step 1] Email salvo:", this.data.email, "step agora:", this.step);
         this.appendMsg("📱 Agora, me conta seu WhatsApp para contato? (É opcional, mas agiliza muito!)", "bot");
         this.mostrarInput("WhatsApp (opcional) ou Enter para pular...");
         this.isProcessing = false;
+        console.log("✅ [step 1] Pergunta de WhatsApp exibida");
       } catch (e) {
         this.esconderDigitando();
-        console.error(e);
+        console.error("❌ [step 1] Erro na verificação:", e);
         this.appendMsg("⚠️ Erro ao verificar email. Tente novamente! 🙏", "bot");
         input.value = "";
         this.isProcessing = false;
@@ -178,26 +206,34 @@ const botFlow = {
     } 
     // Step 2: WhatsApp (opcional)
     else if (this.step === 2) {
+      console.log("📝 [step 2] Processando WhatsApp...");
       this.data.telefone = valor || "";
       this.appendMsg(valor || "⏩ Pular (vou deixar em branco por enquanto)", "user");
       this.step = 3;
+      console.log("✅ [step 2] WhatsApp salvo:", this.data.telefone, "step agora:", this.step);
       this.mostrarDigitando();
       setTimeout(() => {
         this.esconderDigitando();
         this.appendMsg("🎯 Pra finalizar: qual o seu perfil de atendimento?", "bot");
         this.mostrarOpcoesPerfil();
         this.isProcessing = false;
+        console.log("✅ [step 2] Pergunta de perfil exibida");
       }, 1000);
+    } else {
+      console.log("⚠️ [processarInput] step desconhecido:", this.step);
+      this.isProcessing = false;
     }
 
     input.value = "";
   },
 
   async atualizarBadgeVagas() {
+    console.log("📊 [atualizarBadgeVagas] Atualizando badge...");
     try {
       const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
       const data = await response.json();
       const numVagas = parseInt(data.vagas_restantes);
+      console.log("📊 [atualizarBadgeVagas] Vagas restantes:", numVagas);
       const badge = document.getElementById('badge-vagas');
       const vagasCounter = document.getElementById('vagas-counter');
       const vagasNumero = document.getElementById('vagas-numero');
@@ -217,20 +253,25 @@ const botFlow = {
       } else if (vagasCounter) {
         vagasCounter.style.display = 'none';
       }
+      console.log("✅ [atualizarBadgeVagas] Badge atualizado");
     } catch (e) {
-      console.warn("Erro ao atualizar badge:", e);
+      console.warn("❌ [atualizarBadgeVagas] Erro:", e);
     }
   },
 
   fecharChat() {
+    console.log("🚪 [fecharChat] Fechando chat...");
     const modal = document.getElementById("waitlistModal");
     if (modal) {
       modal.style.display = "none";
       document.body.style.overflow = "auto";
+      console.log("✅ [fecharChat] Chat fechado");
     }
   },
 
   async enviarParaPHP() {
+    console.log("📤 [enviarParaPHP] Enviando dados para o servidor...");
+    console.log("📤 Dados:", this.data);
     try {
       const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php`, {
         method: "POST",
@@ -238,6 +279,7 @@ const botFlow = {
         body: JSON.stringify(this.data),
       });
       const result = await response.json();
+      console.log("📤 [enviarParaPHP] Resposta:", result);
 
       if (result.status === "success") {
         const perfilLabel = this.data.perfil === "homecare" ? "🏠 Só Homecare" : this.data.perfil === "fixa" ? "🏥 Clínica Fixa" : "🚀 Misto";
@@ -268,7 +310,7 @@ const botFlow = {
       }
     } catch (e) {
       this.esconderDigitando();
-      console.error(e);
+      console.error("❌ [enviarParaPHP] Erro:", e);
       this.appendMsg("❌ Erro de conexão. Recarregue a página e tente novamente! 🐾", "bot");
     }
   }
@@ -298,4 +340,4 @@ document.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && document.activeElement.id === "chat-user-input") botFlow.processarInput();
 });
 
-console.log("✅ Chat da Miya-ko carregado!");
+console.log("✅ Chat da Miya-ko carregado com logs de debug!");
