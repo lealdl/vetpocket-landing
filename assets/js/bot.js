@@ -1,5 +1,6 @@
 /**
  * LÓGICA DO CHATBOT VETPOCKET - MIYA-KO
+ * CORRIGIDO - SEM TRAVAMENTO
  */
 const botFlow = {
   step: 0,
@@ -96,13 +97,13 @@ const botFlow = {
       if (this.step === 2) {
         // Pergunta do WhatsApp (opcional)
         if (inputField) inputField.placeholder = "WhatsApp (opcional) ou Enter para pular...";
-        setTimeout(() => this.showInput(), 500);
+        this.showInput();
       } else if (this.step === 3) {
         // Pergunta do perfil - mostra opções
-        setTimeout(() => this.showOptions(), 500);
+        this.showOptions();
       } else {
         if (inputField) inputField.placeholder = "Digite sua resposta...";
-        setTimeout(() => this.showInput(), 500);
+        this.showInput();
       }
       this.isProcessing = false;
     }, typingTime);
@@ -116,7 +117,7 @@ const botFlow = {
     if (area && input) {
       area.style.display = "flex";
       if (optionsArea) optionsArea.style.display = "none";
-      setTimeout(() => input.focus(), 300);
+      setTimeout(() => input.focus(), 100);
     }
   },
 
@@ -152,6 +153,7 @@ const botFlow = {
     const optionsArea = document.getElementById("chat-options-area");
     if (optionsArea) optionsArea.style.display = "none";
 
+    // 🔥 ENVIA DIRETO PARA O PHP, SEM CHAMAR askNext() NOVAMENTE
     this.showTyping();
     setTimeout(async () => {
       this.hideTyping();
@@ -269,7 +271,7 @@ const botFlow = {
     console.log("🔄 Recarregando página para atualizar vagas...");
     setTimeout(() => {
       window.location.reload();
-    }, 1500);
+    }, 2000);
   },
 
   async sendToPHP() {
@@ -305,22 +307,21 @@ const botFlow = {
 
         setTimeout(() => {
           this.showTyping();
-          setTimeout(async () => {
+          setTimeout(() => {
             this.hideTyping();
             
             if (result.ganhou_beneficio === true) {
-              const vagasRestantes = result.vagas_restantes || 0;
               this.appendMsg(
                 `🎉 <b>PARABÉNS! Você é um dos primeiros!</b> 🎉<br><br>` +
-                `🐾 Você garantiu uma das ${vagasRestantes + 1} últimas vagas com <b>30% OFF</b> no plano vitalício! 🚀<br><br>` +
-                `💚 Em breve nossa equipe entrará em contato com as instruções para garantir seu desconto especial.<br><br>` +
+                `🐾 Você garantiu uma das vagas com <b>30% OFF</b> no plano vitalício! 🚀<br><br>` +
+                `💚 Em breve nossa equipe entrará em contato com as instruções.<br><br>` +
                 `✨ Obrigada pelo interesse! 💜`,
                 "bot"
               );
             } else {
               this.appendMsg(
                 `💝 As vagas com 30% OFF se esgotaram, mas você está na <b>Lista VIP</b>! 😊<br><br>` +
-                `🐾 Você receberá notificações sobre próximas oportunidades, lançamentos e novidades em primeira mão.<br><br>` +
+                `🐾 Você receberá notificações sobre próximas oportunidades.<br><br>` +
                 `✨ Obrigada pelo interesse! 💜`,
                 "bot"
               );
@@ -331,7 +332,7 @@ const botFlow = {
               await this.atualizarBadgeVagas();
               this.fecharChat();
               this.recarregarPagina();
-            }, 3000);
+            }, 4000);
             
           }, 2000);
         }, 1500);
