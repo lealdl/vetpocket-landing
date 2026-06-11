@@ -37,59 +37,57 @@ async function loadComponent(id, path) {
 /**
  * Gerencia Cliques no Header de forma centralizada
  */
+/**
+ * Gerencia Cliques no Header de forma centralizada
+ */
 function setupHeaderInteractions() {
-  // Evita duplicar eventos caso a função seja chamada mais de uma vez
   if (window.headerEventsBound) return;
   window.headerEventsBound = true;
 
-  document.addEventListener("click", (e) => {
-    // 1. Detecta o clique no botão de menu (Hambúrguer)
-    const toggleBtn = e.target.closest("#mobileMenuBtn");
+  // Menu mobile - versão simplificada
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const navLinks = document.getElementById('navLinks');
+  const menuOverlay = document.getElementById('menuOverlay');
 
-    if (toggleBtn) {
-      // Elementos do Painel Administrativo (VetPocket)
-      const sidebar = document.querySelector(".adm-sidebar");
-      const admOverlay = document.querySelector(".adm-overlay");
+  if (mobileBtn && navLinks && menuOverlay) {
+    // Abrir/fechar menu
+    mobileBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      navLinks.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    });
 
-      // Elementos da Landing Page
-      const navLinks = document.querySelector(".nav-links");
-      const menuOverlay = document.querySelector(".menu-overlay");
+    // Fechar ao clicar no overlay
+    menuOverlay.addEventListener('click', function() {
+      navLinks.classList.remove('active');
+      menuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
 
-      // PRIORIDADE 1: Se estivermos no ADM, prioriza a Sidebar
-      if (sidebar) {
-        sidebar.classList.toggle("active");
-        if (admOverlay) {
-          admOverlay.classList.toggle("active");
+    // IMPORTANTE: Permitir que os links funcionem
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        
+        // Se for link interno (âncora), deixa o comportamento padrão
+        if (href && href.startsWith('#')) {
+          // Fecha o menu
+          navLinks.classList.remove('active');
+          menuOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+          // Deixa o navegador fazer a rolagem (já tem smooth scroll no CSS)
+          return;
         }
-      }
-      // PRIORIDADE 2: Se não houver sidebar, tenta o menu da Landing Page
-      else if (navLinks) {
-        navLinks.classList.toggle("active");
-        if (menuOverlay) {
-          menuOverlay.classList.toggle("active");
-        }
-      }
-      return;
-    }
-
-    // 2. Fechar menu ao clicar no Overlay (fundo escuro)
-    const isOverlay =
-      e.target.classList.contains("adm-overlay") ||
-      e.target.classList.contains("menu-overlay");
-    if (isOverlay) {
-      const activeSidebar = document.querySelector(".adm-sidebar.active");
-      const activeNav = document.querySelector(".nav-links.active");
-
-      if (activeSidebar) {
-        activeSidebar.classList.remove("active");
-        e.target.classList.remove("active");
-      }
-      if (activeNav) {
-        activeNav.classList.remove("active");
-        e.target.classList.remove("active");
-      }
-    }
-  });
+        
+        // Se for link externo, também fecha o menu
+        navLinks.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  }
 
   console.log("✅ Interações do Header configuradas.");
 }

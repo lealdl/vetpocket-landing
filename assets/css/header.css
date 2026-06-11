@@ -1,12 +1,202 @@
-/* Estilo da Logo no Header - Seguindo o padrão do Footer */
-.logo,
-.nav-container .logo,
-.header-logo {
-  color: #6d28d9 !important; /* Roxo padrão do sistema */
-  font-size: 1.2rem;
-  font-weight: 800;
-  text-decoration: none;
+/* ==========================================================================
+   HEADER RESPONSIVO - VETPOCKET
+   ========================================================================== */
+
+/* Reset do Header */
+.navbar {
+  height: 70px;
   display: flex;
   align-items: center;
-  gap: 5px; /* Espaço para o ícone de patinha se houver */
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  color: #6d28d9;
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.nav-links li a:hover {
+  color: #6d28d9;
+}
+
+.btn-nav-demo {
+  color: #6d28d9 !important;
+  border: 2px solid #6d28d9;
+  padding: 6px 16px;
+  border-radius: 8px;
+  background: transparent;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-nav-demo:hover {
+  background: #6d28d9;
+  color: white !important;
+}
+
+.btn-primary {
+  background: #6d28d9;
+  color: white !important;
+  padding: 6px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #5b21b6;
+}
+
+#mobileMenuBtn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  flex-shrink: 0;
+}
+
+#mobileMenuBtn span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #6d28d9;
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  /* backdrop-filter: blur(8px);  ← REMOVA OU COMENTE ESTA LINHA */
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+@media (max-width: 880px) {
+  #mobileMenuBtn {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 80px 20px 30px;
+    margin: 0;
+    gap: 12px;
+    transition: left 0.3s ease;
+    z-index: 999;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-links.active {
+    left: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+    margin: 0;
+  }
+
+  .nav-links li a {
+    display: block;
+    padding: 12px 16px;
+    text-align: center;
+    white-space: normal;
+    font-size: 1rem;
+  }
+
+  .btn-nav-demo,
+  .btn-primary {
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 16px;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    height: 60px;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
 }

@@ -1,6 +1,6 @@
 /**
  * Gerenciamento de Cookies (LGPD/GDPR)
- * VetPocket - Versão corrigida para Firefox
+ * VetPocket - Versão para estrutura com overlay
  */
 
 const CookieConsent = {
@@ -15,16 +15,26 @@ const CookieConsent = {
     checkConsent() {
         try {
             const savedConsent = localStorage.getItem(this.COOKIE_KEY);
-            const banner = document.getElementById('cookie-banner');
+            const overlay = document.getElementById('cookieOverlay');
+            const banner = document.getElementById('cookieBanner');
+            const mainContent = document.getElementById('mainContent');
             
             if (!banner) {
                 console.error('❌ Banner não encontrado');
                 return;
             }
             
-            // Se não há consentimento salvo, mostrar banner
+            // Se não há consentimento salvo, mostrar banner e overlay
             if (!savedConsent) {
-                banner.style.display = 'block';
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.style.display = 'block';
+                }
+                if (banner) banner.style.display = 'block';
+                // 🔥 NÃO APLICA BLUR NO MAINCONTENT
+                if (mainContent) {
+                    mainContent.classList.remove('blurred');
+                }
                 console.log('✅ Banner exibido (sem consentimento)');
                 return;
             }
@@ -36,24 +46,43 @@ const CookieConsent = {
             } catch (e) {
                 console.warn('⚠️ JSON inválido no localStorage, removendo...');
                 localStorage.removeItem(this.COOKIE_KEY);
-                banner.style.display = 'block';
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.style.display = 'block';
+                }
+                if (banner) banner.style.display = 'block';
                 return;
             }
             
-            // Se as preferências são válidas, aplicar
+            // Se as preferências são válidas, esconder banner e overlay
             if (preferences && typeof preferences === 'object') {
-                banner.style.display = 'none';
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    overlay.style.display = 'none';
+                }
+                if (banner) banner.style.display = 'none';
+                if (mainContent) {
+                    mainContent.classList.remove('blurred');
+                }
                 this.applyPreferences(preferences);
                 console.log('✅ Preferências carregadas:', preferences);
             } else {
-                // Preferências inválidas, mostrar banner
                 localStorage.removeItem(this.COOKIE_KEY);
-                banner.style.display = 'block';
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.style.display = 'block';
+                }
+                if (banner) banner.style.display = 'block';
             }
         } catch (error) {
             console.error('❌ Erro ao verificar consentimento:', error);
-            const banner = document.getElementById('cookie-banner');
+            const banner = document.getElementById('cookieBanner');
+            const overlay = document.getElementById('cookieOverlay');
             if (banner) banner.style.display = 'block';
+            if (overlay) {
+                overlay.classList.add('active');
+                overlay.style.display = 'block';
+            }
         }
     },
     
@@ -83,7 +112,7 @@ const CookieConsent = {
     
     setupEventListeners() {
         // Aceitar todos
-        const acceptBtn = document.getElementById('cookie-accept');
+        const acceptBtn = document.getElementById('cookieAcceptBtn');
         if (acceptBtn) {
             acceptBtn.addEventListener('click', () => {
                 try {
@@ -95,8 +124,18 @@ const CookieConsent = {
                     };
                     localStorage.setItem(this.COOKIE_KEY, JSON.stringify(preferences));
                     this.applyPreferences(preferences);
-                    const banner = document.getElementById('cookie-banner');
+                    
+                    const overlay = document.getElementById('cookieOverlay');
+                    const banner = document.getElementById('cookieBanner');
+                    const mainContent = document.getElementById('mainContent');
+                    
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                        overlay.style.display = 'none';
+                    }
                     if (banner) banner.style.display = 'none';
+                    if (mainContent) mainContent.classList.remove('blurred');
+                    
                     console.log('✅ Cookies aceitos');
                 } catch (error) {
                     console.error('❌ Erro ao aceitar cookies:', error);
@@ -105,7 +144,7 @@ const CookieConsent = {
         }
         
         // Recusar (apenas essenciais)
-        const rejectBtn = document.getElementById('cookie-reject');
+        const rejectBtn = document.getElementById('cookieRejectBtn');
         if (rejectBtn) {
             rejectBtn.addEventListener('click', () => {
                 try {
@@ -117,8 +156,18 @@ const CookieConsent = {
                     };
                     localStorage.setItem(this.COOKIE_KEY, JSON.stringify(preferences));
                     this.applyPreferences(preferences);
-                    const banner = document.getElementById('cookie-banner');
+                    
+                    const overlay = document.getElementById('cookieOverlay');
+                    const banner = document.getElementById('cookieBanner');
+                    const mainContent = document.getElementById('mainContent');
+                    
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                        overlay.style.display = 'none';
+                    }
                     if (banner) banner.style.display = 'none';
+                    if (mainContent) mainContent.classList.remove('blurred');
+                    
                     console.log('✅ Apenas cookies essenciais');
                 } catch (error) {
                     console.error('❌ Erro ao recusar cookies:', error);
@@ -127,7 +176,7 @@ const CookieConsent = {
         }
         
         // Abrir modal de configuração
-        const configBtn = document.getElementById('cookie-config');
+        const configBtn = document.getElementById('cookieConfigBtn');
         if (configBtn) {
             configBtn.addEventListener('click', () => {
                 this.openConfigModal();
@@ -135,16 +184,16 @@ const CookieConsent = {
         }
         
         // Fechar modal
-        const closeModalBtn = document.getElementById('close-cookie-modal');
+        const closeModalBtn = document.getElementById('closeCookieModal');
         if (closeModalBtn) {
             closeModalBtn.addEventListener('click', () => {
-                const modal = document.getElementById('cookie-modal');
+                const modal = document.getElementById('cookieModal');
                 if (modal) modal.style.display = 'none';
             });
         }
         
         // Salvar preferências
-        const savePrefsBtn = document.getElementById('cookie-save-preferences');
+        const savePrefsBtn = document.getElementById('savePreferencesBtn');
         if (savePrefsBtn) {
             savePrefsBtn.addEventListener('click', () => {
                 this.savePreferences();
@@ -152,7 +201,7 @@ const CookieConsent = {
         }
         
         // Fechar modal ao clicar fora
-        const modal = document.getElementById('cookie-modal');
+        const modal = document.getElementById('cookieModal');
         if (modal) {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
@@ -165,14 +214,14 @@ const CookieConsent = {
     openConfigModal() {
         try {
             const savedConsent = localStorage.getItem(this.COOKIE_KEY);
-            const modal = document.getElementById('cookie-modal');
+            const modal = document.getElementById('cookieModal');
             
             if (savedConsent) {
                 try {
                     const prefs = JSON.parse(savedConsent);
-                    const functionalCheckbox = document.getElementById('cookie-functional');
-                    const analyticsCheckbox = document.getElementById('cookie-analytics');
-                    const marketingCheckbox = document.getElementById('cookie-marketing');
+                    const functionalCheckbox = document.getElementById('cookieFunctional');
+                    const analyticsCheckbox = document.getElementById('cookieAnalytics');
+                    const marketingCheckbox = document.getElementById('cookieMarketing');
                     
                     if (functionalCheckbox) functionalCheckbox.checked = prefs.functional || false;
                     if (analyticsCheckbox) analyticsCheckbox.checked = prefs.analytics || false;
@@ -190,9 +239,9 @@ const CookieConsent = {
     
     savePreferences() {
         try {
-            const functionalCheckbox = document.getElementById('cookie-functional');
-            const analyticsCheckbox = document.getElementById('cookie-analytics');
-            const marketingCheckbox = document.getElementById('cookie-marketing');
+            const functionalCheckbox = document.getElementById('cookieFunctional');
+            const analyticsCheckbox = document.getElementById('cookieAnalytics');
+            const marketingCheckbox = document.getElementById('cookieMarketing');
             
             const preferences = {
                 essential: true,
@@ -204,11 +253,18 @@ const CookieConsent = {
             localStorage.setItem(this.COOKIE_KEY, JSON.stringify(preferences));
             this.applyPreferences(preferences);
             
-            const modal = document.getElementById('cookie-modal');
-            const banner = document.getElementById('cookie-banner');
+            const modal = document.getElementById('cookieModal');
+            const overlay = document.getElementById('cookieOverlay');
+            const banner = document.getElementById('cookieBanner');
+            const mainContent = document.getElementById('mainContent');
             
             if (modal) modal.style.display = 'none';
+            if (overlay) {
+                overlay.classList.remove('active');
+                overlay.style.display = 'none';
+            }
             if (banner) banner.style.display = 'none';
+            if (mainContent) mainContent.classList.remove('blurred');
             
             console.log('✅ Preferências salvas:', preferences);
         } catch (error) {
@@ -226,13 +282,22 @@ if (document.readyState === 'loading') {
     CookieConsent.init();
 }
 
-// 🔥 FUNÇÕES GLOBAIS PARA DEBUG (disponíveis no console)
+// 🔥 FUNÇÕES GLOBAIS PARA DEBUG
 window.limparCookies = function() {
     try {
         localStorage.removeItem('vetpocket_cookie_consent');
         console.log('✅ Cookies limpos! Recarregue a página.');
-        const banner = document.getElementById('cookie-banner');
+        const overlay = document.getElementById('cookieOverlay');
+        const banner = document.getElementById('cookieBanner');
+        const mainContent = document.getElementById('mainContent');
+        
+        if (overlay) {
+            overlay.classList.add('active');
+            overlay.style.display = 'block';
+        }
         if (banner) banner.style.display = 'block';
+        if (mainContent) mainContent.classList.remove('blurred');
+        
         return 'Cookies limpos com sucesso!';
     } catch(e) {
         console.error('Erro:', e);

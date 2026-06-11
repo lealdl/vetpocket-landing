@@ -128,11 +128,11 @@
     transition: filter 0.3s ease;
 }
 
-.main-content.blurred {
+/* .main-content.blurred {
     filter: blur(4px);
     pointer-events: none;
     user-select: none;
-}
+} */
 
 /* Modal de configuração */
 .cookie-modal {
@@ -364,5 +364,17 @@ input:disabled + .cookie-slider {
     .brave-notice button {
         font-size: 12px;
         margin-left: 6px;
+    }
+}
+/* Rolagem suave nativa (fallback para navegadores modernos) */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Compensa o header fixo */
+}
+
+/* Ajuste para mobile */
+@media (max-width: 768px) {
+    html {
+        scroll-padding-top: 70px;
     }
 }
