@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/admin", "destination": "/pages/admin/index.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/politica", "destination": "/pages/politica-privacidade.html" }
+  ]
+}
