@@ -1,14 +1,43 @@
 /**
  * LÓGICA DO CHATBOT VETPOCKET - MIYA-KO
- * VERSÃO COM LOGS PARA DEBUG
+ * VERSÃO COM LOGS PARA DEBUG, MÁSCARA DE TELEFONE E CORS CORRIGIDO
  */
 const botFlow = {
   step: 0,
   isProcessing: false,
   data: { nome: "", email: "", telefone: "", perfil: "" },
 
+  // Helper para fazer fetch com configurações corretas (SEM CREDENTIALS)
+  async fazerFetch(url, options = {}) {
+    const defaultOptions = {
+      headers: API_CONFIG?.FETCH_OPTIONS?.headers || { "Content-Type": "application/json" }
+    };
+    
+    const finalOptions = { ...defaultOptions, ...options };
+    
+    // REMOVE qualquer credentials para evitar conflito CORS
+    delete finalOptions.credentials;
+    
+    // Se for POST e tiver body, garante que headers estejam corretos
+    if (options.body && !finalOptions.headers["Content-Type"]) {
+      finalOptions.headers["Content-Type"] = "application/json";
+    }
+    
+    console.log("🌐 [fetch] URL:", url);
+    console.log("🌐 [fetch] Method:", finalOptions.method || 'GET');
+    
+    try {
+      const response = await fetch(url, finalOptions);
+      return response;
+    } catch (error) {
+      console.error("❌ [fetch] Erro:", error);
+      throw error;
+    }
+  },
+
   init() {
     console.log("🚀 [1/10] Inicializando chat da Miya-ko...");
+    console.log("🔧 API_CONFIG:", API_CONFIG);
     this.step = 0;
     this.isProcessing = false;
     this.data = { nome: "", email: "", telefone: "", perfil: "" };
@@ -80,15 +109,66 @@ const botFlow = {
     const area = document.getElementById("chat-input-area");
     const input = document.getElementById("chat-user-input");
     const optionsArea = document.getElementById("chat-options-area");
+    
     if (area && input) {
       area.style.display = "flex";
       if (optionsArea) optionsArea.style.display = "none";
       input.placeholder = placeholder || "Digite sua resposta...";
       input.value = "";
+      
+      // Remove a máscara de telefone se existir (para outros campos)
+      this.removerMascaraTelefone(input);
+      
       setTimeout(() => input.focus(), 200);
       console.log("✅ [mostrarInput] Input exibido");
     } else {
       console.error("❌ [mostrarInput] Area ou input não encontrado");
+    }
+  },
+
+  // Mostrar input com máscara para WhatsApp
+  mostrarInputWhatsApp() {
+    console.log("📱 [mostrarInputWhatsApp] Exibindo input com máscara de telefone");
+    const area = document.getElementById("chat-input-area");
+    const input = document.getElementById("chat-user-input");
+    const optionsArea = document.getElementById("chat-options-area");
+    
+    if (area && input) {
+      area.style.display = "flex";
+      if (optionsArea) optionsArea.style.display = "none";
+      input.placeholder = "(99) 99999-9999";
+      input.value = "";
+      
+      // Aplica a máscara de telefone
+      if (typeof aplicarMascaraTelefone === 'function') {
+        aplicarMascaraTelefone(input);
+        console.log("✅ [mostrarInputWhatsApp] Máscara aplicada com sucesso");
+      } else {
+        console.error("❌ [mostrarInputWhatsApp] Função aplicarMascaraTelefone não encontrada!");
+      }
+      
+      setTimeout(() => input.focus(), 200);
+      console.log("✅ [mostrarInputWhatsApp] Input com máscara exibido");
+    } else {
+      console.error("❌ [mostrarInputWhatsApp] Area ou input não encontrado");
+    }
+  },
+
+  // Remover máscara de telefone
+  removerMascaraTelefone(inputElement) {
+    if (!inputElement) return;
+    
+    // Remove todos os listeners de input anteriores (clone e substitui)
+    const novoInput = inputElement.cloneNode(true);
+    inputElement.parentNode.replaceChild(novoInput, inputElement);
+    
+    // Atualiza a referência no DOM
+    const area = document.getElementById("chat-input-area");
+    if (area) {
+      const novoInputNoArea = document.getElementById("chat-user-input");
+      if (novoInputNoArea && novoInputNoArea !== novoInput) {
+        novoInput.id = "chat-user-input";
+      }
     }
   },
 
@@ -141,7 +221,7 @@ const botFlow = {
     this.isProcessing = true;
     
     const input = document.getElementById("chat-user-input");
-    const valor = input.value.trim();
+    let valor = input.value.trim();
     console.log("📝 [processarInput] Valor digitado:", valor);
 
     // Step 0: Nome
@@ -177,8 +257,11 @@ const botFlow = {
 
       try {
         console.log("📡 [step 1] Verificando email no servidor...");
-        const resp = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?check_email=${encodeURIComponent(valor)}`);
+        const url = `${API_CONFIG.BASE_URL}save_lead.php?check_email=${encodeURIComponent(valor)}`;
+        
+        const resp = await this.fazerFetch(url);
         const result = await resp.json();
+        
         this.esconderDigitando();
         console.log("📡 [step 1] Resposta do servidor:", result);
         
@@ -193,9 +276,10 @@ const botFlow = {
         this.step = 2;
         console.log("✅ [step 1] Email salvo:", this.data.email, "step agora:", this.step);
         this.appendMsg("📱 Agora, me conta seu WhatsApp para contato? (É opcional, mas agiliza muito!)", "bot");
-        this.mostrarInput("WhatsApp (opcional) ou Enter para pular...");
+        
+        this.mostrarInputWhatsApp();
         this.isProcessing = false;
-        console.log("✅ [step 1] Pergunta de WhatsApp exibida");
+        console.log("✅ [step 1] Pergunta de WhatsApp exibida com máscara");
       } catch (e) {
         this.esconderDigitando();
         console.error("❌ [step 1] Erro na verificação:", e);
@@ -207,7 +291,14 @@ const botFlow = {
     // Step 2: WhatsApp (opcional)
     else if (this.step === 2) {
       console.log("📝 [step 2] Processando WhatsApp...");
-      this.data.telefone = valor || "";
+      
+      if (typeof limparMascaraTelefone === 'function' && valor) {
+        this.data.telefone = limparMascaraTelefone(valor);
+        console.log("📝 [step 2] Telefone sem máscara:", this.data.telefone);
+      } else {
+        this.data.telefone = valor || "";
+      }
+      
       this.appendMsg(valor || "⏩ Pular (vou deixar em branco por enquanto)", "user");
       this.step = 3;
       console.log("✅ [step 2] WhatsApp salvo:", this.data.telefone, "step agora:", this.step);
@@ -230,8 +321,11 @@ const botFlow = {
   async atualizarBadgeVagas() {
     console.log("📊 [atualizarBadgeVagas] Atualizando badge...");
     try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
+      const url = `${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`;
+      
+      const response = await this.fazerFetch(url);
       const data = await response.json();
+      
       const numVagas = parseInt(data.vagas_restantes);
       console.log("📊 [atualizarBadgeVagas] Vagas restantes:", numVagas);
       const badge = document.getElementById('badge-vagas');
@@ -272,12 +366,13 @@ const botFlow = {
   async enviarParaPHP() {
     console.log("📤 [enviarParaPHP] Enviando dados para o servidor...");
     console.log("📤 Dados:", this.data);
+    
     try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php`, {
+      const response = await this.fazerFetch(`${API_CONFIG.BASE_URL}save_lead.php`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.data),
       });
+      
       const result = await response.json();
       console.log("📤 [enviarParaPHP] Resposta:", result);
 
@@ -340,4 +435,4 @@ document.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && document.activeElement.id === "chat-user-input") botFlow.processarInput();
 });
 
-console.log("✅ Chat da Miya-ko carregado com logs de debug!");
+console.log("✅ Chat da Miya-ko carregado com logs de debug, máscara de telefone e CORS configurado!");

@@ -1,664 +1,665 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+    <!DOCTYPE html>
+    <html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VetPocket | Atendimento Veterinário Inteligente</title>
-    <link rel="icon" type="image/png" href="favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>VetPocket | Atendimento Veterinário Inteligente</title>
+        <link rel="icon" type="image/png" href="favicon.ico">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <!-- CSS EXISTENTES -->
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/index.css">
-    <link rel="stylesheet" href="assets/css/slide.css">
-    <link rel="stylesheet" href="assets/css/toast.css">
-    <link rel="stylesheet" href="assets/css/footer.css">
-    <link rel="stylesheet" href="assets/css/qr-code.css">
-    <link rel="stylesheet" href="assets/css/miya-chat.css">
+        <!-- CSS EXISTENTES -->
+        <link rel="stylesheet" href="assets/css/header.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/index.css">
+        <link rel="stylesheet" href="assets/css/slide.css">
+        <link rel="stylesheet" href="assets/css/toast.css">
+        <link rel="stylesheet" href="assets/css/footer.css">
+        <link rel="stylesheet" href="assets/css/qr-code.css">
+        <link rel="stylesheet" href="assets/css/miya-chat.css">
 
-    <meta name="description"
-        content="VetPocket - Gestão profissional e autoconfigurável para veterinários homecare e clínicas. Modernize seus atendimentos domiciliares.">
-    <meta name="keywords" content="veterinário, homecare, gestão pet, software veterinário, VetPocket">
-    <meta name="author" content="Luciano">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://vetpocket-landing-phi.vercel.app/">
-    <meta property="og:title" content="VetPocket | Atendimento Veterinário Inteligente">
-    <meta property="og:description"
-        content="Saia das planilhas e tenha uma plataforma profissional para gerir seus atendimentos pet.">
-    <meta property="og:image" content="https://vetpocket-landing-phi.vercel.app/assets/img/og-vetpocket-miyako.png">
+        <meta name="description"
+            content="VetPocket - Gestão profissional e autoconfigurável para veterinários homecare e clínicas. Modernize seus atendimentos domiciliares.">
+        <meta name="keywords" content="veterinário, homecare, gestão pet, software veterinário, VetPocket">
+        <meta name="author" content="Luciano">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://vetpocket-landing-phi.vercel.app/">
+        <meta property="og:title" content="VetPocket | Atendimento Veterinário Inteligente">
+        <meta property="og:description"
+            content="Saia das planilhas e tenha uma plataforma profissional para gerir seus atendimentos pet.">
+        <meta property="og:image" content="https://vetpocket-landing-phi.vercel.app/assets/img/og-vetpocket-miyako.png">
 
-    <style>
-        /* 🔥 CORREÇÃO FINAL */
-        .menu-overlay {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-        }
-        .main-content.blurred {
-            filter: none !important;
-            pointer-events: auto !important;
-        }
-    </style>
-</head>
+        <style>
+            /* 🔥 CORREÇÃO FINAL */
+            .menu-overlay {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+            .main-content.blurred {
+                filter: none !important;
+                pointer-events: auto !important;
+            }
+        </style>
+    </head>
 
-<body>
+    <body>
 
-    <!-- OVERLAY DE BLOQUEIO (blur e trava a página) -->
-    <div id="cookieOverlay" class="cookie-overlay"></div>
+        <!-- OVERLAY DE BLOQUEIO (blur e trava a página) -->
+        <div id="cookieOverlay" class="cookie-overlay"></div>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <div id="mainContent" class="main-content">
-        <div id="header-placeholder"></div>
+        <!-- CONTEÚDO PRINCIPAL -->
+        <div id="mainContent" class="main-content">
+            <div id="header-placeholder"></div>
 
-        <header class="hero" style="position: relative;">
-            <div class="qr-code-wrapper">
-                <div id="qrcode"></div>
-                <span>Acesse no Celular</span>
-            </div>
-
-            <div class="container">
-                <h1>Um sistema exclusivo para o seu <br><span>atendimento homecare.</span></h1>
-                <p>Saia das planilhas e tenha uma plataforma profissional, autoconfigurável e personalizada para a sua
-                    marca. Modernize sua gestão e impressione seus clientes.</p>
-                <div class="hero-btns">
-                    <a href="javascript:void(0)" class="btn-primary btn-lg abrir-modal">Tenho interesse no sistema</a>
-                    <a href="javascript:void(0)" class="btn-outline btn-lg abrir-demo">Conheça o App</a>
+            <header class="hero" style="position: relative;">
+                <div class="qr-code-wrapper">
+                    <div id="qrcode"></div>
+                    <span>Acesse no Celular</span>
                 </div>
 
-                <div id="vagas-counter" class="vagas-alert" style="display: none; margin-top: 20px;">
-                    <i class="fas fa-fire" style="color: #ff4d4d;"></i>
-                    Restam apenas <span id="vagas-numero" style="font-weight: bold; color: #ff4d4d;">--</span> vagas com
-                    bônus de lançamento!
-                </div>
-            </div>
-        </header>
+                <div class="container">
+                    <h1>Um sistema exclusivo para o seu <br><span>atendimento homecare.</span></h1>
+                    <p>Saia das planilhas e tenha uma plataforma profissional, autoconfigurável e personalizada para a sua
+                        marca. Modernize sua gestão e impressione seus clientes.</p>
+                    <div class="hero-btns">
+                        <a href="javascript:void(0)" class="btn-primary btn-lg abrir-modal">Tenho interesse no sistema</a>
+                        <a href="javascript:void(0)" class="btn-outline btn-lg abrir-demo">Conheça o App</a>
+                    </div>
 
-        <a href="javascript:void(0)" class="btn-flutuante abrir-modal">
-            <i class="fas fa-rocket"></i> Tenho Interesse
-        </a>
+                    <div id="vagas-counter" class="vagas-alert" style="display: none; margin-top: 20px;">
+                        <i class="fas fa-fire" style="color: #ff4d4d;"></i>
+                        Restam apenas <span id="vagas-numero" style="font-weight: bold; color: #ff4d4d;">--</span> vagas com
+                        bônus de lançamento!
+                    </div>
+                </div>
+            </header>
 
-        <section id="funcionalidades" class="features container">
-            <div class="section-title">
-                <h2 style="text-align: center;">Seu consultório, suas regras.</h2>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-award"></i>
-                    <h3>Identidade Exclusiva</h3>
-                    <p>Sua clínica com um sistema único. Entregamos o VetPocket personalizado com sua logo, cores e
-                        equipe,
-                        garantindo uma ferramenta profissional que reforça sua autoridade em cada atendimento.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-database"></i>
-                    <h3>Dados Sob Seu Controle</h3>
-                    <p>Diferente de grandes plataformas, aqui o banco de dados é exclusivo. Mais privacidade para seus
-                        prontuários e segurança para seus clientes.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-rocket"></i>
-                    <h3>Pronto para Crescer</h3>
-                    <p>Cadastre quantos veterinários e auxiliares precisar. O sistema cresce junto com sua demanda de
-                        atendimentos domiciliares.</p>
-                </div>
-                <div class="feature-card ai-highlight">
-                    <div class="ai-badge">EM BREVE</div>
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Agendamentos Online</h3>
-                    <p>Sistema completo de agendamento para seus clientes marcarem consultas diretamente pelo site ou
-                        WhatsApp. Com lembretes automáticos e gestão de horários.</p>
-                </div>
-                <div class="feature-card ai-highlight">
-                    <div class="ai-badge">EM BREVE</div>
-                    <i class="fas fa-brain"></i>
-                    <h3>Gestão Inteligente com IA</h3>
-                    <p>Receba sugestões de diagnósticos, protocolos de atendimento e insights de gestão gerados por
-                        inteligência artificial treinada para veterinários.</p>
-                </div>
-            </div>
-        </section>
+            <a href="javascript:void(0)" class="btn-flutuante abrir-modal">
+                <i class="fas fa-rocket"></i> Tenho Interesse
+            </a>
 
-        <section id="passo-a-passo" class="steps container">
-            <div class="section-title" style="text-align: center;">
-                <h2>Sua clínica online em 3 passos</h2>
-                <p>Desenvolvido para você focar nos pets, não na configuração.</p>
-            </div>
-            <div class="steps-grid">
-                <div class="step-item">
-                    <div class="step-number">1</div>
-                    <h3>Identidade Visual</h3>
-                    <p>Suba sua logo e personalize as informações básicas. O sistema assume a cara do seu negócio.</p>
-                </div>
-                <div class="step-item">
-                    <div class="step-number">2</div>
-                    <h3>Cadastre sua Equipe</h3>
-                    <p>Adicione auxiliares ou parceiros, defina fotos e níveis de acesso em poucos cliques.</p>
-                </div>
-                <div class="step-item">
-                    <div class="step-number">3</div>
-                    <h3>Atendimento Livre</h3>
-                    <p>Tudo pronto! Comece a registrar consultas e automatizar avisos onde quer que você esteja.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="precos" class="pricing-section">
-            <div class="container">
+            <section id="funcionalidades" class="features container">
                 <div class="section-title">
-                    <h2>🔥 OFERTA ESPECIAL DE LANÇAMENTO</h2>
-                    <p>Garanta sua vaga com condições exclusivas por tempo limitado</p>
+                    <h2 style="text-align: center;">Seu consultório, suas regras.</h2>
                 </div>
-                <div id="pricing-wrapper" class="pricing-grid">
-                    <div class="pricing-card featured">
-                        <div id="badge-vagas" class="badge" style="opacity: 0; transition: opacity 0.4s ease-in-out;">
-                            🔥 RESTAM <span id="num-vagas">10</span> VAGAS COM 30% OFF
-                        </div>
-                        <h3>Licença Profissional Vitalícia</h3>
-                        <div class="price">
-                            <div class="economy-badge"
-                                style="background: #10b981; color: white; padding: 8px 16px; border-radius: 30px; font-size: 0.85rem; display: inline-block; margin-bottom: 15px;">
-                                💰 Economia de R$ 673,50
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-award"></i>
+                        <h3>Identidade Exclusiva</h3>
+                        <p>Sua clínica com um sistema único. Entregamos o VetPocket personalizado com sua logo, cores e
+                            equipe,
+                            garantindo uma ferramenta profissional que reforça sua autoridade em cada atendimento.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-database"></i>
+                        <h3>Dados Sob Seu Controle</h3>
+                        <p>Diferente de grandes plataformas, aqui o banco de dados é exclusivo. Mais privacidade para seus
+                            prontuários e segurança para seus clientes.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-rocket"></i>
+                        <h3>Pronto para Crescer</h3>
+                        <p>Cadastre quantos veterinários e auxiliares precisar. O sistema cresce junto com sua demanda de
+                            atendimentos domiciliares.</p>
+                    </div>
+                    <div class="feature-card ai-highlight">
+                        <div class="ai-badge">EM BREVE</div>
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Agendamentos Online</h3>
+                        <p>Sistema completo de agendamento para seus clientes marcarem consultas diretamente pelo site ou
+                            WhatsApp. Com lembretes automáticos e gestão de horários.</p>
+                    </div>
+                    <div class="feature-card ai-highlight">
+                        <div class="ai-badge">EM BREVE</div>
+                        <i class="fas fa-brain"></i>
+                        <h3>Gestão Inteligente com IA</h3>
+                        <p>Receba sugestões de diagnósticos, protocolos de atendimento e insights de gestão gerados por
+                            inteligência artificial treinada para veterinários.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="passo-a-passo" class="steps container">
+                <div class="section-title" style="text-align: center;">
+                    <h2>Sua clínica online em 3 passos</h2>
+                    <p>Desenvolvido para você focar nos pets, não na configuração.</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <h3>Identidade Visual</h3>
+                        <p>Suba sua logo e personalize as informações básicas. O sistema assume a cara do seu negócio.</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <h3>Cadastre sua Equipe</h3>
+                        <p>Adicione auxiliares ou parceiros, defina fotos e níveis de acesso em poucos cliques.</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <h3>Atendimento Livre</h3>
+                        <p>Tudo pronto! Comece a registrar consultas e automatizar avisos onde quer que você esteja.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="precos" class="pricing-section">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>🔥 OFERTA ESPECIAL DE LANÇAMENTO</h2>
+                        <p>Garanta sua vaga com condições exclusivas por tempo limitado</p>
+                    </div>
+                    <div id="pricing-wrapper" class="pricing-grid">
+                        <div class="pricing-card featured">
+                            <div id="badge-vagas" class="badge" style="opacity: 0; transition: opacity 0.4s ease-in-out;">
+                                🔥 RESTAM <span id="num-vagas">10</span> VAGAS COM 30% OFF
                             </div>
-                            <div style="text-align: left; margin-top: 15px;">
-                                <div
-                                    style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                                    <div
-                                        style="font-size: 0.9rem; color: #065f46; font-weight: 600; margin-bottom: 8px;">
-                                        💳 À vista no PIX:</div>
-                                    <div style="font-size: 2rem; font-weight: 800; color: #065f46;">R$ 942,90</div>
-                                    <div style="font-size: 0.8rem; color: #047857;">Economia de R$ 673,50 no total</div>
+                            <h3>Licença Profissional Vitalícia</h3>
+                            <div class="price">
+                                <div class="economy-badge"
+                                    style="background: #10b981; color: white; padding: 8px 16px; border-radius: 30px; font-size: 0.85rem; display: inline-block; margin-bottom: 15px;">
+                                    💰 Economia de R$ 673,50
                                 </div>
-                                <div
-                                    style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px;">
+                                <div style="text-align: left; margin-top: 15px;">
                                     <div
-                                        style="font-size: 0.9rem; color: #92400e; font-weight: 600; margin-bottom: 8px;">
-                                        📱 Parcelado no cartão:</div>
-                                    <div style="font-size: 1.5rem; font-weight: 800; color: #92400e;">12x de R$ 134,70
+                                        style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                                        <div
+                                            style="font-size: 0.9rem; color: #065f46; font-weight: 600; margin-bottom: 8px;">
+                                            💳 À vista no PIX:</div>
+                                        <div style="font-size: 2rem; font-weight: 800; color: #065f46;">R$ 942,90</div>
+                                        <div style="font-size: 0.8rem; color: #047857;">Economia de R$ 673,50 no total</div>
                                     </div>
-                                    <div style="font-size: 0.8rem; color: #b45309;">Total: R$ 1.616,40</div>
+                                    <div
+                                        style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 12px;">
+                                        <div
+                                            style="font-size: 0.9rem; color: #92400e; font-weight: 600; margin-bottom: 8px;">
+                                            📱 Parcelado no cartão:</div>
+                                        <div style="font-size: 1.5rem; font-weight: 800; color: #92400e;">12x de R$ 134,70
+                                        </div>
+                                        <div style="font-size: 0.8rem; color: #b45309;">Total: R$ 1.616,40</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                                    <small style="color: #6a1b9a;">*Valores sujeitos a alteração após término da
+                                        promoção</small>
                                 </div>
                             </div>
-                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
-                                <small style="color: #6a1b9a;">*Valores sujeitos a alteração após término da
-                                    promoção</small>
-                            </div>
+                            <ul class="pricing-features">
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i><b>Acesso Vitalício</b> ao
+                                    Sistema VetPocket</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Instalação e Configuração
+                                    inclusas</li>
+                                <li class="pricing-feature-item"><i class="fas fa-check"></i>Banco de Dados Exclusivo</li>
+                                <li class="pricing-feature-item feature-pending"><i
+                                        class="fas fa-clock"></i><span>Automações de Lembretes Inteligentes</span><span
+                                        class="badge-soon">EM BREVE</span></li>
+                                <li class="pricing-feature-item"><i class="fas fa-shield-alt"></i>Manutenção e Backup
+                                    Gerenciados<span class="asterisk">*</span></li>
+                            </ul>
+                            <a href="javascript:void(0)" class="btn-primary btn-lg abrir-modal"
+                                style="display: block; text-align: center; margin-top: 28px;">Garantir Minha Licença</a>
+                            <p class="hosting-note"
+                                style="margin-top: 16px; font-size: 0.75rem; color: #6b7280; line-height: 1.4;">*Licença
+                                vitalícia. Hospedagem gerenciada cobrada à parte, conforme valor vigente na data da
+                                aquisição.</p>
                         </div>
-                        <ul class="pricing-features">
-                            <li class="pricing-feature-item"><i class="fas fa-check"></i><b>Acesso Vitalício</b> ao
-                                Sistema VetPocket</li>
-                            <li class="pricing-feature-item"><i class="fas fa-check"></i>Instalação e Configuração
-                                inclusas</li>
-                            <li class="pricing-feature-item"><i class="fas fa-check"></i>Banco de Dados Exclusivo</li>
-                            <li class="pricing-feature-item feature-pending"><i
-                                    class="fas fa-clock"></i><span>Automações de Lembretes Inteligentes</span><span
-                                    class="badge-soon">EM BREVE</span></li>
-                            <li class="pricing-feature-item"><i class="fas fa-shield-alt"></i>Manutenção e Backup
-                                Gerenciados<span class="asterisk">*</span></li>
-                        </ul>
-                        <a href="javascript:void(0)" class="btn-primary btn-lg abrir-modal"
-                            style="display: block; text-align: center; margin-top: 28px;">Garantir Minha Licença</a>
-                        <p class="hosting-note"
-                            style="margin-top: 16px; font-size: 0.75rem; color: #6b7280; line-height: 1.4;">*Licença
-                            vitalícia. Hospedagem gerenciada cobrada à parte, conforme valor vigente na data da
-                            aquisição.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="faq" class="faq container">
+                <div class="section-title">
+                    <h2>Dúvidas Frequentes</h2>
+                </div>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <button class="faq-question">A hospedagem e o backup já estão inclusos? <span
+                                class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>O valor da licença garante o seu direito de uso vitalício do software. A <b>hospedagem</b>
+                                (manutenção do sistema online) é cobrada mensalmente à parte, conforme valor vigente na data
+                                da aquisição. Já o <b>Backup Diário em Nuvem</b> é um serviço opcional que oferece uma
+                                camada extra de segurança, armazenando cópias dos seus dados em servidores externos para
+                                recuperação imediata em caso de falhas.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">Por que o banco de dados é exclusivo? <span
+                                class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>Diferente de sistemas comuns (SaaS), onde seus dados ficam misturados aos de outros milhares
+                                de usuários, no VetPocket criamos uma instância isolada apenas para você. Isso significa
+                                mais velocidade, segurança e total privacidade dos prontuários dos seus pacientes. Seus
+                                dados são seus, não de uma plataforma.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">Preciso instalar algo ou entender de tecnologia? <span
+                                class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>Não. O VetPocket é entregue como uma solução 100% pronta para uso. Nós cuidamos de toda a
+                                infraestrutura em nossa nuvem gerenciada, configuramos seu banco de dados exclusivo e
+                                entregamos apenas os seus dados de acesso. Você foca nos pets, nós cuidamos da tecnologia.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">Preciso baixar um aplicativo na Play Store ou App Store? <span
+                                class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>Não. O VetPocket é um <b>Web App</b> moderno que funciona diretamente pelo navegador (Chrome,
+                                Safari, Edge, etc.). Isso significa que ele não ocupa espaço no seu celular, não precisa de
+                                atualizações manuais e pode ser acessado de qualquer dispositivo — computador, tablet ou
+                                smartphone — bastando ter conexão com a internet.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">E se a VetPocket parar de operar ou eu quiser sair? <span
+                                class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>Diferente de grandes corporações onde você é apenas um número, no VetPocket você tem a
+                                garantia de que <b>seus dados são seus</b>. Nossa arquitetura permite que, caso você decida
+                                sair ou o serviço mude, você leve consigo toda a sua estrutura de dados e até a instância do
+                                sistema. Você nunca ficará na mão ou preso a nós por contratos abusivos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="waitlistModal" class="modal">
+                <div class="modal-content" style="min-height: 480px; display: flex; flex-direction: column;">
+                    <span class="close-modal">&times;</span>
+                    <div id="chat-container">
+                        <div class="msg-bubble bot-msg">Olá! Sou o assistente virtual da VetPocket. 🐾 Com quem eu falo?
+                        </div>
+                    </div>
+                    <div id="chat-input-area" class="chat-input-group" style="display: none;">
+                        <input type="text" id="chat-user-input" placeholder="Digite sua resposta...">
+                        <button id="chat-send-btn" class="btn-chat-send"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                    <div id="chat-options-area" class="chat-options-group" style="display: none;"></div>
+                </div>
+            </div>
+
+            <div id="modal-demo" class="modal-gallery">
+                <div class="modal-content-gallery">
+                    <span class="close-demo">&times;</span>
+                    <h2>Conheça o VetPocket por dentro</h2>
+                    <div class="demo-slider">
+                        <div class="slide"><img src="assets/img/og-vet-pocket.webp" alt="Agenda">
+                            <p><b>Agenda Inteligente</b></p>
+                        </div>
+                        <div class="slide active"><img src="assets/img/tela-visita.webp" alt="Atendimento">
+                            <p><b>Atendimento Ágil</b></p>
+                        </div>
+                        <div class="slide"><img src="assets/img/tela-admin.webp" alt="Admin">
+                            <p><b>Controle Total</b></p>
+                        </div>
+                        <div class="slide"><img src="assets/img/tela-login.webp" alt="Login">
+                            <p><b>Sem Instalação</b></p>
+                        </div>
+                        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+                        <button class="next" onclick="changeSlide(1)">&#10095;</button>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <section id="faq" class="faq container">
-            <div class="section-title">
-                <h2>Dúvidas Frequentes</h2>
+            <div id="footer-placeholder"></div>
+
+            <!-- BOTÃO FLUTUANTE MIYA-KO -->
+            <div class="miya-floating-container">
+                <button class="miya-floating-btn" id="miya-chat-btn">
+                    <div class="miya-pulse"></div>
+                    <img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya-ko">
+                    <span class="miya-floating-text">🐾 Fale com a Miya-ko!</span>
+                </button>
             </div>
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <button class="faq-question">A hospedagem e o backup já estão inclusos? <span
-                            class="icon">+</span></button>
-                    <div class="faq-answer">
-                        <p>O valor da licença garante o seu direito de uso vitalício do software. A <b>hospedagem</b>
-                            (manutenção do sistema online) é cobrada mensalmente à parte, conforme valor vigente na data
-                            da aquisição. Já o <b>Backup Diário em Nuvem</b> é um serviço opcional que oferece uma
-                            camada extra de segurança, armazenando cópias dos seus dados em servidores externos para
-                            recuperação imediata em caso de falhas.</p>
-                    </div>
-                </div>
 
-                <div class="faq-item">
-                    <button class="faq-question">Por que o banco de dados é exclusivo? <span
-                            class="icon">+</span></button>
-                    <div class="faq-answer">
-                        <p>Diferente de sistemas comuns (SaaS), onde seus dados ficam misturados aos de outros milhares
-                            de usuários, no VetPocket criamos uma instância isolada apenas para você. Isso significa
-                            mais velocidade, segurança e total privacidade dos prontuários dos seus pacientes. Seus
-                            dados são seus, não de uma plataforma.</p>
+            <!-- MODAL DO CHAT MIYA-KO -->
+            <div id="miya-chat-modal" class="miya-modal">
+                <div class="miya-modal-content">
+                    <div class="miya-modal-header">
+                        <div class="miya-header-avatar"><img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya-ko">
+                        </div>
+                        <div class="miya-header-info">
+                            <h3>Miya-ko</h3><span class="miya-online-status">Online</span>
+                        </div>
+                        <button class="miya-close-btn" id="miya-close-btn">&times;</button>
                     </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">Preciso instalar algo ou entender de tecnologia? <span
-                            class="icon">+</span></button>
-                    <div class="faq-answer">
-                        <p>Não. O VetPocket é entregue como uma solução 100% pronta para uso. Nós cuidamos de toda a
-                            infraestrutura em nossa nuvem gerenciada, configuramos seu banco de dados exclusivo e
-                            entregamos apenas os seus dados de acesso. Você foca nos pets, nós cuidamos da tecnologia.
-                        </p>
+                    <div class="miya-modal-body" id="miya-chat-messages">
+                        <div class="miya-message bot">
+                            <div class="miya-avatar"><img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya"></div>
+                            <div class="miya-bubble">🐾 Olá! Sou a Miya-ko! 😊<br><br>Como posso chamar você?</div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">Preciso baixar um aplicativo na Play Store ou App Store? <span
-                            class="icon">+</span></button>
-                    <div class="faq-answer">
-                        <p>Não. O VetPocket é um <b>Web App</b> moderno que funciona diretamente pelo navegador (Chrome,
-                            Safari, Edge, etc.). Isso significa que ele não ocupa espaço no seu celular, não precisa de
-                            atualizações manuais e pode ser acessado de qualquer dispositivo — computador, tablet ou
-                            smartphone — bastando ter conexão com a internet.</p>
+                    <div class="miya-modal-footer">
+                        <input type="text" id="miya-user-input" placeholder="Digite seu nome..." autocomplete="off">
+                        <button id="miya-send-btn"><i class="fas fa-paper-plane"></i></button>
                     </div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question">E se a VetPocket parar de operar ou eu quiser sair? <span
-                            class="icon">+</span></button>
-                    <div class="faq-answer">
-                        <p>Diferente de grandes corporações onde você é apenas um número, no VetPocket você tem a
-                            garantia de que <b>seus dados são seus</b>. Nossa arquitetura permite que, caso você decida
-                            sair ou o serviço mude, você leve consigo toda a sua estrutura de dados e até a instância do
-                            sistema. Você nunca ficará na mão ou preso a nós por contratos abusivos.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div id="waitlistModal" class="modal">
-            <div class="modal-content" style="min-height: 480px; display: flex; flex-direction: column;">
-                <span class="close-modal">&times;</span>
-                <div id="chat-container">
-                    <div class="msg-bubble bot-msg">Olá! Sou o assistente virtual da VetPocket. 🐾 Com quem eu falo?
-                    </div>
-                </div>
-                <div id="chat-input-area" class="chat-input-group" style="display: none;">
-                    <input type="text" id="chat-user-input" placeholder="Digite sua resposta...">
-                    <button id="chat-send-btn" class="btn-chat-send"><i class="fas fa-paper-plane"></i></button>
-                </div>
-                <div id="chat-options-area" class="chat-options-group" style="display: none;"></div>
-            </div>
-        </div>
-
-        <div id="modal-demo" class="modal-gallery">
-            <div class="modal-content-gallery">
-                <span class="close-demo">&times;</span>
-                <h2>Conheça o VetPocket por dentro</h2>
-                <div class="demo-slider">
-                    <div class="slide"><img src="assets/img/og-vet-pocket.webp" alt="Agenda">
-                        <p><b>Agenda Inteligente</b></p>
-                    </div>
-                    <div class="slide active"><img src="assets/img/tela-visita.webp" alt="Atendimento">
-                        <p><b>Atendimento Ágil</b></p>
-                    </div>
-                    <div class="slide"><img src="assets/img/tela-admin.webp" alt="Admin">
-                        <p><b>Controle Total</b></p>
-                    </div>
-                    <div class="slide"><img src="assets/img/tela-login.webp" alt="Login">
-                        <p><b>Sem Instalação</b></p>
-                    </div>
-                    <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-                    <button class="next" onclick="changeSlide(1)">&#10095;</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="footer-placeholder"></div>
-
-        <!-- BOTÃO FLUTUANTE MIYA-KO -->
-        <div class="miya-floating-container">
-            <button class="miya-floating-btn" id="miya-chat-btn">
-                <div class="miya-pulse"></div>
-                <img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya-ko">
-                <span class="miya-floating-text">🐾 Fale com a Miya-ko!</span>
-            </button>
-        </div>
-
-        <!-- MODAL DO CHAT MIYA-KO -->
-        <div id="miya-chat-modal" class="miya-modal">
-            <div class="miya-modal-content">
-                <div class="miya-modal-header">
-                    <div class="miya-header-avatar"><img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya-ko">
-                    </div>
-                    <div class="miya-header-info">
-                        <h3>Miya-ko</h3><span class="miya-online-status">Online</span>
-                    </div>
-                    <button class="miya-close-btn" id="miya-close-btn">&times;</button>
-                </div>
-                <div class="miya-modal-body" id="miya-chat-messages">
-                    <div class="miya-message bot">
-                        <div class="miya-avatar"><img src="assets/img/Miya-Ko_original_mascote.webp" alt="Miya"></div>
-                        <div class="miya-bubble">🐾 Olá! Sou a Miya-ko! 😊<br><br>Como posso chamar você?</div>
-                    </div>
-                </div>
-                <div class="miya-modal-footer">
-                    <input type="text" id="miya-user-input" placeholder="Digite seu nome..." autocomplete="off">
-                    <button id="miya-send-btn"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- BANNER DE COOKIES INFERIOR (FORA do mainContent para ser clicável) -->
-    <div id="cookieBanner" class="cookie-banner" style="display: none;">
-        <div class="cookie-content">
-            <div class="cookie-text">
-                <i class="fas fa-cookie-bite"></i>
-                <strong>🍪 Nós usamos cookies!</strong>
-                <p>Utilizamos cookies para melhorar sua experiência, personalizar conteúdo e analisar nosso tráfego. Ao
-                    continuar navegando, você concorda com nossa <a href="pages/politica-privacidade.html"
-                        target="_blank">Política de Privacidade</a>.</p>
-            </div>
-            <div class="cookie-buttons">
-                <button id="cookieAcceptBtn" class="cookie-btn accept">Aceitar Todos</button>
-                <button id="cookieRejectBtn" class="cookie-btn reject">Apenas Essenciais</button>
-                <button id="cookieConfigBtn" class="cookie-btn config">Configurar</button>
+        <!-- BANNER DE COOKIES INFERIOR (FORA do mainContent para ser clicável) -->
+        <div id="cookieBanner" class="cookie-banner" style="display: none;">
+            <div class="cookie-content">
+                <div class="cookie-text">
+                    <i class="fas fa-cookie-bite"></i>
+                    <strong>🍪 Nós usamos cookies!</strong>
+                    <p>Utilizamos cookies para melhorar sua experiência, personalizar conteúdo e analisar nosso tráfego. Ao
+                        continuar navegando, você concorda com nossa <a href="pages/politica-privacidade.html"
+                            target="_blank">Política de Privacidade</a>.</p>
+                </div>
+                <div class="cookie-buttons">
+                    <button id="cookieAcceptBtn" class="cookie-btn accept">Aceitar Todos</button>
+                    <button id="cookieRejectBtn" class="cookie-btn reject">Apenas Essenciais</button>
+                    <button id="cookieConfigBtn" class="cookie-btn config">Configurar</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- MODAL DE CONFIGURAÇÃO DE COOKIES -->
-    <div id="cookieModal" class="cookie-modal" style="display: none;">
-        <div class="cookie-modal-content">
-            <div class="cookie-modal-header">
-                <h3>Configuração de Cookies</h3>
-                <button id="closeCookieModal" class="cookie-modal-close">&times;</button>
-            </div>
-            <div class="cookie-modal-body">
-                <div class="cookie-option">
-                    <label class="cookie-switch"><input type="checkbox" id="cookieEssential" checked disabled><span
-                            class="cookie-slider"></span></label>
-                    <div class="cookie-option-text"><strong>🍪 Cookies Essenciais (Sempre
-                            ativos)</strong><small>Necessários para o funcionamento básico do site.</small></div>
+        <!-- MODAL DE CONFIGURAÇÃO DE COOKIES -->
+        <div id="cookieModal" class="cookie-modal" style="display: none;">
+            <div class="cookie-modal-content">
+                <div class="cookie-modal-header">
+                    <h3>Configuração de Cookies</h3>
+                    <button id="closeCookieModal" class="cookie-modal-close">&times;</button>
                 </div>
-                <div class="cookie-option">
-                    <label class="cookie-switch"><input type="checkbox" id="cookieFunctional"><span
-                            class="cookie-slider"></span></label>
-                    <div class="cookie-option-text"><strong>⚙️ Cookies Funcionais</strong><small>Permitem lembrar suas
-                            preferências.</small></div>
+                <div class="cookie-modal-body">
+                    <div class="cookie-option">
+                        <label class="cookie-switch"><input type="checkbox" id="cookieEssential" checked disabled><span
+                                class="cookie-slider"></span></label>
+                        <div class="cookie-option-text"><strong>🍪 Cookies Essenciais (Sempre
+                                ativos)</strong><small>Necessários para o funcionamento básico do site.</small></div>
+                    </div>
+                    <div class="cookie-option">
+                        <label class="cookie-switch"><input type="checkbox" id="cookieFunctional"><span
+                                class="cookie-slider"></span></label>
+                        <div class="cookie-option-text"><strong>⚙️ Cookies Funcionais</strong><small>Permitem lembrar suas
+                                preferências.</small></div>
+                    </div>
+                    <div class="cookie-option">
+                        <label class="cookie-switch"><input type="checkbox" id="cookieAnalytics"><span
+                                class="cookie-slider"></span></label>
+                        <div class="cookie-option-text"><strong>📊 Cookies de Análise</strong><small>Nos ajudam a entender
+                                como você usa o site.</small></div>
+                    </div>
+                    <div class="cookie-option">
+                        <label class="cookie-switch"><input type="checkbox" id="cookieMarketing"><span
+                                class="cookie-slider"></span></label>
+                        <div class="cookie-option-text"><strong>📢 Cookies de Marketing</strong><small>Usados para exibir
+                                anúncios relevantes.</small></div>
+                    </div>
                 </div>
-                <div class="cookie-option">
-                    <label class="cookie-switch"><input type="checkbox" id="cookieAnalytics"><span
-                            class="cookie-slider"></span></label>
-                    <div class="cookie-option-text"><strong>📊 Cookies de Análise</strong><small>Nos ajudam a entender
-                            como você usa o site.</small></div>
+                <div class="cookie-modal-footer">
+                    <button id="savePreferencesBtn" class="cookie-btn accept">💾 Salvar Preferências</button>
                 </div>
-                <div class="cookie-option">
-                    <label class="cookie-switch"><input type="checkbox" id="cookieMarketing"><span
-                            class="cookie-slider"></span></label>
-                    <div class="cookie-option-text"><strong>📢 Cookies de Marketing</strong><small>Usados para exibir
-                            anúncios relevantes.</small></div>
-                </div>
-            </div>
-            <div class="cookie-modal-footer">
-                <button id="savePreferencesBtn" class="cookie-btn accept">💾 Salvar Preferências</button>
             </div>
         </div>
-    </div>
 
-    <!-- AVISO PARA USUÁRIOS DO BRAVE -->
-    <div id="braveNotice" class="brave-notice">
-        <i class="fas fa-shield-alt"></i>
-        <strong>🦁 Você está usando o Brave!</strong> Se o banner de cookies não aparecer, desative o "Shields" (ícone
-        do leão) para este site.
-        <button onclick="this.parentElement.style.display='none'">&times;</button>
-    </div>
+        <!-- AVISO PARA USUÁRIOS DO BRAVE -->
+        <div id="braveNotice" class="brave-notice">
+            <i class="fas fa-shield-alt"></i>
+            <strong>🦁 Você está usando o Brave!</strong> Se o banner de cookies não aparecer, desative o "Shields" (ícone
+            do leão) para este site.
+            <button onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
 
-    <!-- SCRIPTS -->
-    <script src="assets/js/rolagem.js"></script>
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/faq.js"></script>
-    <script src="assets/js/bot.js"></script>
-    <script src="assets/js/qr-code.js"></script>
-    <script src="assets/js/slide.js"></script>
-    <script src="assets/js/adm/components.js"></script>
-    <script src="assets/js/miya-chat.js"></script>
+        <!-- SCRIPTS -->
+        <script src="assets/js/rolagem.js"></script>
+        <script src="assets/js/config.js"></script>
+        <script src="assets/js/faq.js"></script>
+        <script src="assets/js/funcoes.js"></script>
+        <script src="assets/js/bot.js"></script>
+        <script src="assets/js/qr-code.js"></script>
+        <script src="assets/js/slide.js"></script>
+        <script src="assets/js/adm/components.js"></script>
+        <script src="assets/js/miya-chat.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const badge = document.getElementById('badge-vagas');
-            try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
-                const data = await response.json();
-                const numVagas = parseInt(data.vagas_restantes);
-                if (numVagas > 0) {
-                    const termoVerbo = numVagas === 1 ? "RESTA" : "RESTAM";
-                    const sufixoS = numVagas === 1 ? "" : "S";
-                    if (badge) {
-                        badge.innerHTML = `🎯 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
-                        badge.style.setProperty('opacity', '1', 'important');
+        <script>
+            document.addEventListener("DOMContentLoaded", async () => {
+                const badge = document.getElementById('badge-vagas');
+                try {
+                    const response = await fetch(`${API_CONFIG.BASE_URL}save_lead.php?get_vagas=true&nocache=${Date.now()}`);
+                    const data = await response.json();
+                    const numVagas = parseInt(data.vagas_restantes);
+                    if (numVagas > 0) {
+                        const termoVerbo = numVagas === 1 ? "RESTA" : "RESTAM";
+                        const sufixoS = numVagas === 1 ? "" : "S";
+                        if (badge) {
+                            badge.innerHTML = `🎯 ${termoVerbo} <span id="num-vagas">${numVagas}</span> VAGA${sufixoS} COM 30% OFF`;
+                            badge.style.setProperty('opacity', '1', 'important');
+                        }
+                    } else {
+                        if (badge) {
+                            badge.innerHTML = "Oferta de Lançamento - Últimas Unidades";
+                            badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important; display: inline-block !important; padding: 8px 20px;";
+                        }
                     }
-                } else {
-                    if (badge) {
-                        badge.innerHTML = "Oferta de Lançamento - Últimas Unidades";
-                        badge.style.cssText += "background: #6366f1 !important; opacity: 1 !important; display: inline-block !important; padding: 8px 20px;";
-                    }
-                }
-            } catch (e) {
-                console.warn("Erro ao buscar vagas, mantendo interface padrão.");
-                if (badge) badge.style.opacity = "1";
-            }
-        });
-    </script>
-
-    <script>
-        // GERENCIAMENTO DE COOKIES (SEM BLUR)
-        (function () {
-            const COOKIE_KEY = 'vetpocket_cookie_consent';
-            const overlay = document.getElementById('cookieOverlay');
-            const banner = document.getElementById('cookieBanner');
-            const modal = document.getElementById('cookieModal');
-
-            function liberarPagina() {
-                if (overlay) {
-                    overlay.classList.remove('active');
-                    overlay.style.display = 'none';
-                }
-                if (banner) banner.style.display = 'none';
-                console.log('✅ Página liberada');
-            }
-
-            function bloquearPagina() {
-                if (overlay) {
-                    overlay.classList.add('active');
-                    overlay.style.display = 'block';
-                }
-                if (banner) banner.style.display = 'block';
-                console.log('🔒 Página bloqueada');
-            }
-
-            const hasConsent = localStorage.getItem(COOKIE_KEY);
-
-            if (!hasConsent) {
-                bloquearPagina();
-            } else {
-                liberarPagina();
-            }
-
-            const acceptBtn = document.getElementById('cookieAcceptBtn');
-            if (acceptBtn) {
-                acceptBtn.addEventListener('click', function () {
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify({
-                        essential: true, functional: true, analytics: true, marketing: true
-                    }));
-                    liberarPagina();
-                });
-            }
-
-            const rejectBtn = document.getElementById('cookieRejectBtn');
-            if (rejectBtn) {
-                rejectBtn.addEventListener('click', function () {
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify({
-                        essential: true, functional: false, analytics: false, marketing: false
-                    }));
-                    liberarPagina();
-                });
-            }
-
-            const configBtn = document.getElementById('cookieConfigBtn');
-            if (configBtn) {
-                configBtn.addEventListener('click', function () {
-                    const saved = localStorage.getItem(COOKIE_KEY);
-                    if (saved) {
-                        try {
-                            const prefs = JSON.parse(saved);
-                            if (document.getElementById('cookieFunctional')) document.getElementById('cookieFunctional').checked = prefs.functional || false;
-                            if (document.getElementById('cookieAnalytics')) document.getElementById('cookieAnalytics').checked = prefs.analytics || false;
-                            if (document.getElementById('cookieMarketing')) document.getElementById('cookieMarketing').checked = prefs.marketing || false;
-                        } catch (e) { }
-                    }
-                    if (modal) modal.style.display = 'flex';
-                });
-            }
-
-            const closeModalBtn = document.getElementById('closeCookieModal');
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', function () {
-                    if (modal) modal.style.display = 'none';
-                });
-            }
-
-            const savePrefsBtn = document.getElementById('savePreferencesBtn');
-            if (savePrefsBtn) {
-                savePrefsBtn.addEventListener('click', function () {
-                    const preferences = {
-                        essential: true,
-                        functional: document.getElementById('cookieFunctional')?.checked || false,
-                        analytics: document.getElementById('cookieAnalytics')?.checked || false,
-                        marketing: document.getElementById('cookieMarketing')?.checked || false
-                    };
-                    localStorage.setItem(COOKIE_KEY, JSON.stringify(preferences));
-                    if (modal) modal.style.display = 'none';
-                    liberarPagina();
-                });
-            }
-
-            if (modal) {
-                modal.addEventListener('click', function (e) {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-            }
-        })();
-    </script>
-
-    <script>
-        // DETECTAR BRAVE
-        (function () {
-            const COOKIE_KEY = 'vetpocket_cookie_consent';
-            const hasConsent = localStorage.getItem(COOKIE_KEY);
-
-            function detectarBrave() {
-                if (navigator.userAgent.includes('Brave')) return true;
-                if (navigator.brave && typeof navigator.brave.isBrave === 'function') {
-                    return navigator.brave.isBrave();
-                }
-                return false;
-            }
-
-            if (!hasConsent) {
-                Promise.resolve(detectarBrave()).then(isBrave => {
-                    if (isBrave) {
-                        const aviso = document.getElementById('braveNotice');
-                        if (aviso) aviso.style.display = 'block';
-                        console.log('🦁 Brave detectado');
-                    }
-                });
-            }
-        })();
-    </script>
-
-    <script>
-        // 🔥 MENU MOBILE - VERSÃO QUE SOBRESCREVE components.js
-        (function() {
-            function initMenu() {
-                const mobileBtn = document.getElementById('mobileMenuBtn');
-                const navLinks = document.getElementById('navLinks');
-                const menuOverlay = document.getElementById('menuOverlay');
-                
-                if (!mobileBtn) {
-                    setTimeout(initMenu, 200);
-                    return;
-                }
-                
-                console.log('✅ Configurando menu mobile...');
-                
-                // Remover evento anterior e adicionar novo
-                const newBtn = mobileBtn.cloneNode(true);
-                mobileBtn.parentNode.replaceChild(newBtn, mobileBtn);
-                
-                newBtn.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (navLinks) navLinks.classList.toggle('active');
-                    if (menuOverlay) menuOverlay.classList.toggle('active');
-                    document.body.style.overflow = navLinks && navLinks.classList.contains('active') ? 'hidden' : '';
-                    console.log('Menu aberto:', navLinks?.classList.contains('active'));
-                };
-                
-                if (menuOverlay) {
-                    const newOverlay = menuOverlay.cloneNode(true);
-                    menuOverlay.parentNode.replaceChild(newOverlay, menuOverlay);
-                    newOverlay.onclick = function() {
-                        if (navLinks) navLinks.classList.remove('active');
-                        newOverlay.classList.remove('active');
-                        document.body.style.overflow = '';
-                    };
-                }
-                
-                if (navLinks) {
-                    navLinks.querySelectorAll('a').forEach(link => {
-                        const newLink = link.cloneNode(true);
-                        link.parentNode.replaceChild(newLink, link);
-                        newLink.onclick = function(e) {
-                            e.preventDefault();
-                            const href = this.getAttribute('href');
-                            console.log('🔗 Link:', href);
-                            if (navLinks) navLinks.classList.remove('active');
-                            if (menuOverlay) menuOverlay.classList.remove('active');
-                            document.body.style.overflow = '';
-                            if (href && href.startsWith('#')) {
-                                const target = document.querySelector(href);
-                                if (target) {
-                                    const header = document.querySelector('.navbar');
-                                    const offset = header ? header.offsetHeight : 80;
-                                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                    setTimeout(() => {
-                                        window.scrollBy(0, -offset);
-                                    }, 100);
-                                }
-                            } else if (href && href !== 'javascript:void(0)') {
-                                window.location.href = href;
-                            }
-                        };
-                    });
-                }
-            }
-            
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initMenu);
-            } else {
-                initMenu();
-            }
-            
-            // Observar quando o header for carregado
-            const observer = new MutationObserver(() => {
-                if (document.getElementById('navLinks')?.querySelector('a')) {
-                    observer.disconnect();
-                    initMenu();
+                } catch (e) {
+                    console.warn("Erro ao buscar vagas, mantendo interface padrão.");
+                    if (badge) badge.style.opacity = "1";
                 }
             });
-            observer.observe(document.body, { childList: true, subtree: true });
-        })();
-    </script>
-    
-</body>
+        </script>
 
-</html>
+        <script>
+            // GERENCIAMENTO DE COOKIES (SEM BLUR)
+            (function () {
+                const COOKIE_KEY = 'vetpocket_cookie_consent';
+                const overlay = document.getElementById('cookieOverlay');
+                const banner = document.getElementById('cookieBanner');
+                const modal = document.getElementById('cookieModal');
+
+                function liberarPagina() {
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                        overlay.style.display = 'none';
+                    }
+                    if (banner) banner.style.display = 'none';
+                    console.log('✅ Página liberada');
+                }
+
+                function bloquearPagina() {
+                    if (overlay) {
+                        overlay.classList.add('active');
+                        overlay.style.display = 'block';
+                    }
+                    if (banner) banner.style.display = 'block';
+                    console.log('🔒 Página bloqueada');
+                }
+
+                const hasConsent = localStorage.getItem(COOKIE_KEY);
+
+                if (!hasConsent) {
+                    bloquearPagina();
+                } else {
+                    liberarPagina();
+                }
+
+                const acceptBtn = document.getElementById('cookieAcceptBtn');
+                if (acceptBtn) {
+                    acceptBtn.addEventListener('click', function () {
+                        localStorage.setItem(COOKIE_KEY, JSON.stringify({
+                            essential: true, functional: true, analytics: true, marketing: true
+                        }));
+                        liberarPagina();
+                    });
+                }
+
+                const rejectBtn = document.getElementById('cookieRejectBtn');
+                if (rejectBtn) {
+                    rejectBtn.addEventListener('click', function () {
+                        localStorage.setItem(COOKIE_KEY, JSON.stringify({
+                            essential: true, functional: false, analytics: false, marketing: false
+                        }));
+                        liberarPagina();
+                    });
+                }
+
+                const configBtn = document.getElementById('cookieConfigBtn');
+                if (configBtn) {
+                    configBtn.addEventListener('click', function () {
+                        const saved = localStorage.getItem(COOKIE_KEY);
+                        if (saved) {
+                            try {
+                                const prefs = JSON.parse(saved);
+                                if (document.getElementById('cookieFunctional')) document.getElementById('cookieFunctional').checked = prefs.functional || false;
+                                if (document.getElementById('cookieAnalytics')) document.getElementById('cookieAnalytics').checked = prefs.analytics || false;
+                                if (document.getElementById('cookieMarketing')) document.getElementById('cookieMarketing').checked = prefs.marketing || false;
+                            } catch (e) { }
+                        }
+                        if (modal) modal.style.display = 'flex';
+                    });
+                }
+
+                const closeModalBtn = document.getElementById('closeCookieModal');
+                if (closeModalBtn) {
+                    closeModalBtn.addEventListener('click', function () {
+                        if (modal) modal.style.display = 'none';
+                    });
+                }
+
+                const savePrefsBtn = document.getElementById('savePreferencesBtn');
+                if (savePrefsBtn) {
+                    savePrefsBtn.addEventListener('click', function () {
+                        const preferences = {
+                            essential: true,
+                            functional: document.getElementById('cookieFunctional')?.checked || false,
+                            analytics: document.getElementById('cookieAnalytics')?.checked || false,
+                            marketing: document.getElementById('cookieMarketing')?.checked || false
+                        };
+                        localStorage.setItem(COOKIE_KEY, JSON.stringify(preferences));
+                        if (modal) modal.style.display = 'none';
+                        liberarPagina();
+                    });
+                }
+
+                if (modal) {
+                    modal.addEventListener('click', function (e) {
+                        if (e.target === modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+            })();
+        </script>
+
+        <script>
+            // DETECTAR BRAVE
+            (function () {
+                const COOKIE_KEY = 'vetpocket_cookie_consent';
+                const hasConsent = localStorage.getItem(COOKIE_KEY);
+
+                function detectarBrave() {
+                    if (navigator.userAgent.includes('Brave')) return true;
+                    if (navigator.brave && typeof navigator.brave.isBrave === 'function') {
+                        return navigator.brave.isBrave();
+                    }
+                    return false;
+                }
+
+                if (!hasConsent) {
+                    Promise.resolve(detectarBrave()).then(isBrave => {
+                        if (isBrave) {
+                            const aviso = document.getElementById('braveNotice');
+                            if (aviso) aviso.style.display = 'block';
+                            console.log('🦁 Brave detectado');
+                        }
+                    });
+                }
+            })();
+        </script>
+
+        <script>
+            // 🔥 MENU MOBILE - VERSÃO QUE SOBRESCREVE components.js
+            (function() {
+                function initMenu() {
+                    const mobileBtn = document.getElementById('mobileMenuBtn');
+                    const navLinks = document.getElementById('navLinks');
+                    const menuOverlay = document.getElementById('menuOverlay');
+                    
+                    if (!mobileBtn) {
+                        setTimeout(initMenu, 200);
+                        return;
+                    }
+                    
+                    console.log('✅ Configurando menu mobile...');
+                    
+                    // Remover evento anterior e adicionar novo
+                    const newBtn = mobileBtn.cloneNode(true);
+                    mobileBtn.parentNode.replaceChild(newBtn, mobileBtn);
+                    
+                    newBtn.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (navLinks) navLinks.classList.toggle('active');
+                        if (menuOverlay) menuOverlay.classList.toggle('active');
+                        document.body.style.overflow = navLinks && navLinks.classList.contains('active') ? 'hidden' : '';
+                        console.log('Menu aberto:', navLinks?.classList.contains('active'));
+                    };
+                    
+                    if (menuOverlay) {
+                        const newOverlay = menuOverlay.cloneNode(true);
+                        menuOverlay.parentNode.replaceChild(newOverlay, menuOverlay);
+                        newOverlay.onclick = function() {
+                            if (navLinks) navLinks.classList.remove('active');
+                            newOverlay.classList.remove('active');
+                            document.body.style.overflow = '';
+                        };
+                    }
+                    
+                    if (navLinks) {
+                        navLinks.querySelectorAll('a').forEach(link => {
+                            const newLink = link.cloneNode(true);
+                            link.parentNode.replaceChild(newLink, link);
+                            newLink.onclick = function(e) {
+                                e.preventDefault();
+                                const href = this.getAttribute('href');
+                                console.log('🔗 Link:', href);
+                                if (navLinks) navLinks.classList.remove('active');
+                                if (menuOverlay) menuOverlay.classList.remove('active');
+                                document.body.style.overflow = '';
+                                if (href && href.startsWith('#')) {
+                                    const target = document.querySelector(href);
+                                    if (target) {
+                                        const header = document.querySelector('.navbar');
+                                        const offset = header ? header.offsetHeight : 80;
+                                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                        setTimeout(() => {
+                                            window.scrollBy(0, -offset);
+                                        }, 100);
+                                    }
+                                } else if (href && href !== 'javascript:void(0)') {
+                                    window.location.href = href;
+                                }
+                            };
+                        });
+                    }
+                }
+                
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initMenu);
+                } else {
+                    initMenu();
+                }
+                
+                // Observar quando o header for carregado
+                const observer = new MutationObserver(() => {
+                    if (document.getElementById('navLinks')?.querySelector('a')) {
+                        observer.disconnect();
+                        initMenu();
+                    }
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+            })();
+        </script>
+        
+    </body>
+
+    </html>
